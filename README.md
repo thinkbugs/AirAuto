@@ -9,7 +9,7 @@
   <a href="https://github.com/Roylyl/WinPlay/releases/latest"><img src="https://img.shields.io/github/v/release/Roylyl/WinPlay?style=flat-square&amp;label=release&amp;color=2563eb" alt="GitHub最新正式发行版"></a>
   <a href="#使用条件"><img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-555555?style=flat-square" alt="Windows10/11x64"></a>
   <a href="#无线连接"><img src="https://img.shields.io/badge/CarPlay-wireless-2563eb?style=flat-square" alt="无线CarPlay"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-2563eb?style=flat-square" alt="GPL-3.0-or-later许可证"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--or--later-2563eb?style=flat-square" alt="AGPL-3.0-or-later许可证"></a>
   <a href="https://github.com/Roylyl/WinPlay/releases"><img src="https://img.shields.io/badge/download-x64%20EXE-2563eb?style=flat-square" alt="Windows安装包发行页"></a>
 </p>
 
@@ -236,7 +236,9 @@ npm run dist
 
 ## 来源与许可
 
-无线引导参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)，局域网方案与网络协议复用[MacPlay](https://github.com/Roylyl/MacPlay)，保留[LIVI](https://github.com/f-io/LIVI)、LasseHeitgres及贡献者和[DiPlay](https://github.com/shihabal3amri/DiPlay)来源声明。项目沿用GPL-3.0-or-later，见[LICENSE](LICENSE)、[NOTICE](NOTICE)与[第三方声明](vendor/THIRD-PARTY-NOTICES.txt)。
+无线引导参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)，局域网方案与网络协议复用[MacPlay](https://github.com/Roylyl/MacPlay)，保留[LIVI](https://github.com/f-io/LIVI)、LasseHeitgres及贡献者和[DiPlay](https://github.com/shihabal3amri/DiPlay)来源声明。Android Auto协议参考[DiAuto](https://github.com/shihabal3amri/DiAuto)与[Open Headunit](https://github.com/andreknieriem/open-headunit)（AGPL-3.0），协议定义与消息结构保留其来源与许可。因合并AGPL实现，项目升级为AGPL-3.0-or-later，见[LICENSE](LICENSE)、[NOTICE](NOTICE)与[第三方声明](vendor/THIRD-PARTY-NOTICES.txt)。
+
+Android Auto支持仍处于开发阶段（`spike/aa-probe`）：目前只验证协议链路，尚未接入应用界面。
 
 WinPlay是独立衍生项目，不代表Apple或上游作者，不声称获得MFi认证。第三方组件、认证证书、私钥和商标继续适用各自权利条件。分发修改版时应保留声明，并提供适用许可要求的对应源码与构建资料。
 

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Render the README in Chromium without interacting with other applications.
 const {app,BrowserWindow}=require('electron');
 const fs=require('node:fs'),path=require('node:path');

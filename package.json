@@ -4,7 +4,7 @@
   "private": true,
   "description": "Windows CarPlay接收端",
   "author": "Roylyl",
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "main": "src/main.cjs",
   "scripts": {
     "prebuild": "node node_modules/electron/install.js",
@@ -21,6 +21,7 @@
     "electron": "42.11.10",
     "electron-builder": "^26.0.12",
     "marked": "^17.0.0",
+    "protobufjs": "^8.8.1",
     "typescript": "^5.9.3"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Native SMTC owner. Audio remains on the user's selected Windows endpoint.
 using System;
 using System.IO;

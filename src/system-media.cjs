@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-or-later
 const {spawn} = require('node:child_process');
 const {createInterface} = require('node:readline');
 

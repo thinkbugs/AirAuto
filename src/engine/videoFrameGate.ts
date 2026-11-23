@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-or-later
 export type VideoResetReason='decoder-stall'|'transport-overflow'|'ipc-overflow'|'reconnect';
 export type ForwardedVideoFrame = {
  data:Buffer;timestamp:number;frameId:number;generation:number;reset?:boolean;resetReason?:VideoResetReason;

@@ -1,11 +1,18 @@
 WinPlay 1.2.5 — Roylyl
-GPL-3.0-or-later; see LICENSE.
+AGPL-3.0-or-later; see LICENSE.
 
 CarPlay control, pairing, encryption, plist and HID implementation adapted from
 Roylyl/MacPlay, based on f-io/LIVI (Lasse Heitgres and contributors).
 Wireless iAP2 identification and handoff adapted from Roylyl/AndroidPlay,
 based on shihabal3amri/DiPlay. Original source comments are retained.
 See vendor/MacPlay-NOTICE and vendor/SOURCE-AUDIT.md.
+
+Android Auto protocol work in spike/aa-probe is derived from DiAuto
+(https://github.com/shihabal3amri/DiAuto, AGPL-3.0), which preserves the
+Open Headunit project (https://github.com/andreknieriem/open-headunit) and
+Michael Reid's original headunit work. The .proto definitions under
+spike/aa-probe/proto are adapted from DiAuto and remain under AGPL-3.0.
+Android Auto and Google are trademarks of Google LLC; no endorsement is claimed.
 
 No Apple endorsement or MFi certification is claimed. This locally built installation package embeds the authentication pair supplied
 by the user. Credentials require separate redistribution authorization. MacPlay NOTICE

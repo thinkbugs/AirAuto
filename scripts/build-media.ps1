@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: AGPL-3.0-or-later
 $ErrorActionPreference='Stop'
 $projectDir=Split-Path $PSScriptRoot -Parent
 $refDir=Join-Path $projectDir 'tools/net48-reference/build/.NETFramework/v4.8'

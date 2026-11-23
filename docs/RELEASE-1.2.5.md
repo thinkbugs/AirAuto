@@ -33,4 +33,4 @@ WinPlay是Windows无线CarPlay接收端，支持本机移动热点与现有局�
 
 应用侧栏的“捐赠”页提供微信支付、支付宝、AlipayHK收款码及PayPal入口，收款码可点击放大。README底部也提供相同入口。
 
-项目遵循GPL-3.0-or-later，保留上游声明。认证材料与商标分别适用各自权利条件。详见[LICENSE](../LICENSE)、[NOTICE](../NOTICE)和[源码来源说明](../vendor/SOURCE-AUDIT.md)。
+1.2.5发布时遵循GPL-3.0-or-later；自Android Auto支持开发线起升级为AGPL-3.0-or-later（合并AGPL协议实现）。认证材料与商标分别适用各自权利条件。详见[LICENSE](../LICENSE)、[NOTICE](../NOTICE)和[源码来源说明](../vendor/SOURCE-AUDIT.md)。

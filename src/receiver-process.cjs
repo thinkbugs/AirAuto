@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Retire the old worker before another receiver binds its listening ports.
 function retireReceiver(proc,{graceMs=1500,killWaitMs=1000}={}){
  if(!proc||proc.exitCode!=null||proc.signalCode!=null)return Promise.resolve();
