@@ -44,7 +44,9 @@ class AaConnection extends EventEmitter {
     this.sendChain = Promise.resolve()
     this.stats = { framesIn: 0, framesOut: 0, records: 0, messages: 0, videoFrames: 0, audioPackets: 0 }
 
+    if(process.env.AA_DEBUG){socket.on('pause',()=>this.log('socket-pause',{}));socket.on('resume',()=>this.log('socket-resume',{}));socket.on('end',()=>this.log('socket-end',{}))}
     socket.on('data', chunk => {
+      if(process.env.AA_DEBUG)this.log('raw-chunk',{bytes:chunk.length});
       let frames
       try {
         frames = this.parser.push(chunk)
@@ -95,7 +97,7 @@ class AaConnection extends EventEmitter {
       this.cipherTail = this.cipherTail.subarray(total)
       const header = this.outQueue.shift() || this.outHeader
       if (process.env.AA_DEBUG) this.log('tls-record-out', { channel: header.channel, bytes: total })
-      this.#writeFrame(encodeTlsRecord(header.channel, header.flags, record))
+      this.#writeFrame(encodeTlsRecord(header.channel, header.flags, record, header.declaredTotal))
     }
   }
 
@@ -226,7 +228,7 @@ class AaConnection extends EventEmitter {
 
   // Encrypted application message (or one fragment of one); only valid after 'secure'.
   // `type` is null for middle/last fragments, which carry raw continuation bytes.
-  send(channel, type, payload = Buffer.alloc(0), flags) {
+  send(channel, type, payload = Buffer.alloc(0), flags, declaredTotal) {
     if (!this.secure) throw new Error('send() before TLS is secure')
     let inner
     if (type === null) {
@@ -270,11 +272,16 @@ class AaConnection extends EventEmitter {
 }
 
 // Encrypted record frame: header carries channel/flags, body is the TLS record only.
-function encodeTlsRecord(channel, flags, record) {
+function encodeTlsRecord(channel, flags, record, declaredTotal) {
   const header = Buffer.alloc(4)
   header[0] = channel & 0xff
   header[1] = flags & 0xff
   header.writeUInt16BE(record.length, 2)
+  if (flags === 0x09) {
+    const extra = Buffer.alloc(4)
+    extra.writeUInt32BE((declaredTotal || 0) >>> 0, 0)
+    return Buffer.concat([header, extra, record])
+  }
   return Buffer.concat([header, record])
 }
 

@@ -74,12 +74,10 @@ TLS is pinned to 1.2 for this spike to avoid TLS 1.3 post-handshake tickets.
 
 ## Known limitations
 
-- **Live video streaming stalls after ~30 messages.** Feeding a continuous stream exposes
-  a TLS write/backpressure problem in this spike's transport: both sides stop flushing
-  records after about a second. The codec/config path is sound — decoded frames render in
-  the preview page — and the preview replays its cached GOP on connect so a freshly opened
-  page immediately shows the frames received so far. Continuous playback needs a proper
-  TLS record queue next.
+- Continuous playback works with the bundled sample (100+ access units, keyframe
+  fragmentation included). The earlier stall was a first-fragment framing bug: flags 0x09
+  frames carry a 4-byte total outside the length field, which the sender now writes.
+  Real-phone verification is still pending.
 - Large keyframes (>12 KB) are fragmented at the AA layer; the reassembly path is unit
   tested but the live fragmented stream shares the stall above.
 - Audio packets are counted only; no playout

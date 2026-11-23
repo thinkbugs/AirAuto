@@ -125,7 +125,7 @@ function sendAccessUnit(conn, frame) {
     offset += chunk.length
     const last = offset >= frame.length
     if (first) {
-      conn.send(CHANNEL.VIDEO, MEDIA_MSG.DATA, Buffer.concat([timestamp, chunk]), last ? 0x0b : 0x09)
+      conn.send(CHANNEL.VIDEO, MEDIA_MSG.DATA, Buffer.concat([timestamp, chunk]), last ? 0x0b : 0x09, frame.length)
       first = false
     } else {
       conn.send(CHANNEL.VIDEO, null, chunk, last ? 0x0a : 0x08)

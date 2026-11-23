@@ -3,6 +3,7 @@
 const test = require('node:test')
 const assert = require('node:assert')
 const { encodeFrame, FrameParser, FLAG_FIRST_FRAGMENT } = require('../lib/framing')
+const { encodeTlsRecord } = require('../lib/connection')
 
 test('plaintext frame round-trip', () => {
   const frame = encodeFrame({ channel: 0, flags: 3, type: 2, payload: Buffer.from([0, 1, 0, 0]) })
@@ -47,4 +48,15 @@ test('parser handles byte-by-byte delivery and multiple frames per chunk', () =>
   for (const byte of Buffer.concat([a, b])) collected.push(...parser.push(Buffer.from([byte])))
   assert.strictEqual(collected.length, 2)
   assert.deepStrictEqual(collected.map(f => f.type), [1, 2])
+})
+
+test('encrypted first fragment carries the 4-byte total outside the length field', () => {
+  const record = Buffer.from('170303000401020304', 'hex')
+  const frame = encodeTlsRecord(2, 0x09, record, 54321)
+  assert.strictEqual(frame.readUInt16BE(2), record.length)
+  assert.strictEqual(frame.readUInt32BE(4), 54321)
+  const [parsed] = new FrameParser().push(frame)
+  assert.strictEqual(parsed.flags, 0x09)
+  assert.strictEqual(parsed.declaredTotal, 54321)
+  assert.deepStrictEqual(parsed.payload, record)
 })

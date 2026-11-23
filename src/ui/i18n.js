@@ -198,6 +198,8 @@
     ["下一首","下一首","Next"],
     ["播放或暂停","播放或暫停","Play or pause"],
     ["请先连接手机","請先連線手機","Connect a phone first"],
+    ["分屏座舱（宽屏）","分屏座艙（寬螢幕）","Split cockpit (wide screens)"],
+    ["开启后投屏画面靠左显示，右侧显示时钟与媒体卡片，需要足够宽的屏幕。","開啟後投影畫面靠左顯示，右側顯示時鐘與媒體卡片，需要足夠寬的螢幕。","Projects on the left with clock and media cards on the right; requires a wide screen."],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){
