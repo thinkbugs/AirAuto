@@ -227,6 +227,7 @@
     ["支持 PNG/JPG/WEBP/BMP，不超过25MB；图片仅保存在本机。","支援 PNG/JPG/WEBP/BMP，不超過25MB；圖片僅保存在本機。","PNG/JPG/WEBP/BMP up to 25MB; the image stays on this PC."],
     ["壁纸已导入","壁紙已匯入","Wallpaper imported"],
     ["已移除自定义壁纸","已移除自訂壁紙","Custom wallpaper removed"],
+    ["Android Auto 支持正在开发中，当前版本连接iPhone（CarPlay）。","Android Auto 支援正在開發中，目前版本連線iPhone（CarPlay）。","Android Auto support is in development. This version connects iPhone (CarPlay)."],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){
