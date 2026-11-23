@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: airauto-media:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'">
 <title>AirAuto</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="cockpit.css">
 </head>
 <body>
@@ -80,7 +80,10 @@
     <button data-wallpaper="dusk"><span class="wallpaper-preview w-dusk"></span><b data-i18n="暮色山岭">暮色山岭</b></button>
     <button data-wallpaper="night"><span class="wallpaper-preview w-night"></span><b data-i18n="深海夜空">深海夜空</b></button>
     <button data-wallpaper="plain"><span class="wallpaper-preview w-plain"></span><b data-i18n="纯净">纯净</b></button>
+    <button data-wallpaper="custom" id="wallpaper-custom"><span class="wallpaper-preview w-custom" id="wallpaper-custom-preview"><em data-i18n="导入本地图片">导入本地图片</em></span><b data-i18n="自定义">自定义</b></button>
   </div>
+  <div class="wallpaper-actions"><button id="wallpaper-import" class="primary" data-i18n="导入本地壁纸">导入本地壁纸</button><button id="wallpaper-remove" hidden data-i18n="移除自定义壁纸">移除自定义壁纸</button></div>
+  <p class="caption" data-i18n="支持 PNG/JPG/WEBP/BMP，不超过25MB；图片仅保存在本机。">支持 PNG/JPG/WEBP/BMP，不超过25MB；图片仅保存在本机。</p>
 </section>
 <section id="connect" class="page connect-page" hidden>
   <div class="wizard">

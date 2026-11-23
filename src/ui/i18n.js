@@ -235,6 +235,13 @@
     ["暮色山岭","暮色山嶺","Dusk ridge"],
     ["深海夜空","深海夜空","Deep night"],
     ["纯净","純淨","Clean"],
+    ["自定义","自訂","Custom"],
+    ["导入本地图片","匯入本機圖片","Import local image"],
+    ["导入本地壁纸","匯入本機壁紙","Import local wallpaper"],
+    ["移除自定义壁纸","移除自訂壁紙","Remove custom wallpaper"],
+    ["支持 PNG/JPG/WEBP/BMP，不超过25MB；图片仅保存在本机。","支援 PNG/JPG/WEBP/BMP，不超過25MB；圖片僅保存在本機。","PNG/JPG/WEBP/BMP up to 25MB; the image stays on this PC."],
+    ["壁纸已导入","壁紙已匯入","Wallpaper imported"],
+    ["已移除自定义壁纸","已移除自訂壁紙","Custom wallpaper removed"],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){

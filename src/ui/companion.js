@@ -25,6 +25,6 @@
     if(message.type==='now-playing')nowPlaying(message.state,message.artChanged);
     if(message.type==='position'){const seek=$('seek');if(seek)seek.value=Math.min(duration||1,message.positionMs||0);put('time',format(message.positionMs)+' / '+format(duration))}
   });
-  airauto.call('state').then(result=>{if(!result||!result.ok)return;document.body.classList.toggle('dark',!!result.dark);put('state',result.running?'接收中':'未连接');setConnected(!!result.running)}).catch(()=>{});
+  airauto.call('state').then(result=>{if(!result||!result.ok)return;document.body.classList.toggle('dark',!!result.dark);put('state',result.running?'接收中':'未连接');setConnected(!!result.running);const s=result.settings||{};if(s.wallpaper==='custom'&&s.wallpaperFile){document.body.style.backgroundImage='linear-gradient(180deg,rgba(6,10,16,.32),rgba(6,10,16,.76)), url("airauto-media://wallpapers/'+encodeURIComponent(s.wallpaperFile)+'")';document.body.style.backgroundSize='cover';document.body.style.backgroundPosition='center'}}).catch(()=>{});
   window.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();airauto.input({command:'video-minimize'})}});
 })();
