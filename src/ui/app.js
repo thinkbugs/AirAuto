@@ -93,7 +93,7 @@ async function audioDevices(request=false){
   }catch{toast('Windows未允许麦克风访问，请检查系统隐私设置')}
 }
 async function save(key,value){const request=call('save',{[key]:value});pendingSaves.add(request);let r;try{r=await request}finally{pendingSaves.delete(request)}if(!r.ok)return r;config[key]=value;if(key==='theme')theme(value==='dark'||value==='system'&&(await airauto.call('state')).dark);if(key==='language')applyLanguage();return r}
-function showPage(page){document.querySelectorAll('.nav').forEach(button=>button.classList.toggle('active',button.dataset.page===page));const dockPage=['connection','display','about','donation','settings'].includes(page)?'settings':page;document.querySelectorAll('.dock-item').forEach(button=>button.classList.toggle('active',button.dataset.page===dockPage));document.body.classList.toggle('cockpit-home',page==='home');document.querySelectorAll('.page').forEach(node=>node.hidden=node.id!==page);$('receiver-footer').hidden=page==='about'||page==='donation'||page==='home'||page==='connect'||page==='settings'||page==='trip'||page==='appearance';if($('app-dock'))$('app-dock').hidden=page==='connect'||page==='donation';const scroller=document.querySelector('.settings-content');if(scroller)scroller.scrollTop=0;if(page==='connect'&&window.__wizardEnter)window.__wizardEnter()}
+function showPage(page){document.querySelectorAll('.nav').forEach(button=>button.classList.toggle('active',button.dataset.page===page));const dockPage=['connection','display','about','settings'].includes(page)?'settings':page;document.querySelectorAll('.dock-item').forEach(button=>button.classList.toggle('active',button.dataset.page===dockPage));document.body.classList.toggle('cockpit-home',page==='home');document.querySelectorAll('.page').forEach(node=>node.hidden=node.id!==page);$('receiver-footer').hidden=page==='about'||page==='home'||page==='connect'||page==='settings'||page==='trip'||page==='appearance';if($('app-dock'))$('app-dock').hidden=page==='connect';const scroller=document.querySelector('.settings-content');if(scroller)scroller.scrollTop=0;if(page==='connect'&&window.__wizardEnter)window.__wizardEnter()}
 document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>showPage(button.dataset.page)));showPage('home');
 function renderAppearanceControls(){if(!config)return;const themeValue=config.theme||'system';document.querySelectorAll('#theme-modes button').forEach(button=>button.classList.toggle('active',button.dataset.theme===themeValue));const accent=config.accent||'sky';document.querySelectorAll('#accent-swatches button').forEach(button=>button.classList.toggle('active',button.dataset.accent===accent));const wallpaper=config.wallpaper||'aurora';document.querySelectorAll('#wallpaper-grid button').forEach(button=>button.classList.toggle('active',button.dataset.wallpaper===wallpaper));const customPreview=$('wallpaper-custom-preview');if(customPreview){if(config.wallpaperFile){customPreview.style.backgroundImage='url("'+wallpaperUrl(config.wallpaperFile)+'")';customPreview.style.backgroundSize='cover';customPreview.style.backgroundPosition='center'}else{customPreview.style.backgroundImage=''}}const remove=$('wallpaper-remove');if(remove)remove.hidden=!config.wallpaperFile;const select=$('theme');if(select)select.value=themeValue}
 function wallpaperUrl(file){return 'airauto-media://wallpapers/'+encodeURIComponent(file)}
@@ -175,13 +175,7 @@ function wireWizard(){
   $n('wizard-again').onclick=()=>startFromWizard();
   $n('wizard-show').onclick=()=>call('show-video');
 }
-const donationMethods={wechat:'微信支付',alipay:'支付宝',alipayhk:'AlipayHK'};
-document.querySelectorAll('.donation-code').forEach(button=>button.addEventListener('click',()=>{
-  const method=button.dataset.method;if(!Object.hasOwn(donationMethods,method))return;
-  text('donation-title',donationMethods[method]);const img=$('donation-image');img.src='donation/'+method+'.jpg';img.dataset.i18nAlt=donationMethods[method]+'收款码';img.alt=t(img.dataset.i18nAlt);$('donation-dialog').showModal();
-}));
-$('donation-close').onclick=()=>$('donation-dialog').close();
-$('donation-paypal').onclick=()=>call('open-donation-paypal');
+
 function format(ms){const seconds=Math.max(0,Math.floor((ms||0)/1000));return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0')}
 function metadata(s,artChanged){
   playing=s;if(artChanged){if(artUrl)URL.revokeObjectURL(artUrl);artUrl=s.artwork?.length?URL.createObjectURL(new Blob([new Uint8Array(s.artwork)],{type:s.artwork[0]===137?'image/png':'image/jpeg'})):'';$('artwork').hidden=!artUrl;if(artUrl)$('artwork').src=artUrl;else $('artwork').removeAttribute('src');
