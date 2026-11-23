@@ -11,11 +11,15 @@ const tls = require('node:tls')
 const { execFileSync } = require('node:child_process')
 const { AaConnection } = require('./lib/connection')
 const { CONTROL_MSG, MEDIA_MSG, CHANNEL } = require('./lib/framing')
+const { VideoPipeline } = require('./lib/video')
+const { createPreview } = require('./lib/preview')
 const proto = require('./lib/aa-proto')
 
 const ARGS = process.argv.slice(2)
 const CONNECT_INDEX = ARGS.indexOf('--connect')
 const CONNECT_HOST = CONNECT_INDEX >= 0 ? ARGS[CONNECT_INDEX + 1] : null
+const PREVIEW_INDEX = ARGS.indexOf('--preview')
+const PREVIEW_PORT = PREVIEW_INDEX >= 0 ? (Number(ARGS[PREVIEW_INDEX + 1]) || 5600) : 0
 const PORT = Number(process.env.AA_PORT || (CONNECT_INDEX >= 0 ? ARGS[CONNECT_INDEX + 2] : ARGS[0]) || 5277)
 const CERT_DIR = path.join(__dirname, 'certs')
 const KEY_FILE = path.join(CERT_DIR, 'key.pem')
@@ -24,6 +28,10 @@ const CERT_FILE = path.join(CERT_DIR, 'cert.pem')
 function log(event, data = {}) {
   process.stdout.write(`${JSON.stringify({ ts: Date.now(), event, ...data })}\n`)
 }
+
+let preview = null
+const broadcastConfig = configured => preview?.broadcastConfig(configured)
+const broadcastFrame = frame => preview?.broadcastFrame(frame)
 
 function ensureCertificate() {
   if (fs.existsSync(KEY_FILE) && fs.existsSync(CERT_FILE)) return
@@ -54,6 +62,23 @@ function channelName(id) {
 
 function handleMessage(conn, sessions, message) {
   const { channel, type, payload, flags } = message
+  // Middle/last fragments have no message type; only the video pipeline consumes them.
+  if (type === null) {
+    if (channel === CHANNEL.VIDEO) {
+      conn.stats.videoFrames++
+      const frame = conn.video.push(payload, flags)
+      if (frame) {
+        log('video-access-unit', { n: conn.video.stats.accessUnits, keyframe: frame.keyframe, bytes: frame.bytes, nals: frame.nals })
+        broadcastFrame(frame)
+      }
+      if (sessions.videoSession) {
+        conn.send(channel, MEDIA_MSG.ACK, proto.encode('Ack', { session_id: sessions.videoSession, ack: 1 }))
+      }
+      return
+    }
+    log('fragment', { channel: channelName(channel), bytes: payload.length, flags: `0x${flags.toString(16)}` })
+    return
+  }
   if (channel === CHANNEL.CONTROL) {
     switch (type) {
       case CONTROL_MSG.SERVICE_DISCOVERY_REQUEST: {
@@ -111,13 +136,23 @@ function handleMessage(conn, sessions, message) {
         return
       }
       case MEDIA_MSG.CODEC_CONFIG: {
-        log('video-codec-config', { bytes: payload.length, head: payload.subarray(0, 24).toString('hex') })
+        const configured = conn.video.configure(payload)
+        log('video-codec-config', configured
+          ? { bytes: payload.length, codec: configured.codec, width: configured.info.width, height: configured.info.height, descriptionBytes: configured.description.length }
+          : { bytes: payload.length, head: payload.subarray(0, 24).toString('hex'), note: 'no SPS/PPS found' })
+        if (configured) broadcastConfig(configured)
         return
       }
       case MEDIA_MSG.DATA: {
         conn.stats.videoFrames++
-        if (conn.stats.videoFrames <= 5 || conn.stats.videoFrames % 300 === 0) {
-          log('video-frame', { n: conn.stats.videoFrames, bytes: payload.length, flags: `0x${flags.toString(16)}`, declaredTotal: message.declaredTotal })
+        const frame = conn.video.push(payload, flags)
+        if (frame) {
+          if (conn.stats.videoFrames <= 5 || conn.stats.videoFrames % 120 === 0) {
+            log('video-access-unit', { n: conn.video.stats.accessUnits, keyframe: frame.keyframe, bytes: frame.bytes, nals: frame.nals })
+          }
+          broadcastFrame(frame)
+        } else if (conn.stats.videoFrames <= 5) {
+          log('video-fragment', { bytes: payload.length, flags: `0x${flags.toString(16)}`, declaredTotal: message.declaredTotal })
         }
         if (sessions.videoSession) {
           conn.send(channel, MEDIA_MSG.ACK, proto.encode('Ack', { session_id: sessions.videoSession, ack: 1 }))
@@ -215,6 +250,7 @@ function main() {
     const sessions = {}
     log('tcp-connected', { remote: `${socket.remoteAddress}:${socket.remotePort}` })
     const conn = new AaConnection(socket, { isServer: true, secureContext, log })
+    conn.video = new VideoPipeline()
     conn.on('version-request', () => log('unexpected-version-request', {}))
     conn.on('version', () => log('version-confirmed', {}))
     conn.on('secure', () => conn.sendAuthComplete())
@@ -240,6 +276,11 @@ function main() {
     return conn
   }
 
+  if (PREVIEW_PORT > 0) {
+    preview = createPreview({ port: PREVIEW_PORT, log })
+    preview.listen()
+  }
+
   let server
   if (CONNECT_HOST) {
     // Developer-mode path: the phone runs its own head unit server on 5277 and we dial it.
@@ -258,7 +299,10 @@ function main() {
       log('listening', { port: PORT })
     })
   }
-  const shutdown = () => server.close(() => process.exit(0))
+  const shutdown = () => {
+    preview?.close()
+    server.close(() => process.exit(0))
+  }
   process.on('SIGINT', shutdown)
   process.on('SIGTERM', shutdown)
 }

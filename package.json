@@ -22,7 +22,8 @@
     "electron-builder": "^26.0.12",
     "marked": "^17.0.0",
     "protobufjs": "^8.8.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "ws": "^8.23.0"
   },
   "dependencies": {
     "@noble/curves": "1.9.7",

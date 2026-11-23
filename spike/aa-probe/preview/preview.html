@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>WinPlay · Android Auto 预览</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; height: 100%; background: #0c111b; color: #dfe7f3; font: 13px/1.5 "Segoe UI", system-ui, sans-serif; }
+  #wrap { height: 100%; display: flex; flex-direction: column; }
+  #stage { flex: 1; display: grid; place-items: center; padding: 16px; min-height: 0; }
+  canvas { max-width: 100%; max-height: 100%; background: #000; border-radius: 8px; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+  #overlay { position: absolute; display: grid; place-items: center; color: #7d8aa3; }
+  #hud { display: flex; gap: 16px; padding: 8px 14px; border-top: 1px solid #1c2534; color: #8ea0bb; font-variant-numeric: tabular-nums; }
+  #hud b { color: #cdd9ea; font-weight: 600; }
+  #dot { width: 8px; height: 8px; border-radius: 50%; background: #f0a33a; margin-top: 5px; }
+  #dot.live { background: #38c172; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <canvas id="screen" width="1280" height="720"></canvas>
+    <div id="overlay">等待 Android Auto 视频…<br>启动 <code>node server.js --preview 5600</code>，让手机连接后再打开本页</div>
+  </div>
+  <div id="hud">
+    <span id="dot"></span>
+    <span><b id="state">未连接</b></span>
+    <span>帧 <b id="frames">0</b></span>
+    <span>FPS <b id="fps">0</b></span>
+    <span>解码队列 <b id="queue">0</b></span>
+    <span><b id="codec">-</b></span>
+  </div>
+</div>
+<script>
+const canvas = document.getElementById('screen')
+const ctx = canvas.getContext('2d')
+const overlay = document.getElementById('overlay')
+const $ = id => document.getElementById(id)
+let decoder = null
+let configured = false
+let needKey = false
+let annexbMode = false
+let lastConfig = null
+let configNals = null
+let frames = 0
+let windowFrames = 0
+let lastKey = false
+let started = 0
+
+function setState(text, live) {
+  $('state').textContent = text
+  $('dot').className = live ? 'live' : ''
+}
+
+window.__previewErrors = []
+window.__lastConfig = null
+
+function fail(where, error) {
+  const text = `${where}: ${error && (error.message || error)}`
+  window.__previewErrors.push(text)
+  console.error(text)
+  setState('解码错误', false)
+  overlay.style.display = ''
+  overlay.textContent = text
+}
+
+function onOutput(frame) {
+  if (frame.displayWidth && frame.displayHeight) {
+    if (canvas.width !== frame.displayWidth || canvas.height !== frame.displayHeight) {
+      canvas.width = frame.displayWidth
+      canvas.height = frame.displayHeight
+    }
+    ctx.drawImage(frame, 0, 0)
+    overlay.style.display = 'none'
+  }
+  frame.close()
+  frames++
+  window.__decoded = frames
+  windowFrames++
+  if (!started) started = performance.now()
+  $('frames').textContent = frames
+  $('queue').textContent = decoder.decodeQueueSize
+}
+
+function onDecodeError(error) {
+  const chunk = `${window.__lastChunk ? ` chunk=${JSON.stringify(window.__lastChunk)}` : ''} decoded=${window.__decoded || 0}`
+  // Some Chromium builds reject the avcC/AVCC combination but accept Annex-B with no
+  // description; retry once before reporting failure.
+  if (!annexbMode && lastConfig) {
+    window.__previewErrors.push('fallback: annexb' + chunk)
+    retryAnnexB()
+    return
+  }
+  fail('解码', error.message + chunk)
+}
+
+function createDecoder(options) {
+  try { decoder?.close() } catch {}
+  decoder = new VideoDecoder({ output: onOutput, error: onDecodeError })
+  try {
+    decoder.configure({ hardwareAcceleration: 'prefer-software', ...options })
+  } catch (error) {
+    fail('配置', error)
+    return false
+  }
+  configured = true
+  needKey = true
+  return true
+}
+
+function retryAnnexB() {
+  annexbMode = true
+  if (createDecoder({ codec: lastConfig.codec, optimizeForLatency: true })) {
+    setState('Annex-B 模式，等待关键帧', true)
+  }
+}
+
+function configure(message) {
+  window.__lastConfig = message
+  if (!('VideoDecoder' in window)) {
+    overlay.style.display = ''
+    overlay.textContent = '当前浏览器不支持 WebCodecs（需要较新的 Edge/Chrome）'
+    return
+  }
+  lastConfig = message
+  annexbMode = false
+  const description = Uint8Array.from(atob(message.description), ch => ch.charCodeAt(0))
+  configNals = parseAvcC(description)
+  if (!createDecoder({ codec: message.codec, description, optimizeForLatency: true })) return
+  window.__previewConfig = { codec: message.codec, description }
+  $('codec').textContent = message.codec + (message.width ? ` · ${message.width}×${message.height}` : '')
+  setState('已配置，等待画面', true)
+  overlay.style.display = 'none'
+}
+
+// Extract SPS/PPS from an AVCDecoderConfigurationRecord so a keyframe can carry them
+// in-band, which is the most widely accepted H.264 WebCodecs shape.
+function parseAvcC(bytes) {
+  try {
+    let offset = 5
+    const spsCount = bytes[offset++] & 0x1f
+    const sps = []
+    for (let i = 0; i < spsCount; i++) {
+      const length = bytes[offset] << 8 | bytes[offset + 1]
+      offset += 2
+      sps.push(bytes.subarray(offset, offset + length))
+      offset += length
+    }
+    const ppsCount = bytes[offset++]
+    const pps = []
+    for (let i = 0; i < ppsCount; i++) {
+      const length = bytes[offset] << 8 | bytes[offset + 1]
+      offset += 2
+      pps.push(bytes.subarray(offset, offset + length))
+      offset += length
+    }
+    return [...sps, ...pps]
+  } catch {
+    return null
+  }
+}
+
+function withConfigNals(data, key) {
+  if (!key || !configNals || !configNals.length) return data
+  const parts = configNals.map(nal => {
+    const out = new Uint8Array(4 + nal.length)
+    out[3] = 1
+    out.set(nal, 4)
+    return out
+  })
+  parts.push(data)
+  let total = 0
+  for (const part of parts) total += part.length
+  const out = new Uint8Array(total)
+  let at = 0
+  for (const part of parts) {
+    out.set(part, at)
+    at += part.length
+  }
+  return out
+}
+
+function avccToAnnexB(data) {
+  const parts = []
+  let offset = 0
+  while (offset + 4 <= data.length) {
+    const length = (data[offset] << 24 | data[offset + 1] << 16 | data[offset + 2] << 8 | data[offset + 3]) >>> 0
+    offset += 4
+    if (length <= 0 || offset + length > data.length) break
+    parts.push(new Uint8Array([0, 0, 0, 1]), data.subarray(offset, offset + length))
+    offset += length
+  }
+  let total = 0
+  for (const part of parts) total += part.length
+  const out = new Uint8Array(total)
+  let at = 0
+  for (const part of parts) {
+    out.set(part, at)
+    at += part.length
+  }
+  return out
+}
+
+function onFrame(buffer) {
+  if (!configured || !decoder || decoder.state !== 'configured') return
+  const view = new DataView(buffer)
+  const key = view.getUint8(0) === 1
+  const timestamp = Number(view.getBigUint64(1))
+  let data = new Uint8Array(buffer, 9)
+  // A decoder configured from an avcC description still needs a keyframe before deltas.
+  if (needKey && !key) return
+  if (key) {
+    needKey = false
+    // Decode the first keyframe on its own before the stream starts pouring in; the
+    // software H.264 path is sensitive to a delta arriving before the IDR has completed.
+    window.__firstFrame = true
+  }
+  lastKey = key
+  if (key) setState('接收中（关键帧）', true)
+  if (annexbMode) data = withConfigNals(avccToAnnexB(data), key)
+  window.__lastChunk = { key, bytes: data.length, ts: timestamp, hex: Array.from(data.slice(0, 8), b => b.toString(16).padStart(2, '0')).join(' ') }
+  try {
+    decoder.decode(new EncodedVideoChunk({ type: key ? 'key' : 'delta', timestamp, data }))
+    if (window.__firstFrame) {
+      window.__firstFrame = false
+      decoder.flush().catch(error => fail('首帧', error))
+    }
+  } catch (error) {
+    setState('喂帧失败', false)
+    return
+  }
+  $('queue').textContent = decoder.decodeQueueSize
+  if (decoder.decodeQueueSize > 24) decoder.flush().catch(() => {})
+}
+
+setInterval(() => {
+  $('fps').textContent = String(windowFrames * 2)
+  windowFrames = 0
+  lastKey = false
+}, 500)
+
+function connect() {
+  setState('连接探针…', false)
+  const socket = new WebSocket(`ws://${location.host}/ws`)
+  socket.binaryType = 'arraybuffer'
+  socket.onopen = () => setState('已连接，等待视频', true)
+  socket.onmessage = event => {
+    if (typeof event.data === 'string') {
+      const message = JSON.parse(event.data)
+      if (message.type === 'config') configure(message)
+      return
+    }
+    onFrame(event.data)
+  }
+  socket.onclose = () => {
+    setState('探针已断开，重连中', false)
+    configured = false
+    setTimeout(connect, 1000)
+  }
+  socket.onerror = () => socket.close()
+}
+connect()
+</script>
+</body>
+</html>

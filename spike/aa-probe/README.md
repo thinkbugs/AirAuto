@@ -22,6 +22,11 @@ Not wired into WinPlay yet. Nothing outside `spike/` depends on it.
   - **listen mode** (wireless shape): PC listens on 5277, peer dials in
   - **connect mode** (developer-mode shape): PC dials the phone's head unit server; TLS
     roles do not follow who dials, the head unit still presents the certificate
+- Video pipeline: SPS/PPS → AVCDecoderConfigurationRecord, Annex-B → AVCC, AA fragment
+  reassembly (0x09/0x08/0x0a), keyframe detection. A captured keyframe decodes in Electron's
+  WebCodecs and renders correctly (still-frame check).
+- Browser preview page (`--preview`) that decodes the video channel with WebCodecs, plus a
+  mock `--sample` mode that replays a local H.264 Annex-B file.
 
 ## Run
 
@@ -36,8 +41,19 @@ node mock-phone.js
 node mock-phone.js --listen 15310
 node server.js --connect 127.0.0.1 15310
 
+# preview page + sample stream (open http://127.0.0.1:5600/)
+node server.js --preview 5600
+node mock-phone.js --sample sample/testsrc-small.h264
+
 # protocol tests
 node --test
+```
+
+`sample/` is generated, not committed:
+
+```sh
+ffmpeg -f lavfi -i testsrc2=size=640x360:rate=30 -t 4 -c:v libx264 -profile:v baseline \
+  -level 3.0 -g 30 -bf 0 -b:v 1200k -pix_fmt yuv420p -f h264 sample/testsrc-small.h264
 ```
 
 Environment: `AA_PORT`, `AA_DEBUG=1` (frame/record tracing), `AA_MOCK_TIMEOUT` (ms).
@@ -56,9 +72,15 @@ The first real-device run is unverified. Expect to adjust cipher suites, client
 certificate policy (`requestCert`) and version payload if the phone rejects the handshake.
 TLS is pinned to 1.2 for this spike to avoid TLS 1.3 post-handshake tickets.
 
-## Known limitations (deliberately out of scope)
+## Known limitations
 
-- Video is logged, not decoded (no fragment assembly, no WebCodecs hand-off)
+- **Live video streaming stalls after ~30 messages.** The single-frame decode path is
+  verified (a captured keyframe renders), but feeding a continuous stream exposes a TLS
+  write/backpressure problem in this spike's transport: both sides stop flushing records
+  after about a second. A single keyframe decodes correctly, so the codec/config path is
+  sound; the transport needs a proper record queue before live playback is reliable.
+- Large keyframes (>12 KB) are fragmented at the AA layer; the reassembly path is unit
+  tested but the live fragmented stream shares the stall above.
 - Audio packets are counted only; no playout
 - Input (touch/keys) not sent; sensor channel only answers the start request
 - No Bluetooth RFCOMM (WPP) credential handoff and no Wi-Fi AP provisioning, so wireless

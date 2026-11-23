@@ -6,6 +6,7 @@ const tls = require('node:tls')
 const {
   FLAG_ENCRYPTED,
   FLAG_HANDSHAKE,
+  FLAG_BIT_FIRST,
   CONTROL_MSG,
   defaultFlags,
   encodeFrame,
@@ -14,7 +15,6 @@ const {
 
 const VERSION_REQUEST = Buffer.from([0, 3, 0, 6, 0, 1, 0, 1, 0, 2])
 const AUTH_COMPLETE_OK = Buffer.from([0, 3, 0, 4, 0, 4, 8, 0])
-const DECRYPT_TIMEOUT_MS = 500
 
 // Speaks AAP over a TCP socket: plaintext version exchange first, then TLS where every
 // TLS record travels inside an AAP frame (flags 3/type 3 while handshaking, then the
@@ -40,10 +40,7 @@ class AaConnection extends EventEmitter {
     this.outHeader = { channel: 0, flags: 0x0b }
     this.outQueue = []
     this.cipherTail = Buffer.alloc(0)
-    this.inbound = []
-    this.inboundPumping = false
-    this.plaintextQueue = []
-    this.pendingResolve = null
+    this.currentRecord = null
     this.sendChain = Promise.resolve()
     this.stats = { framesIn: 0, framesOut: 0, records: 0, messages: 0, videoFrames: 0, audioPackets: 0 }
 
@@ -143,7 +140,7 @@ class AaConnection extends EventEmitter {
     // A persistent data listener keeps the TLS socket flowing. In paused/read() mode Node
     // only flushes pending writes while its read side is being serviced, which deadlocked
     // back-to-back sends until the peer happened to send another record.
-    this.tlsSocket.on('data', chunk => this.#onTlsData(chunk))
+    this.tlsSocket.on('data', chunk => this.#onPlaintext(chunk))
     // A hand-built TLSSocket is in manualStart mode. Only the client may start the
     // handshake explicitly; a server-side TLSWrap rejects Start() and instead begins when
     // the ClientHello record arrives.
@@ -155,72 +152,33 @@ class AaConnection extends EventEmitter {
     })
   }
 
-  // Records are fed one at a time so each decrypted payload can be attributed to the
-  // channel of the frame that carried it. Plaintext is pulled with read() rather than
-  // collected from 'data' events: an event pump loses track of records that decrypt to
-  // nothing (TLS session tickets), which then stalls or misattributes everything after it.
-  // Encrypted frames are decrypted strictly in arrival order. The raw socket must stay
-  // resumed: pausing it also stalls TLS's write path, which deadlocks the peer's replies.
-  async #pumpInbound() {
-    if (this.inboundPumping) return
-    this.inboundPumping = true
-    try {
-      while (this.inbound.length && !this.closed) {
-        const frame = this.inbound.shift()
-        this.stats.records++
-        let plaintext
-        try {
-          plaintext = await this.#feedRecord(frame.payload)
-        } catch (error) {
-          this.log('decrypt-error', { channel: frame.channel, message: error.message })
-          this.emit('transport-error', error)
-          continue
-        }
-        if (!plaintext) {
-          this.log('decrypt-empty', { channel: frame.channel })
-          continue
-        }
-        if (plaintext.length < 2) {
-          this.log('empty-plaintext', { channel: frame.channel })
-          continue
-        }
-        this.stats.messages++
-        this.emit('message', {
-          channel: frame.channel,
-          type: plaintext.readUInt16BE(0),
-          payload: plaintext.subarray(2),
-          flags: frame.flags,
-          declaredTotal: frame.declaredTotal,
-        })
+  // Decrypted plaintext is attributed to the most recent encrypted frame's channel/flags.
+  // The sender guarantees one record per AA message, so a chunk is one message (or one
+  // fragment of one); middle/last fragments carry raw continuation bytes with no type.
+  #onPlaintext(plaintext) {
+    const record = this.currentRecord
+    if (!record || !plaintext) return
+    this.stats.messages++
+    if ((record.flags & FLAG_BIT_FIRST) !== 0) {
+      if (plaintext.length < 2) {
+        this.log('empty-plaintext', { channel: record.channel })
+        return
       }
-    } finally {
-      this.inboundPumping = false
-    }
-  }
-
-  #onTlsData(chunk) {
-    if (this.pendingResolve) {
-      const resolve = this.pendingResolve
-      this.pendingResolve = null
-      resolve(chunk)
+      this.emit('message', {
+        channel: record.channel,
+        type: plaintext.readUInt16BE(0),
+        payload: plaintext.subarray(2),
+        flags: record.flags,
+        declaredTotal: record.declaredTotal,
+      })
       return
     }
-    this.plaintextQueue.push(chunk)
-  }
-
-  #feedRecord(record) {
-    if (this.plaintextQueue.length) return Promise.resolve(this.plaintextQueue.shift())
-    return new Promise(resolve => {
-      const timer = setTimeout(() => {
-        this.pendingResolve = null
-        resolve(null)
-      }, DECRYPT_TIMEOUT_MS)
-      this.pendingResolve = chunk => {
-        clearTimeout(timer)
-        this.pendingResolve = null
-        resolve(chunk)
-      }
-      this.wire.push(record)
+    this.emit('message', {
+      channel: record.channel,
+      type: null,
+      payload: plaintext,
+      flags: record.flags,
+      declaredTotal: record.declaredTotal,
     })
   }
 
@@ -253,8 +211,9 @@ class AaConnection extends EventEmitter {
       return
     }
     if (frame.flags & FLAG_ENCRYPTED) {
-      this.inbound.push(frame)
-      this.#pumpInbound()
+      this.stats.records++
+      this.currentRecord = { channel: frame.channel, flags: frame.flags, declaredTotal: frame.declaredTotal }
+      this.wire.push(frame.payload)
       return
     }
     this.log('unexpected-frame', { channel: frame.channel, flags: frame.flags, bytes: frame.payload.length })
@@ -265,13 +224,19 @@ class AaConnection extends EventEmitter {
     this.socket.write(AUTH_COMPLETE_OK)
   }
 
-  // Encrypted application message; only valid after 'secure'.
-  send(channel, type, payload = Buffer.alloc(0)) {
+  // Encrypted application message (or one fragment of one); only valid after 'secure'.
+  // `type` is null for middle/last fragments, which carry raw continuation bytes.
+  send(channel, type, payload = Buffer.alloc(0), flags) {
     if (!this.secure) throw new Error('send() before TLS is secure')
-    const inner = Buffer.alloc(2 + payload.length)
-    inner.writeUInt16BE(type >>> 0, 0)
-    payload.copy(inner, 2)
-    const header = { channel, flags: defaultFlags(channel, type) }
+    let inner
+    if (type === null) {
+      inner = payload
+    } else {
+      inner = Buffer.alloc(2 + payload.length)
+      inner.writeUInt16BE(type >>> 0, 0)
+      payload.copy(inner, 2)
+    }
+    const header = { channel, flags: flags ?? defaultFlags(channel, type) }
     this.outHeader = header
     // One TLS record per AA message is a protocol invariant (each record is decrypted as
     // one message). Node coalesces writes issued in the same turn into a single record, so
@@ -283,7 +248,14 @@ class AaConnection extends EventEmitter {
       }
       this.outQueue.push(header)
       if (process.env.AA_DEBUG) this.log('tls-write', { channel, type, inner: inner.length })
-      this.tlsSocket.write(inner, () => setImmediate(resolve))
+      try {
+        this.tlsSocket.write(inner)
+      } catch (error) {
+        this.log('tls-write-error', { message: error.message })
+      }
+      // Do not wait on the write callback: one blocked callback would freeze every later
+      // send. A macrotask between writes also keeps Node from coalescing records.
+      setTimeout(resolve, 1)
     }))
   }
 

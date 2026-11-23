@@ -45,7 +45,7 @@ test('mock phone completes version, TLS, discovery, media setup and teardown', a
   assert.strictEqual(code, 0, `mock phone exited ${code}:\n${phone.read()}`)
 
   const serverLog = server.read()
-  for (const event of ['service-discovery-request', 'channel-open-request', 'video-setup', 'video-codec-config', 'video-frame', 'byebye-request']) {
+  for (const event of ['service-discovery-request', 'channel-open-request', 'video-setup', 'video-codec-config', 'video-access-unit', 'byebye-request']) {
     assert.ok(serverLog.includes(`"event":"${event}"`), `missing ${event}:\n${serverLog}`)
   }
   assert.ok(serverLog.includes('"event":"tls-secure"'), 'TLS never became secure')
