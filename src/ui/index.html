@@ -7,23 +7,11 @@
 <title>AirAuto</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-<aside>
-  <button id="collapse-sidebar" data-i18n-title="折叠侧栏" data-i18n-aria="折叠侧栏" aria-label="折叠侧栏" title="折叠侧栏">☰</button>
-  <div id="sidebar-resizer" role="separator" data-i18n-aria="调整侧栏宽度" aria-label="调整侧栏宽度"></div>
-  <div class="brand"><img class="brand-icon" src="airauto.png" alt="AirAuto"><span>AirAuto</span></div>
-  <nav data-i18n-aria="设置导航" aria-label="设置导航">
-    <button class="nav active" data-page="home"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg><span data-i18n="首页">首页</span></button>
-    <button class="nav" data-page="connection"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4M3 8a8 8 0 0 0 0 8M21 8a8 8 0 0 1 0 8"/></svg><span data-i18n="连接">连接</span></button>
-    <button class="nav" data-page="display"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span data-i18n="显示">显示</span></button>
-    <button class="nav" data-page="audio"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9zM16 8a6 6 0 0 1 0 8M19 5a10 10 0 0 1 0 14"/></svg><span data-i18n="音频">音频</span></button>
-    <button class="nav" data-page="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg><span data-i18n="关于">关于</span></button>
-    <button class="nav" data-page="donation"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span data-i18n="捐赠">捐赠</span></button>
-  </nav>
-  <div class="side-footer"><span class="dot" id="side-dot"></span><span id="side-status" data-i18n="未连接">未连接</span><small><span data-i18n="版本">版本</span><span id="version">1.2.5</span></small></div>
-</aside>
 <main>
 <header class="topbar">
+  <div class="topbar-brand"><img src="airauto.png" alt="AirAuto"><span>AirAuto</span></div>
   <div class="topbar-clock"><strong data-clock>--:--</strong><span id="top-date"></span></div>
+  <span id="side-dot" class="dot" hidden></span><span id="side-status" data-i18n="未连接" hidden>未连接</span>
   <span class="chip"><span class="dot" id="top-dot"></span><span id="top-status" data-i18n="未连接">未连接</span></span>
   <span class="topbar-version">AirAuto <span id="top-version"></span></span>
 </header>
@@ -41,13 +29,13 @@
       <header><svg viewBox="0 0 24 24" class="card-icon"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4"/></svg><h2 data-i18n="设备连接">设备连接</h2></header>
       <p class="card-main" id="home-device" data-i18n="尚未连接手机">尚未连接手机</p>
       <p class="card-sub" data-i18n="支持iPhone CarPlay与Android Auto">支持iPhone CarPlay与Android Auto</p>
-      <button class="primary card-cta" data-page="connection" data-i18n="连接手机">连接手机</button>
+      <button class="primary card-cta" data-page="connect" data-i18n="连接手机">连接手机</button>
     </article>
     <article class="home-card">
       <header><svg viewBox="0 0 24 24" class="card-icon"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><h2 data-i18n="进入投屏">进入投屏</h2></header>
       <p class="card-main" id="home-projection" data-i18n="配置并启动">配置并启动</p>
       <p class="card-sub" data-i18n="独立全屏画面，极简状态栏">独立全屏画面，极简状态栏</p>
-      <button class="card-cta" data-page="connection" data-i18n="配置并启动">配置并启动</button>
+      <button class="card-cta" data-page="connect" data-i18n="配置并启动">配置并启动</button>
     </article>
     <article class="home-card media-card">
       <header><svg viewBox="0 0 24 24" class="card-icon"><path d="M3 9v6h4l5 4V5L7 9z"/><path d="M16 8a6 6 0 0 1 0 8"/></svg><h2 data-i18n="正在播放">正在播放</h2></header>
@@ -67,13 +55,60 @@
       <button class="card-cta" data-page="about" data-i18n="关于与更新">关于与更新</button>
     </article>
   </div>
-  <nav class="home-dock" data-i18n-aria="座舱导航" aria-label="座舱导航">
-    <button class="dock-item active" data-page="home" data-i18n="首页">首页</button>
-    <button class="dock-item" data-page="connection" data-i18n="连接">连接</button>
-    <button class="dock-item" data-page="display" data-i18n="显示">显示</button>
-    <button class="dock-item" data-page="audio" data-i18n="音频">音频</button>
-    <button class="dock-item" data-page="about" data-i18n="设置">设置</button>
-  </nav>
+
+</section>
+<section id="connect" class="page connect-page" hidden>
+  <div class="wizard">
+    <header class="wizard-head">
+      <p class="hero-eyebrow" data-i18n="连接向导">连接向导</p>
+      <h1 data-i18n="三步连接手机">三步连接手机</h1>
+      <ol class="wizard-steps">
+        <li class="active"><span>1</span><b data-i18n="选择手机">选择手机</b></li>
+        <li><span>2</span><b data-i18n="网络方式">网络方式</b></li>
+        <li><span>3</span><b data-i18n="确认并启动">确认并启动</b></li>
+      </ol>
+    </header>
+    <div class="wizard-panel" data-wizard-step="1">
+      <div class="device-grid" id="wizard-devices"></div>
+      <p class="caption" id="wizard-device-hint" data-i18n="请选择一台已在Windows蓝牙中配对的iPhone">请选择一台已在Windows蓝牙中配对的iPhone</p>
+      <div class="wizard-actions">
+        <button id="wizard-refresh" data-i18n="刷新设备">刷新设备</button>
+        <button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button>
+      </div>
+    </div>
+    <div class="wizard-panel" data-wizard-step="2" hidden>
+      <div class="mode-grid">
+        <button class="mode-card" data-mode="hotspot"><strong data-i18n="本机移动热点">本机移动热点</strong><span data-i18n="使用Windows移动热点接收，最稳定">使用Windows移动热点接收，最稳定</span></button>
+        <button class="mode-card" data-mode="lan"><strong data-i18n="现有局域网">现有局域网</strong><span data-i18n="电脑与手机连接同一路由器">电脑与手机连接同一路由器</span></button>
+      </div>
+      <div class="field-grid">
+        <label><span data-i18n="Wi-Fi名称">Wi-Fi名称</span><input id="wizard-ssid" autocomplete="off"></label>
+        <label><span data-i18n="密码">密码</span><input id="wizard-password" type="password" autocomplete="off"></label>
+      </div>
+      <div class="wizard-actions">
+        <button id="wizard-read" data-i18n="读取当前网络和密码">读取当前网络和密码</button>
+        <button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button>
+      </div>
+    </div>
+    <div class="wizard-panel" data-wizard-step="3" hidden>
+      <div class="summary" id="wizard-summary"></div>
+      <p class="wizard-live" id="wizard-status" data-i18n="准备开始接收">准备开始接收</p>
+      <div class="wizard-fixes" id="wizard-fixes" hidden>
+        <button id="wizard-hotspot" data-i18n="打开移动热点">打开移动热点</button>
+        <button id="wizard-bt" data-i18n="打开蓝牙设置">打开蓝牙设置</button>
+        <button id="wizard-retry" data-i18n="重试">重试</button>
+      </div>
+      <div class="wizard-actions" id="wizard-result" hidden>
+        <button id="wizard-show" class="primary" data-i18n="显示画面">显示画面</button>
+        <button id="wizard-again" data-i18n="重新连接">重新连接</button>
+      </div>
+    </div>
+    <footer class="wizard-foot">
+      <button id="wizard-back" data-i18n="上一步">上一步</button>
+      <span class="wizard-dots" id="wizard-dots"></span>
+      <button id="wizard-next" class="primary" data-i18n="下一步">下一步</button>
+    </footer>
+  </div>
 </section>
 <section id="connection" class="page" hidden>
   <header><h1 data-i18n="连接">连接</h1></header>
@@ -185,7 +220,13 @@
   <div class="card"><div class="setting-row donation-paypal"><span>RoyRoylyl</span><button id="donation-paypal" class="primary" data-i18n="通过PayPal捐赠">通过PayPal捐赠</button></div></div>
 </section>
 </div>
-<footer class="app-footer" id="receiver-footer"><div id="running-actions" class="actions" hidden><button id="stop" data-i18n="停止接收">停止接收</button><button id="show-video" data-i18n="显示画面" disabled>显示画面</button></div><button id="start" class="primary" data-i18n="启动接收">启动接收</button></footer>
+  <nav class="home-dock" id="app-dock" data-i18n-aria="座舱导航" aria-label="座舱导航">
+    <button class="dock-item active" data-page="home" data-i18n="首页">首页</button>
+    <button class="dock-item" data-page="connect" data-i18n="连接">连接</button>
+    <button class="dock-item" data-page="display" data-i18n="显示">显示</button>
+    <button class="dock-item" data-page="audio" data-i18n="音频">音频</button>
+    <button class="dock-item" data-page="about" data-i18n="设置">设置</button>
+  </nav><footer class="app-footer" id="receiver-footer"><div id="running-actions" class="actions" hidden><button id="stop" data-i18n="停止接收">停止接收</button><button id="show-video" data-i18n="显示画面" disabled>显示画面</button></div><button id="start" class="primary" data-i18n="启动接收">启动接收</button></footer>
 </main>
 <dialog id="donation-dialog" aria-labelledby="donation-title"><div class="donation-modal"><div class="row"><h2 id="donation-title"></h2><button id="donation-close" data-i18n="关闭">关闭</button></div><img id="donation-image" alt=""></div></dialog>
 <div id="toast" role="status" hidden></div><audio id="system-audio"></audio>

@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id);
-let config,running=false,toastTimer,artUrl='',playing={},locale='zh-CN',updateState={},displayItems=[],displayLoading=true,displayRequest=0,displaySaveRequest=0,resolutionChoice,networkRequest=0,networkReadRequest=0,networkReadBusy=false,mediaFormat,displayError='',displayDraft,lastReceiverStatus='';
+let config,running=false,toastTimer,artUrl='',playing={},locale='zh-CN',updateState={},displayItems=[],displayLoading=true,displayRequest=0,displaySaveRequest=0,resolutionChoice,networkRequest=0,networkReadRequest=0,networkReadBusy=false,mediaFormat,displayError='',displayDraft,lastReceiverStatus='',wizardStep=1,wizardMode='hotspot',wizardDevice='',wizardStarting=false;
 const logs=[],pendingSaves=new Set(),networkEdits=new Map();
 let networkInfo=null,networkBusy=false;
 const t=source=>AirAutoI18n.translate(source,config?.language||'system',locale);
@@ -93,8 +93,80 @@ async function audioDevices(request=false){
   }catch{toast('Windows未允许麦克风访问，请检查系统隐私设置')}
 }
 async function save(key,value){const request=call('save',{[key]:value});pendingSaves.add(request);let r;try{r=await request}finally{pendingSaves.delete(request)}if(!r.ok)return r;config[key]=value;if(key==='theme')theme(value==='dark'||value==='system'&&(await airauto.call('state')).dark);if(key==='language')applyLanguage();return r}
-function showPage(page){document.querySelectorAll('.nav').forEach(button=>button.classList.toggle('active',button.dataset.page===page));document.querySelectorAll('.dock-item').forEach(button=>button.classList.toggle('active',button.dataset.page===page));document.querySelectorAll('.page').forEach(node=>node.hidden=node.id!==page);$('receiver-footer').hidden=page==='about'||page==='donation'||page==='home'}
+function showPage(page){document.querySelectorAll('.nav').forEach(button=>button.classList.toggle('active',button.dataset.page===page));document.querySelectorAll('.dock-item').forEach(button=>button.classList.toggle('active',button.dataset.page===page));document.querySelectorAll('.page').forEach(node=>node.hidden=node.id!==page);$('receiver-footer').hidden=page==='about'||page==='donation'||page==='home'||page==='connect';if($('app-dock'))$('app-dock').hidden=page==='connect'||page==='donation';if(page==='connect'&&window.__wizardEnter)window.__wizardEnter()}
 document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>showPage(button.dataset.page)));showPage('home');
+function wireWizard(){
+  const $n=id=>document.getElementById(id);if(!$n('connect'))return;
+  const setText=(id,source)=>{if($n(id))text(id,source)};
+  function go(step){
+    wizardStep=step;
+    document.querySelectorAll('.wizard-panel').forEach(panel=>{panel.hidden=Number(panel.dataset.wizardStep)!==step});
+    document.querySelectorAll('.wizard-steps li').forEach((item,index)=>{item.classList.toggle('active',index+1===step);item.classList.toggle('done',index+1<step)});
+    $n('wizard-back').disabled=step===1;setText('wizard-next',step===3?'开始接收':'下一步');
+    const dots=$n('wizard-dots');if(dots)dots.textContent=step+' / 3';
+    if(step===1)loadDevices();
+    if(step===2)loadNetwork();
+    if(step===3)renderSummary();
+  }
+  async function loadDevices(){
+    const box=$n('wizard-devices');if(!box)return;box.replaceChildren();
+    const hint=$n('wizard-device-hint');const result=await call('bluetooth');const devices=result.ok?result.devices:[];
+    wizardDevice=wizardDevice||config?.targetBluetooth||'';
+    if(!devices.length){const empty=document.createElement('div');empty.className='device-empty';empty.textContent=t('未找到已配对手机，请先在Windows蓝牙设置中配对');box.append(empty);if(hint)hint.hidden=false;return}
+    if(hint)hint.hidden=true;
+    for(const device of devices){
+      const button=document.createElement('button');button.type='button';button.className='device-card'+(device.address===wizardDevice?' active':'');
+      const name=document.createElement('strong');name.textContent=device.name||device.address;
+      const address=document.createElement('span');address.textContent=device.address;
+      button.append(name,address);
+      button.onclick=async()=>{wizardDevice=device.address;box.querySelectorAll('.device-card').forEach(node=>node.classList.toggle('active',node===button));await save('targetBluetooth',device.address)};
+      box.append(button);
+    }
+  }
+  function markMode(mode){document.querySelectorAll('.mode-card').forEach(card=>card.classList.toggle('active',card.dataset.mode===mode))}
+  function loadNetwork(){
+    wizardMode=config?.wirelessMode||'hotspot';markMode(wizardMode);
+    const ssid=$n('wizard-ssid'),password=$n('wizard-password');
+    if(ssid)ssid.value=config?.[fieldKey('ssid')]||'';
+    if(password)password.value=config?.[fieldKey('password')]||'';
+  }
+  async function ensureNetworkSaved(){
+    const ssid=$n('wizard-ssid'),password=$n('wizard-password');if(!ssid||!password)return false;
+    if(!ssid.value.trim()){toast('请填写Wi-Fi名称');ssid.focus();return false}
+    await save(fieldKey('ssid'),ssid.value.trim());await save(fieldKey('password'),password.value);return true;
+  }
+  function renderSummary(){
+    const box=$n('wizard-summary');if(!box)return;box.replaceChildren();
+    const active=[...document.querySelectorAll('#wizard-devices .device-card.active')][0];
+    const deviceName=active?.querySelector('strong')?.textContent||'—';
+    const items=[['设备',deviceName],['网络',config?.wirelessMode==='lan'?'现有局域网':'本机移动热点'],['Wi-Fi',config?.[fieldKey('ssid')]||'—']];
+    for(const [label,value] of items){const wrap=document.createElement('div');const small=document.createElement('small');small.textContent=label;const strong=document.createElement('strong');strong.textContent=value;wrap.append(small,strong);box.append(wrap)}
+  }
+  async function startFromWizard(){
+    if(wizardStarting)return;wizardStarting=true;
+    const next=$n('wizard-next');if(next)next.disabled=true;const status=$n('wizard-status');
+    try{
+      if(!await ensureNetworkSaved())return;
+      const saved=await Promise.all([...pendingSaves]);if(saved.some(value=>!value.ok&&value.code!=='display-save-superseded'))return;
+      await window.airautoAudio?.prepare(config);
+      if(status){text('wizard-status','正在启动接收…');status.classList.toggle('busy',true);status.classList.toggle('ok',false)}
+      if($n('wizard-result'))$n('wizard-result').hidden=true;
+      if($n('wizard-fixes'))$n('wizard-fixes').hidden=true;
+      await call(running?'restart':'start');
+    }finally{wizardStarting=false;if(next)next.disabled=false}
+  }
+  window.__wizardEnter=()=>go(1);
+  $n('wizard-refresh').onclick=()=>loadDevices();
+  $n('wizard-next').onclick=()=>{if(wizardStep===1){if(!wizardDevice){toast('请选择一台手机');return}go(2)}else if(wizardStep===2){ensureNetworkSaved().then(ok=>{if(ok)go(3)})}else startFromWizard()};
+  $n('wizard-back').onclick=()=>{if(wizardStep>1)go(wizardStep-1)};
+  $n('wizard-read').onclick=async()=>{const button=$n('wizard-read');if(!button)return;button.disabled=true;try{const trigger=$('read-network');if(trigger)trigger.click();for(let i=0;i<50&&networkReadBusy;i++)await new Promise(resolve=>setTimeout(resolve,200));await new Promise(resolve=>setTimeout(resolve,250));const ssid=$n('wizard-ssid'),password=$n('wizard-password');if(ssid)ssid.value=$('ssid')?.value||'';if(password)password.value=$('password')?.value||''}finally{button.disabled=false}};
+  document.querySelectorAll('.mode-card').forEach(card=>card.onclick=async()=>{const mode=card.dataset.mode;const saved=await save('wirelessMode',mode);if(saved.ok){wizardMode=mode;markMode(mode);loadNetwork()}});
+  $n('wizard-hotspot').onclick=()=>call('settings-hotspot');
+  $n('wizard-bt').onclick=()=>call('settings-bluetooth');
+  $n('wizard-retry').onclick=()=>startFromWizard();
+  $n('wizard-again').onclick=()=>startFromWizard();
+  $n('wizard-show').onclick=()=>call('show-video');
+}
 const donationMethods={wechat:'微信支付',alipay:'支付宝',alipayhk:'AlipayHK'};
 document.querySelectorAll('.donation-code').forEach(button=>button.addEventListener('click',()=>{
   const method=button.dataset.method;if(!Object.hasOwn(donationMethods,method))return;
@@ -133,20 +205,20 @@ airauto.on(message=>{
   if(message.type==='lan-guide'){text('lan-guide','电脑正在使用以太网。请在iPhone上打开“设置→Wi-Fi”，手动加入“{ssid}”，输入该Wi-Fi的密码。若已连接，请保持连接并等待CarPlay画面，无需反复点击启动接收。',{ssid:message.ssid});$('lan-guide').hidden=false}
   if(message.type==='starting'||message.type==='started'){lastReceiverStatus='';state(true);if(config)window.airautoAudio?.prepare(config).catch(()=>{})}
   if(message.type==='requested-fps'){$('fps-fallback').hidden=message.attempt>=message.requested;text('fps-fallback','当前已从{requested}fps回退至{attempt}fps',{requested:message.requested,attempt:message.attempt})}
-  if(message.type==='status'||message.type==='diagnostic'){if(message.type==='status'){lastReceiverStatus=message.status+' '+(message.detail||'');text('status',message.status);text('status-detail',message.detail||'')}logs.push(diagnosticLine(message));renderLogs()}
-  if(message.type==='connected'){$('lan-guide').hidden=true;lastReceiverStatus='正在接收CarPlay视频';text('status',lastReceiverStatus);text('status-detail','');text('side-status','已收到视频')}
+  if(message.type==='status'||message.type==='diagnostic'){if(message.type==='status'){lastReceiverStatus=message.status+' '+(message.detail||'');text('status',message.status);text('status-detail',message.detail||'');if($('wizard-status')){text('wizard-status',message.status);$('wizard-status').textContent+=(message.detail?' · '+message.detail:'');$('wizard-status').classList.toggle('busy',true);$('wizard-status').classList.toggle('ok',false)}}logs.push(diagnosticLine(message));renderLogs()}
+  if(message.type==='connected'){$('lan-guide').hidden=true;lastReceiverStatus='正在接收CarPlay视频';text('status',lastReceiverStatus);text('status-detail','');text('side-status','已收到视频');if($('wizard-status')){text('wizard-status','连接成功');$('wizard-status').classList.toggle('busy',false);$('wizard-status').classList.toggle('ok',true);if($('wizard-result'))$('wizard-result').hidden=false}}
   if(message.type==='stopped'){
     $('lan-guide').hidden=true;
     const failure=/失败|拒绝|未建立|超时|无法|没有检测|请选择|异常|已断开/.test(lastReceiverStatus);state(false);metadata({title:'',artist:'',album:'',playing:false,canSeek:false,durationMs:0,positionMs:0},true);
     if(navigator.mediaSession){navigator.mediaSession.metadata=null;navigator.mediaSession.playbackState='none';for(const action of ['play','pause','previoustrack','nexttrack','seekto']){try{navigator.mediaSession.setActionHandler(action,null)}catch{}}}
-    if(!failure){text('status','接收已停止');text('status-detail','可以重新启动接收。')}mediaFormat=undefined;text('actual-media-format','等待iPhone协商');
+    if(!failure){text('status','接收已停止');text('status-detail','可以重新启动接收。')}mediaFormat=undefined;text('actual-media-format','等待iPhone协商');if($('wizard-status')){$('wizard-status').classList.toggle('busy',false);if(failure)$('wizard-status').textContent=lastReceiverStatus||'连接失败';if($('wizard-fixes'))$('wizard-fixes').hidden=!failure;if($('wizard-result'))$('wizard-result').hidden=true}
   }
   if(message.type==='metrics'){$('show-video').disabled=!(running&&message.decodedWidth);$('metric-request').textContent=message.requested+'fps';$('metric-attempt').textContent=running?message.attempt+'fps':'—';$('metric-received').textContent=running?message.receivedFps.toFixed(1)+'fps':'—';$('metric-decoded').textContent=running?(message.decodedFps||0).toFixed(1)+'fps':'—';if(message.decodedWidth)text('video-size','实际解码尺寸：{width}×{height}',{width:message.decodedWidth,height:message.decodedHeight})}
   if(message.type==='audio-config'&&message.opts.media){mediaFormat=message.opts;renderMediaFormat()}
   if(message.type==='now-playing')metadata(message.state,message.artChanged);if(message.type==='position')position(message.positionMs);window.airautoAudio?.handle(message);
 });
 (async()=>{
-  const r=await call('state');if(!r.ok)return;config=r.settings;config.language=config.language||'system';locale=r.locale||navigator.language;resolutionChoice=config.resolutionMode;updateState=r.updates||{};theme(r.dark);state(r.running);$('show-video').disabled=!(r.running&&r.stats?.decodedWidth);$('version').textContent=$('about-version').textContent=r.version;const topVersion=$('top-version');if(topVersion)topVersion.textContent=r.version;const homeVersion=$('home-version');if(homeVersion)homeVersion.textContent=r.version;literal('architecture',r.architecture||'x64');
+  const r=await call('state');if(!r.ok)return;config=r.settings;config.language=config.language||'system';locale=r.locale||navigator.language;resolutionChoice=config.resolutionMode;updateState=r.updates||{};theme(r.dark);state(r.running);$('show-video').disabled=!(r.running&&r.stats?.decodedWidth);if($('version'))$('version').textContent=r.version;if($('about-version'))$('about-version').textContent=r.version;const topVersion=$('top-version');if(topVersion)topVersion.textContent=r.version;const homeVersion=$('home-version');if(homeVersion)homeVersion.textContent=r.version;literal('architecture',r.architecture||'x64');
   for(const item of r.diagnostics||[])logs.push(diagnosticLine(item));renderLogs();text('auth-status',r.auth?'文件已就绪，等待iPhone验证':'缺少文件');
   bindNetworkEditing();
   for(const key of ['ssid','password','channel','fps','theme','closeBehavior','language']){$(key).value=config[fieldKey(key)];$(key).addEventListener('change',()=>save(fieldKey(key),['channel','fps'].includes(key)?Number($(key).value):$(key).value))}
@@ -193,7 +265,7 @@ airauto.on(message=>{
     })().catch(error=>{if(current())result('network-result',error.message||'未能读取当前网络，请检查网络设置后重试。');return {ok:false}});pendingSaves.add(operation);
     try{return await operation}finally{pendingSaves.delete(operation);networkReadBusy=false;text('read-network','读取当前网络和密码');button.disabled=false}
   };
-  $('collapse-sidebar').onclick=()=>document.body.classList.toggle('sidebar-collapsed');const resizer=$('sidebar-resizer');resizer.onpointerdown=e=>{resizer.setPointerCapture(e.pointerId);resizer.onpointermove=event=>{document.querySelector('aside').style.width=Math.max(150,Math.min(200,event.clientX))+'px'};resizer.onpointerup=()=>{resizer.onpointermove=null}};
+  wireWizard();
   document.addEventListener('keydown',event=>{if(event.key!=='Enter'||event.defaultPrevented||event.ctrlKey||event.altKey||event.metaKey||$('receiver-footer').hidden||$('start').disabled)return;if(event.target.closest('button,select,summary')||event.target.matches('input[type=range],input[type=checkbox]'))return;event.preventDefault();event.target.blur?.();$('start').click()});
   let refreshing=false;window.addEventListener('focus',async()=>{if(refreshing)return;refreshing=true;try{await Promise.all([networks(),displays(),audioDevices(),bluetooth()])}finally{refreshing=false}});applyLanguage();await Promise.all([networks(),displays(),audioDevices(),bluetooth()]);navigator.mediaDevices.addEventListener('devicechange',()=>audioDevices());
 })().catch(()=>toast('界面初始化失败，请重新打开AirAuto'));
