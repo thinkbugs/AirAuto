@@ -4,7 +4,7 @@
 
 <p align="center">把iPhone的CarPlay带到Windows，支持无线连接、独立画面窗口、音频播放与鼠标/触控板操作。</p>
 
-> AirAuto 原名 WinPlay，1.2.5 及之前版本以 WinPlay 名称发布。当前开发线正在重构为车机座舱界面：零层级首页、深色设计系统与独立投屏 HUD；Android Auto 支持同步开发中。
+> AirAuto 原名 WinPlay，1.2.5 及之前版本以 WinPlay 名称发布。当前开发线正在重构为车机座舱界面：零层级首页、深色设计系统与独立投屏 HUD；Android Auto 与 CarLife+ 支持同步开发中。
 
 <p align="center">
   <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.5-2563eb?style=flat-square" alt="源码版本1.2.5"></a>
@@ -95,6 +95,7 @@ Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的
 | 座舱界面 | 极光玻璃仪表盘首页、悬浮 Dock（主页/导航/音乐 · AI · 行程/电话/更多）、三步连接向导、投屏极简 HUD、深/浅色一键切换、壁纸与主题中心（内置四套，可导入本地图片） |
 | 分屏座舱 | 宽屏时可让投屏靠左，右侧显示时钟、媒体与帧率（显示设置中开启） |
 | Android Auto | 开发者模式连接（局域网或 adb forward），视频/触摸/音频复用现有管线 |
+| CarLife+ | 荣耀/百度 CarLife+ 接收端（测试中）：UDP 7999 自动发现或直连手机 IP，7 通道握手，H.264 视频与触摸复用现有管线 |
 | 语音与媒体 | 顶栏/HUD 直接唤起 Siri，首页媒体卡可播放、切歌与拖动进度 |
 | 关于与更新 | 查看版本、检查正式发行版、下载对应安装包，并管理日志与认证 |
 
@@ -245,5 +246,7 @@ npm run dist
 无线引导参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)，局域网方案与网络协议复用[MacPlay](https://github.com/Roylyl/MacPlay)，保留[LIVI](https://github.com/f-io/LIVI)、LasseHeitgres及贡献者和[DiPlay](https://github.com/shihabal3amri/DiPlay)来源声明。Android Auto协议参考[DiAuto](https://github.com/shihabal3amri/DiAuto)与[Open Headunit](https://github.com/andreknieriem/open-headunit)（AGPL-3.0），协议定义与消息结构保留其来源与许可。因合并AGPL实现，项目升级为AGPL-3.0-or-later，见[LICENSE](LICENSE)、[NOTICE](NOTICE)与[第三方声明](vendor/THIRD-PARTY-NOTICES.txt)。
 
 Android Auto 协议栈已并入引擎（帧层、TLS、服务发现、分片重组、视频/触摸/音频），mock 全链路通过；真机开发者模式受 Google 官方 DHU 证书限制，无线蓝牙（RFCOMM/WPP）握手待接入。
+
+CarLife+ 协议栈（7 个 TCP 通道、UDP 7999 发现、98305 v3.0 握手、98343/98307/98386/98311/98313 顺序、心跳、模块状态与触摸）已并入引擎，mock 与真机均验证到视频上屏：荣耀 ALI-AN00（MagicOS 15 / CarLife+ 8.8.5）可完成握手并输出 H.264，AirAuto 解码显示。当前限制是手机侧无线引擎只有在完成与“车机”的系统蓝牙配对后才进入正式投屏态；未配对时引擎仅输出欢迎页并在约 5 秒后自行退出。电脑接入蓝牙适配器、完成配对后即可完整使用，触摸/音频等剩余功能随蓝牙接入继续联调。
 
 AirAuto是独立衍生项目，不代表Apple或上游作者，不声称获得MFi认证。第三方组件、认证证书、私钥和商标继续适用各自权利条件。分发修改版时应保留声明，并提供适用许可要求的对应源码与构建资料。

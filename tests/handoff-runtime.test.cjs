@@ -32,7 +32,7 @@ async function receiver({interruptAt,fps=60}={}){
   './frameRateFallback':fallbackModule.exports,
   './iap':{Accessory,IapLink:class extends EventEmitter{constructor(stream){super();this.stream=stream}send(){}close(){}}},
   './nowPlaying':{NowPlaying:class{position(){return 0}close(){}}},'./relay':{setIapRelayFactory:value=>relayFactory=value},
-  './media':{closeMedia:()=>{}},'./networkMode':{receiverNetwork,accessPointIdentifier:()=>mac},'./handoffRecovery':{HandoffRecovery:Recovery},'./videoFrameGate':require('../build/engine/videoFrameGate'),'./protocols/aa/stack':{AapSession:class extends EventEmitter{start(){}stop(){}touch(){}}}
+  './media':{closeMedia:()=>{}},'./networkMode':{receiverNetwork,accessPointIdentifier:()=>mac},'./handoffRecovery':{HandoffRecovery:Recovery},'./videoFrameGate':require('../build/engine/videoFrameGate'),'./protocols/aa/stack':{AapSession:class extends EventEmitter{start(){}stop(){}touch(){}}},'./protocols/carlife/stack':{CarLifeSession:class extends EventEmitter{start(){}stop(){}touch(){}}}
  };
  const processMock={connected:true,env:{AIRAUTO_NATIVE:'public-native',AIRAUTO_RESOURCES:'public-resources'},send:message=>messages.push(message),
   on:(event,callback)=>{if(event==='message')receive=callback},once:()=>{},exit:()=>{}};

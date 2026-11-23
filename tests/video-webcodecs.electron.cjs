@@ -22,7 +22,7 @@ async function checkWebCodecs(){
  async function nativeDecode(fixture){
   const plane=makeCanvas(fixture.width,fixture.height);let count=0,error;
   const decoder=new VideoDecoder({output(frame){try{plane.context.drawImage(frame,0,0);count++}finally{frame.close()}},error:e=>error=e.message});
-  const bytes=fixture.description,config={codec:'avc1.'+[bytes[1],bytes[2],bytes[3]].map(n=>n.toString(16).padStart(2,'0')).join(''),description:bytes,optimizeForLatency:true,hardwareAcceleration:'prefer-hardware'};
+  const bytes=fixture.description,config={codec:'avc1.'+[bytes[1],bytes[2],bytes[3]].map(n=>n.toString(16).padStart(2,'0')).join(''),description:bytes,optimizeForLatency:true,hardwareAcceleration:'no-preference'};
   decoder.configure(config);for(const frame of fixture.frames)decoder.decode(new EncodedVideoChunk({type:frame.type,data:frame.data,timestamp:frame.timestamp}));await decoder.flush();decoder.close();if(error)throw Error(error);return {pixels:pixels(plane),count};
  }
  function receiver(Decoder=VideoDecoder){

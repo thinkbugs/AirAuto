@@ -257,6 +257,16 @@
     ["支持 iPhone CarPlay，Android Auto 开发中","支援 iPhone CarPlay，Android Auto 開發中","iPhone CarPlay supported; Android Auto in development"],
     ["Android Auto 支持开发中：开发者模式受 Google 官方证书限制，无线连接将随蓝牙支持开放。","Android Auto 支援開發中：開發者模式受 Google 官方憑證限制，無線連線將隨藍牙支援開放。","Android Auto is in development: developer mode requires Google credentials; wireless will follow with Bluetooth support."],
     ["开发者模式需要官方 DHU 客户端证书，自签证书会在握手阶段被拒绝；该入口保留用于后续无线联调。","開發者模式需要官方 DHU 用戶端憑證，自簽憑證會在握手階段被拒絕；此入口保留用於後續無線聯調。","Developer mode requires official DHU credentials; self-signed certificates are rejected during the handshake."],
+    ["CarLife+","CarLife+","CarLife+"],
+    ["CarLife+ 手机","CarLife+ 手機","CarLife+ phone"],
+    ["手机打开荣耀车联或百度CarLife，并确保与电脑在同一网络；电脑会自动发现（UDP 7999），也可填写手机 IP。","手機開啟榮耀車聯或百度CarLife，並確保與電腦在同一網路；電腦會自動探索（UDP 7999），也可填寫手機 IP。","Open Honor CarLink or Baidu CarLife on the phone and keep it on the same network as the PC. AirAuto discovers it over UDP 7999, or you can enter the phone IP."],
+    ["手机地址（可选）","手機位址（選填）","Phone address (optional)"],
+    ["留空则监听 UDP 7999 自动发现；手机需与电脑在同一 Wi-Fi 或热点下。","留空則監聽 UDP 7999 自動探索；手機需與電腦在同一 Wi-Fi 或熱點下。","Leave blank to listen on UDP 7999; the phone must share the same Wi-Fi or hotspot."],
+    ["CarLife 手机地址（留空自动发现）","CarLife 手機位址（留空自動探索）","CarLife phone address (blank = auto discover)"],
+    ["留空时监听 UDP 7999；也可填写手机 IP 直接连接。","留空時監聽 UDP 7999；也可填寫手機 IP 直接連線。","Blank listens on UDP 7999; enter the phone IP to connect directly."],
+    ["支持 iPhone CarPlay · CarLife+（测试中）","支援 iPhone CarPlay · CarLife+（測試中）","iPhone CarPlay · CarLife+ (testing)"],
+    ["测试中：无线 CarLife+ 需要手机先与“车机”完成系统蓝牙配对；未配对时引擎只输出欢迎页并会在数秒后结束，电脑接入蓝牙适配器后即可完整使用。","測試中：無線 CarLife+ 需要手機先與「車機」完成系統藍牙配對；未配對時引擎只輸出歡迎頁並會在數秒後結束，電腦接入藍牙適配器後即可完整使用。","Testing: wireless CarLife+ needs the phone to finish a system Bluetooth pairing with the head unit. Without it the engine only streams its welcome page and exits after a few seconds; a Bluetooth adapter on the PC completes the setup."],
+    ["手机地址无效","手機位址無效","Invalid phone address"],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){

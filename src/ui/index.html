@@ -100,6 +100,7 @@
       <div class="segment device-type" id="wizard-device-type">
         <button data-type="iphone">iPhone · CarPlay</button>
         <button data-type="android">Android · Auto</button>
+        <button data-type="carlife">CarLife+</button>
       </div>
       <div id="wizard-iphone-panel">
         <div class="device-grid" id="wizard-devices"></div>
@@ -108,7 +109,11 @@
       <div id="wizard-android-panel" hidden>
         <p class="caption" data-i18n="Android Auto 支持开发中：开发者模式受 Google 官方证书限制，无线连接将随蓝牙支持开放。">Android Auto 使用开发者模式连接：在手机开启“head unit server”，下一步填写手机地址。</p>
       </div>
-      <div class="wizard-actions">
+            <div id="wizard-carlife-panel" hidden>
+        <p class="caption" data-i18n="手机打开荣耀车联或百度CarLife，并确保与电脑在同一网络；电脑会自动发现（UDP 7999），也可填写手机 IP。">手机打开荣耀车联或百度CarLife，并确保与电脑在同一网络；电脑会自动发现（UDP 7999），也可填写手机 IP。</p>
+        <p class="caption" data-i18n="测试中：无线 CarLife+ 需要手机先与“车机”完成系统蓝牙配对；未配对时引擎只输出欢迎页并会在数秒后结束，电脑接入蓝牙适配器后即可完整使用。">测试中：无线 CarLife+ 需要手机先与“车机”完成系统蓝牙配对；未配对时引擎只输出欢迎页并会在数秒后结束，电脑接入蓝牙适配器后即可完整使用。</p>
+      </div>
+<div class="wizard-actions">
         <button id="wizard-refresh" data-i18n="刷新设备">刷新设备</button>
         <button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button>
       </div>
@@ -134,6 +139,13 @@
           <label><span data-i18n="端口">端口</span><input id="wizard-port" type="number" min="1" max="65535" value="5277"></label>
         </div>
         <p class="caption" data-i18n="开发者模式需要官方 DHU 客户端证书，自签证书会在握手阶段被拒绝；该入口保留用于后续无线联调。">在手机 Android Auto 开发者选项启动“head unit server”，手机与电脑需在同一网络；也可执行 adb forward tcp:5277 tcp:5277 后填写 127.0.0.1。</p>
+        <div class="wizard-actions"><button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button></div>
+      </div>
+      <div id="wizard-carlife-network" hidden>
+        <div class="field-grid">
+          <label><span data-i18n="手机地址（可选）">手机地址（可选）</span><input id="wizard-carlife-host" autocomplete="off" placeholder="192.168.1.23"></label>
+        </div>
+        <p class="caption" data-i18n="留空则监听 UDP 7999 自动发现；手机需与电脑在同一 Wi-Fi 或热点下。">留空则监听 UDP 7999 自动发现；手机需与电脑在同一 Wi-Fi 或热点下。</p>
         <div class="wizard-actions"><button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button></div>
       </div>
     </div>
@@ -164,18 +176,22 @@
     <button class="settings-tile" data-page="display"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><strong data-i18n="显示与分辨率">显示与分辨率</strong><span data-i18n="画面尺寸与显示模式">画面尺寸与显示模式</span></button>
     <button class="settings-tile" data-page="appearance"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18"/><circle cx="9" cy="9" r="1.4"/><circle cx="15" cy="9" r="1.4"/><circle cx="9" cy="15" r="1.4"/><circle cx="15" cy="15" r="1.4"/></svg><strong data-i18n="壁纸与主题">壁纸与主题</strong><span data-i18n="背景、强调色与主题">背景、强调色与主题</span></button>
     <button class="settings-tile" data-page="audio"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9z"/><path d="M16 8a6 6 0 0 1 0 8"/></svg><strong data-i18n="音频输出">音频输出</strong><span data-i18n="设备与音量">设备与音量</span></button>
-    <button class="settings-tile" data-page="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg><strong data-i18n="关于与更新">关于与更新</strong><span data-i18n="版本、更新与认证">版本、更新与认证</span></button>
+    <button class="settings-tile" data-page="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg><strong data-i18n="关于与更新">关于与更新</strong><span data-i18n="版本、更新与认证">版本、更新与认证</span></button>
   </div>
 </section>
 <section id="connection" class="page" hidden>
   <header><h1 data-i18n="连接">连接</h1></header>
   <h2 class="section-title" data-i18n="设备类型">设备类型</h2>
   <div class="card">
-    <label class="setting-row"><span data-i18n="连接方式">连接方式</span><select id="deviceType"><option value="iphone">iPhone · CarPlay</option><option value="android">Android · Auto</option></select></label>
+    <label class="setting-row"><span data-i18n="连接方式">连接方式</span><select id="deviceType"><option value="iphone">iPhone · CarPlay</option><option value="android">Android · Auto</option><option value="carlife">CarLife+</option></select></label>
     <div id="aa-fields" hidden>
       <label class="setting-row"><span data-i18n="Android Auto 地址">Android Auto 地址</span><input id="aaHost" autocomplete="off" placeholder="192.168.1.23"></label>
       <label class="setting-row"><span data-i18n="端口">端口</span><input id="aaPort" type="number" min="1" max="65535"></label>
       <p class="caption" data-i18n="开发者模式：在手机启动“head unit server”，电脑连接手机地址；也可使用 adb forward tcp:5277 tcp:5277 后填写 127.0.0.1。">开发者模式：在手机启动“head unit server”，电脑连接手机地址；也可使用 adb forward tcp:5277 tcp:5277 后填写 127.0.0.1。</p>
+    </div></div>
+    <div id="carlife-fields" hidden>
+      <label class="setting-row"><span data-i18n="CarLife 手机地址（留空自动发现）">CarLife 手机地址（留空自动发现）</span><input id="carlifeHost" autocomplete="off" placeholder="192.168.1.23"></label>
+      <p class="caption" data-i18n="留空时监听 UDP 7999；也可填写手机 IP 直接连接。">留空时监听 UDP 7999；也可填写手机 IP 直接连接。</p>
     </div>
   </div>
   <h2 class="section-title" data-i18n="接收端">接收端</h2>

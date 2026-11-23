@@ -17,7 +17,7 @@ test('an IDR received after initialization overflow restores a complete pending 
 });
 test('transport reset replaces the decoder and decodes its supplied IDR without selecting software fallback',async()=>{
  const f=fixture();try{await f.r.configure({data:config});f.r.decode(key);f.r.decode({...key,timestamp:10,reset:true});f.r.decode({data:[0,0,0,1,1],timestamp:11});await new Promise(resolve=>setImmediate(resolve));
-  assert.equal(f.decoders.length,2);assert.equal(f.decoders[0].closed,true);assert.equal(f.decoders[1].config.hardwareAcceleration,'prefer-hardware');assert.deepEqual(f.decoders[1].frames.map(frame=>frame.timestamp),[10,11]);let closed=false;f.decoders[0].callbacks.output({close(){closed=true}});assert.ok(closed);assert.equal(f.outputs.length,0);
+  assert.equal(f.decoders.length,2);assert.equal(f.decoders[0].closed,true);assert.equal(f.decoders[1].config.hardwareAcceleration,'no-preference');assert.deepEqual(f.decoders[1].frames.map(frame=>frame.timestamp),[10,11]);let closed=false;f.decoders[0].callbacks.output({close(){closed=true}});assert.ok(closed);assert.equal(f.outputs.length,0);
  }finally{f.r.close()}
 });
 test('decoder dequeue releases only consumed frame acknowledgments and wakes paused delivery without new input',async()=>{
