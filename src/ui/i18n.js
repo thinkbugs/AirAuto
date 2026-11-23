@@ -182,6 +182,16 @@
     ["设备","裝置","Device"],
     ["网络","網路","Network"],
     ["密码","密碼","Password"],
+    ["设置中心","設定中心","Settings"],
+    ["连接设置","連線設定","Connection"],
+    ["蓝牙、网络与接收参数","藍牙、網路與接收參數","Bluetooth, network and receiver"],
+    ["显示与分辨率","顯示與解析度","Display & resolution"],
+    ["画面尺寸与显示模式","畫面尺寸與顯示模式","Size and display mode"],
+    ["音频输出","音訊輸出","Audio output"],
+    ["设备与音量","裝置與音量","Devices and volume"],
+    ["版本、更新与认证","版本、更新與驗證","Version, updates and authentication"],
+    ["捐赠支持","捐贈支持","Support the project"],
+    ["支持持续开发","支持持續開發","Support ongoing development"],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){

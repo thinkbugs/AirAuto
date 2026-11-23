@@ -110,6 +110,16 @@
     </footer>
   </div>
 </section>
+<section id="settings" class="page settings-page" hidden>
+  <header class="settings-head"><p class="hero-eyebrow" data-i18n="设置">设置</p><h1 data-i18n="设置中心">设置中心</h1></header>
+  <div class="settings-grid">
+    <button class="settings-tile" data-page="connection"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4M3 8a8 8 0 0 0 0 8M21 8a8 8 0 0 1 0 8"/></svg><strong data-i18n="连接设置">连接设置</strong><span data-i18n="蓝牙、网络与接收参数">蓝牙、网络与接收参数</span></button>
+    <button class="settings-tile" data-page="display"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><strong data-i18n="显示与分辨率">显示与分辨率</strong><span data-i18n="画面尺寸与显示模式">画面尺寸与显示模式</span></button>
+    <button class="settings-tile" data-page="audio"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9z"/><path d="M16 8a6 6 0 0 1 0 8"/></svg><strong data-i18n="音频输出">音频输出</strong><span data-i18n="设备与音量">设备与音量</span></button>
+    <button class="settings-tile" data-page="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg><strong data-i18n="关于与更新">关于与更新</strong><span data-i18n="版本、更新与认证">版本、更新与认证</span></button>
+    <button class="settings-tile" data-page="donation"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><strong data-i18n="捐赠支持">捐赠支持</strong><span data-i18n="支持持续开发">支持持续开发</span></button>
+  </div>
+</section>
 <section id="connection" class="page" hidden>
   <header><h1 data-i18n="连接">连接</h1></header>
   <h2 class="section-title" data-i18n="接收端">接收端</h2>
@@ -225,7 +235,7 @@
     <button class="dock-item" data-page="connect" data-i18n="连接">连接</button>
     <button class="dock-item" data-page="display" data-i18n="显示">显示</button>
     <button class="dock-item" data-page="audio" data-i18n="音频">音频</button>
-    <button class="dock-item" data-page="about" data-i18n="设置">设置</button>
+    <button class="dock-item" data-page="settings" data-i18n="设置">设置</button>
   </nav><footer class="app-footer" id="receiver-footer"><div id="running-actions" class="actions" hidden><button id="stop" data-i18n="停止接收">停止接收</button><button id="show-video" data-i18n="显示画面" disabled>显示画面</button></div><button id="start" class="primary" data-i18n="启动接收">启动接收</button></footer>
 </main>
 <dialog id="donation-dialog" aria-labelledby="donation-title"><div class="donation-modal"><div class="row"><h2 id="donation-title"></h2><button id="donation-close" data-i18n="关闭">关闭</button></div><img id="donation-image" alt=""></div></dialog>

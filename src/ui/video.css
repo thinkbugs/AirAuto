@@ -1,3 +1,14 @@
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}canvas{width:100%;height:100%;object-fit:contain;display:block;touch-action:none;user-select:none}
 
 .window-controls{position:fixed;z-index:2;top:0;right:0;display:flex;opacity:0;transition:opacity .15s}.window-controls:hover,body:hover .window-controls,.window-controls:focus-within{opacity:1}.window-controls button{width:36px;height:28px;border:0;color:white;background:#202020bb;font:20px Segoe UI;cursor:pointer}.window-controls button:hover{background:#444}.window-controls #close-video:hover{background:#b72727}
+/* Projection HUD: a slim overlay that never changes the canvas geometry. */
+#hud{position:fixed;z-index:3;left:0;right:0;top:0;height:56px;display:flex;align-items:center;gap:16px;padding:0 16px;background:linear-gradient(180deg,rgba(5,8,12,.82),rgba(5,8,12,0));opacity:0;transform:translateY(-10px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+body.hud-visible #hud{opacity:1;transform:none;pointer-events:auto}
+.hud-left{display:flex;align-items:center;gap:10px;color:#e9f1fb;font:600 14px "Segoe UI","Microsoft YaHei UI",sans-serif;text-shadow:0 1px 3px #000}
+.hud-left .hud-dot{width:8px;height:8px;border-radius:50%;background:#38c172;box-shadow:0 0 10px rgba(56,193,114,.8)}
+.hud-left small{color:#9fb0c7;font-weight:500}
+.hud-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+#hud-clock{color:#dfe8f5;font:600 15px "Segoe UI Variable","Segoe UI",sans-serif;font-variant-numeric:tabular-nums;margin-right:6px;text-shadow:0 1px 3px #000}
+#hud button{width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(14,20,28,.55);color:#dfe8f5;font:16px/1 "Segoe UI",sans-serif;cursor:pointer;display:grid;place-items:center;backdrop-filter:blur(8px)}
+#hud button:hover{background:rgba(30,42,58,.75)}
+#hud-close:hover{background:rgba(183,39,39,.85);border-color:rgba(255,120,120,.4)}

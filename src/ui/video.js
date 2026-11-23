@@ -16,3 +16,14 @@ function endWheel(){clearTimeout(wheelTimer);cancelAnimationFrame(wheelFrame);wh
 canvas.addEventListener('wheel',e=>{e.preventDefault();if(dragging)return;const p=point(e);if(!p)return;if(!wheelActive){last=p;wheelActive=true;touch(last,true)}const area=airautoGeometry.contentRect(canvas.clientWidth,canvas.clientHeight,decodedWidth,decodedHeight),delta=airautoGeometry.wheelDelta(e.deltaX,e.deltaY,e.deltaMode,area.width,area.height,window.devicePixelRatio||1);wheelX+=delta.x;wheelY+=delta.y;if(!wheelFrame)wheelFrame=requestAnimationFrame(()=>{wheelFrame=0;last={x:Math.max(.02,Math.min(.98,last.x-Math.max(-.04,Math.min(.04,wheelX)))),y:Math.max(.02,Math.min(.98,last.y-Math.max(-.04,Math.min(.04,wheelY))))};wheelX=wheelY=0;touch(last,true)});clearTimeout(wheelTimer);wheelTimer=setTimeout(endWheel,180)},{passive:false});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();airauto.input({command:'video-minimize'})}});setInterval(()=>{const now=performance.now();if(now-lastStats>=1000){airauto.input({command:'decoded',fps:count*1000/(now-lastStats),width:decodedWidth,height:decodedHeight});count=0;lastStats=now}},1000);
 
+// Projection HUD: auto-hides so the picture stays clean; any pointer motion brings it back.
+(function(){const hud=document.getElementById('hud'),clock=document.getElementById('hud-clock');if(!hud)return;let hideTimer=0;const pad=n=>String(n).padStart(2,'0');
+ function show(){document.body.classList.add('hud-visible');clearTimeout(hideTimer);hideTimer=setTimeout(()=>document.body.classList.remove('hud-visible'),3000)}
+ function tick(){const now=new Date();clock.textContent=pad(now.getHours())+':'+pad(now.getMinutes())}
+ tick();setInterval(tick,1000);show();
+ window.addEventListener('pointermove',show,{passive:true});window.addEventListener('pointerdown',show,{passive:true});
+ document.getElementById('hud-min').addEventListener('click',()=>airauto.input({command:'video-minimize'}));
+ document.getElementById('hud-close').addEventListener('click',()=>airauto.input({command:'video-close'}));
+ hud.addEventListener('pointerenter',()=>{clearTimeout(hideTimer);document.body.classList.add('hud-visible')});
+ hud.addEventListener('pointerleave',show);
+})();
