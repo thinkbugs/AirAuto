@@ -60,11 +60,14 @@ export class AapSession extends EventEmitter {
       key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
       cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem')),
     })
+    // Developer-mode head unit servers expect the official DHU client identity; the env
+    // toggle keeps the TLS-client path available for future pairing work.
+    const tlsClient = process.env.AIRAUTO_AA_TLS_CLIENT === '1'
     this.socket = net.connect({ host, port, allowHalfOpen: true })
     this.socket.setNoDelay(true)
     this.socket.on('connect', () => {
       log('aa-tcp-connected', {})
-      const connection = new AaConnection(this.socket!, { isServer: true, secureContext, log })
+      const connection = new AaConnection(this.socket!, { isServer: !tlsClient, secureContext: tlsClient ? undefined : secureContext, log })
       this.connection = connection
       connection.on('version', () => this.emit('status', 'Android Auto版本协商完成'))
       connection.on('secure', () => {

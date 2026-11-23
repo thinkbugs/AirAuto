@@ -254,6 +254,9 @@
     ["正在接收Android Auto视频","正在接收Android Auto視訊","Receiving Android Auto video"],
     ["手机已结束Android Auto连接","手機已結束Android Auto連線","Phone ended the Android Auto session"],
     ["Android Auto连接结束","Android Auto連線結束","Android Auto session ended"],
+    ["支持 iPhone CarPlay，Android Auto 开发中","支援 iPhone CarPlay，Android Auto 開發中","iPhone CarPlay supported; Android Auto in development"],
+    ["Android Auto 支持开发中：开发者模式受 Google 官方证书限制，无线连接将随蓝牙支持开放。","Android Auto 支援開發中：開發者模式受 Google 官方憑證限制，無線連線將隨藍牙支援開放。","Android Auto is in development: developer mode requires Google credentials; wireless will follow with Bluetooth support."],
+    ["开发者模式需要官方 DHU 客户端证书，自签证书会在握手阶段被拒绝；该入口保留用于后续无线联调。","開發者模式需要官方 DHU 用戶端憑證，自簽憑證會在握手階段被拒絕；此入口保留用於後續無線聯調。","Developer mode requires official DHU credentials; self-signed certificates are rejected during the handshake."],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){

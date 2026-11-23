@@ -79,6 +79,7 @@ export class AaConnection extends EventEmitter {
   private queue: Promise<void> = Promise.resolve()
 
   private writeFrame(frame: Buffer): void {
+    if (process.env.AIRAUTO_AA_DEBUG === '1') this.log('frame-out', { flags: frame[1], bytes: frame.readUInt16BE(2) })
     this.socket.write(frame)
   }
 
@@ -170,6 +171,7 @@ export class AaConnection extends EventEmitter {
 
   private async handleFrame(frame: import('./framing').AapFrame): Promise<void> {
     if (this.closed) return
+    if (process.env.AIRAUTO_AA_DEBUG === '1') this.log('frame-in', { flags: frame.flags, type: frame.type, bytes: frame.payload.length })
     if (frame.flags === FLAG_HANDSHAKE) {
       if (frame.type === CONTROL_MSG.VERSION_REQUEST) {
         this.emit('version-request')

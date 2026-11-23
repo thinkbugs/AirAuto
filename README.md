@@ -244,6 +244,6 @@ npm run dist
 
 无线引导参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)，局域网方案与网络协议复用[MacPlay](https://github.com/Roylyl/MacPlay)，保留[LIVI](https://github.com/f-io/LIVI)、LasseHeitgres及贡献者和[DiPlay](https://github.com/shihabal3amri/DiPlay)来源声明。Android Auto协议参考[DiAuto](https://github.com/shihabal3amri/DiAuto)与[Open Headunit](https://github.com/andreknieriem/open-headunit)（AGPL-3.0），协议定义与消息结构保留其来源与许可。因合并AGPL实现，项目升级为AGPL-3.0-or-later，见[LICENSE](LICENSE)、[NOTICE](NOTICE)与[第三方声明](vendor/THIRD-PARTY-NOTICES.txt)。
 
-Android Auto 已接入应用（开发者模式）：手机开启“head unit server”后，电脑通过局域网或 adb forward 连接，视频、触摸与 PCM 音频走同一渲染管线。无线蓝牙（RFCOMM/WPP）握手与真机兼容性验证仍在进行。
+Android Auto 协议栈已并入引擎（帧层、TLS、服务发现、分片重组、视频/触摸/音频），mock 全链路通过；真机开发者模式受 Google 官方 DHU 证书限制，无线蓝牙（RFCOMM/WPP）握手待接入。
 
 AirAuto是独立衍生项目，不代表Apple或上游作者，不声称获得MFi认证。第三方组件、认证证书、私钥和商标继续适用各自权利条件。分发修改版时应保留声明，并提供适用许可要求的对应源码与构建资料。
