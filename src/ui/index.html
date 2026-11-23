@@ -23,7 +23,7 @@
   <div class="dash">
     <article class="dash-hero glass">
       <header class="hero-head"><span class="hero-pill"><svg viewBox="0 0 24 24"><path d="M4 20l8-16 8 16"/><path d="M7 14h10"/></svg><span data-i18n="导航投屏">导航投屏</span></span><span class="hero-state"><span class="dot" id="hero-dot"></span><span id="hero-state-text" data-i18n="未连接">未连接</span></span></header>
-      <div class="hero-copy"><p class="hero-kicker">CarPlay · Android Auto（开发中）</p><h2 id="home-projection" data-i18n="连接手机开始">连接手机开始</h2><p id="hero-detail" data-i18n="连接后即可在车机屏上导航、听歌与通话。">连接后即可在车机屏上导航、听歌与通话。</p></div>
+      <div class="hero-copy"><p class="hero-kicker">CarPlay · Android Auto</p><h2 id="home-projection" data-i18n="连接手机开始">连接手机开始</h2><p id="hero-detail" data-i18n="连接后即可在车机屏上导航、听歌与通话。">连接后即可在车机屏上导航、听歌与通话。</p></div>
       <div class="hero-stats">
         <div><small data-i18n="连接设备">连接设备</small><strong id="home-device" data-i18n="尚未连接手机">尚未连接手机</strong></div>
         <div><small data-i18n="画面">画面</small><strong id="hero-size">—</strong></div>
@@ -97,26 +97,44 @@
       </ol>
     </header>
     <div class="wizard-panel" data-wizard-step="1">
-      <div class="device-grid" id="wizard-devices"></div>
-      <p class="caption" id="wizard-device-hint" data-i18n="请选择一台已在Windows蓝牙中配对的iPhone">请选择一台已在Windows蓝牙中配对的iPhone</p>
-      <p class="caption" data-i18n="Android Auto 支持正在开发中，当前版本连接iPhone（CarPlay）。">Android Auto 支持正在开发中，当前版本连接iPhone（CarPlay）。</p>
+      <div class="segment device-type" id="wizard-device-type">
+        <button data-type="iphone">iPhone · CarPlay</button>
+        <button data-type="android">Android · Auto</button>
+      </div>
+      <div id="wizard-iphone-panel">
+        <div class="device-grid" id="wizard-devices"></div>
+        <p class="caption" id="wizard-device-hint" data-i18n="请选择一台已在Windows蓝牙中配对的iPhone">请选择一台已在Windows蓝牙中配对的iPhone</p>
+      </div>
+      <div id="wizard-android-panel" hidden>
+        <p class="caption" data-i18n="Android Auto 使用开发者模式连接：在手机开启“head unit server”，下一步填写手机地址。">Android Auto 使用开发者模式连接：在手机开启“head unit server”，下一步填写手机地址。</p>
+      </div>
       <div class="wizard-actions">
         <button id="wizard-refresh" data-i18n="刷新设备">刷新设备</button>
         <button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button>
       </div>
     </div>
     <div class="wizard-panel" data-wizard-step="2" hidden>
-      <div class="mode-grid">
-        <button class="mode-card" data-mode="hotspot"><strong data-i18n="本机移动热点">本机移动热点</strong><span data-i18n="使用Windows移动热点接收，最稳定">使用Windows移动热点接收，最稳定</span></button>
-        <button class="mode-card" data-mode="lan"><strong data-i18n="现有局域网">现有局域网</strong><span data-i18n="电脑与手机连接同一路由器">电脑与手机连接同一路由器</span></button>
+      <div id="wizard-iphone-network">
+        <div class="mode-grid">
+          <button class="mode-card" data-mode="hotspot"><strong data-i18n="本机移动热点">本机移动热点</strong><span data-i18n="使用Windows移动热点接收，最稳定">使用Windows移动热点接收，最稳定</span></button>
+          <button class="mode-card" data-mode="lan"><strong data-i18n="现有局域网">现有局域网</strong><span data-i18n="电脑与手机连接同一路由器">电脑与手机连接同一路由器</span></button>
+        </div>
+        <div class="field-grid">
+          <label><span data-i18n="Wi-Fi名称">Wi-Fi名称</span><input id="wizard-ssid" autocomplete="off"></label>
+          <label><span data-i18n="密码">密码</span><input id="wizard-password" type="password" autocomplete="off"></label>
+        </div>
+        <div class="wizard-actions">
+          <button id="wizard-read" data-i18n="读取当前网络和密码">读取当前网络和密码</button>
+          <button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button>
+        </div>
       </div>
-      <div class="field-grid">
-        <label><span data-i18n="Wi-Fi名称">Wi-Fi名称</span><input id="wizard-ssid" autocomplete="off"></label>
-        <label><span data-i18n="密码">密码</span><input id="wizard-password" type="password" autocomplete="off"></label>
-      </div>
-      <div class="wizard-actions">
-        <button id="wizard-read" data-i18n="读取当前网络和密码">读取当前网络和密码</button>
-        <button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button>
+      <div id="wizard-android-network" hidden>
+        <div class="field-grid">
+          <label><span data-i18n="手机地址">手机地址</span><input id="wizard-host" autocomplete="off" placeholder="192.168.1.23"></label>
+          <label><span data-i18n="端口">端口</span><input id="wizard-port" type="number" min="1" max="65535" value="5277"></label>
+        </div>
+        <p class="caption" data-i18n="在手机 Android Auto 开发者选项启动“head unit server”，手机与电脑需在同一网络；也可执行 adb forward tcp:5277 tcp:5277 后填写 127.0.0.1。">在手机 Android Auto 开发者选项启动“head unit server”，手机与电脑需在同一网络；也可执行 adb forward tcp:5277 tcp:5277 后填写 127.0.0.1。</p>
+        <div class="wizard-actions"><button class="link-button" data-page="connection" data-i18n="高级设置">高级设置</button></div>
       </div>
     </div>
     <div class="wizard-panel" data-wizard-step="3" hidden>
@@ -151,6 +169,15 @@
 </section>
 <section id="connection" class="page" hidden>
   <header><h1 data-i18n="连接">连接</h1></header>
+  <h2 class="section-title" data-i18n="设备类型">设备类型</h2>
+  <div class="card">
+    <label class="setting-row"><span data-i18n="连接方式">连接方式</span><select id="deviceType"><option value="iphone">iPhone · CarPlay</option><option value="android">Android · Auto</option></select></label>
+    <div id="aa-fields" hidden>
+      <label class="setting-row"><span data-i18n="Android Auto 地址">Android Auto 地址</span><input id="aaHost" autocomplete="off" placeholder="192.168.1.23"></label>
+      <label class="setting-row"><span data-i18n="端口">端口</span><input id="aaPort" type="number" min="1" max="65535"></label>
+      <p class="caption" data-i18n="开发者模式：在手机启动“head unit server”，电脑连接手机地址；也可使用 adb forward tcp:5277 tcp:5277 后填写 127.0.0.1。">开发者模式：在手机启动“head unit server”，电脑连接手机地址；也可使用 adb forward tcp:5277 tcp:5277 后填写 127.0.0.1。</p>
+    </div>
+  </div>
   <h2 class="section-title" data-i18n="接收端">接收端</h2>
   <div class="card">
     <div class="setting-row"><span data-i18n="状态">状态</span><span id="status" class="value" data-i18n="准备连接">准备连接</span></div>

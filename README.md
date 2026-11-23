@@ -94,6 +94,7 @@ Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的
 | 多语言 | 跟随系统、简体中文、繁體中文、English，切换立即生效 |
 | 座舱界面 | 极光玻璃仪表盘首页、悬浮 Dock（主页/导航/音乐 · AI · 行程/电话/更多）、三步连接向导、投屏极简 HUD、深/浅色一键切换、壁纸与主题中心（内置四套，可导入本地图片） |
 | 分屏座舱 | 宽屏时可让投屏靠左，右侧显示时钟、媒体与帧率（显示设置中开启） |
+| Android Auto | 开发者模式连接（局域网或 adb forward），视频/触摸/音频复用现有管线 |
 | 语音与媒体 | 顶栏/HUD 直接唤起 Siri，首页媒体卡可播放、切歌与拖动进度 |
 | 关于与更新 | 查看版本、检查正式发行版、下载对应安装包，并管理日志与认证 |
 
@@ -243,6 +244,6 @@ npm run dist
 
 无线引导参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)，局域网方案与网络协议复用[MacPlay](https://github.com/Roylyl/MacPlay)，保留[LIVI](https://github.com/f-io/LIVI)、LasseHeitgres及贡献者和[DiPlay](https://github.com/shihabal3amri/DiPlay)来源声明。Android Auto协议参考[DiAuto](https://github.com/shihabal3amri/DiAuto)与[Open Headunit](https://github.com/andreknieriem/open-headunit)（AGPL-3.0），协议定义与消息结构保留其来源与许可。因合并AGPL实现，项目升级为AGPL-3.0-or-later，见[LICENSE](LICENSE)、[NOTICE](NOTICE)与[第三方声明](vendor/THIRD-PARTY-NOTICES.txt)。
 
-Android Auto支持仍处于开发阶段（`spike/aa-probe`）：协议链路与连续视频回放已在探针内验证（含分片重组与 WebCodecs 解码），尚未接入应用界面。
+Android Auto 已接入应用（开发者模式）：手机开启“head unit server”后，电脑通过局域网或 adb forward 连接，视频、触摸与 PCM 音频走同一渲染管线。无线蓝牙（RFCOMM/WPP）握手与真机兼容性验证仍在进行。
 
 AirAuto是独立衍生项目，不代表Apple或上游作者，不声称获得MFi认证。第三方组件、认证证书、私钥和商标继续适用各自权利条件。分发修改版时应保留声明，并提供适用许可要求的对应源码与构建资料。

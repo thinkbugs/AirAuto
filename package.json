@@ -8,7 +8,7 @@
   "main": "src/main.cjs",
   "scripts": {
     "prebuild": "node node_modules/electron/install.js",
-    "build:engine": "node scripts/prune-engine.cjs && tsc -p tsconfig.json",
+    "build:engine": "node scripts/prune-engine.cjs && tsc -p tsconfig.json && node scripts/copy-engine-assets.cjs",
     "build:native": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-native.ps1",
     "build": "npm run build:engine && npm run build:native && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-assets.ps1",
     "start": "electron .",
@@ -21,14 +21,14 @@
     "electron": "42.11.10",
     "electron-builder": "^26.0.12",
     "marked": "^17.0.0",
-    "protobufjs": "^8.8.1",
     "typescript": "^5.9.3",
     "ws": "^8.23.0"
   },
   "dependencies": {
     "@noble/curves": "1.9.7",
     "multicast-dns": "7.2.5",
-    "plist": "3.1.0"
+    "plist": "3.1.0",
+    "protobufjs": "8.8.1"
   },
   "build": {
     "appId": "io.github.roylyl.airauto",

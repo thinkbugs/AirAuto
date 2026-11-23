@@ -4,7 +4,7 @@ const painter=new AirAutoLatestVideoPainter({schedule:callback=>requestAnimation
 const receiver=new AirAutoVideoReceiver({Decoder:VideoDecoder,Chunk:EncodedVideoChunk,ack:(frame,state)=>airauto.input({command:'video-ack',frameId:frame.frameId,generation:frame.generation,...state}),reset:()=>painter.clear(),requestKey:()=>airauto.input({command:'request-keyframe'}),fail:reason=>airauto.input({command:'decode-error',reason}),recover:reason=>airauto.input({command:'video-recovery',reason}),output(frame){decodedWidth=frame.displayWidth;decodedHeight=frame.displayHeight;count++;painter.submit(frame)}});
 window.addEventListener('unload',()=>{painter.close();receiver.close()});
 window.addEventListener('resize',pixelViewport);
-airauto.on(m=>{if(m.type==='video-viewport'){viewport=m;pixelViewport()}if(m.type==='video-config')receiver.configure(m);if(m.type==='video-frame')receiver.decode(m)});
+airauto.on(m=>{if(m.type==='video-viewport'){viewport=m;pixelViewport();const label=document.getElementById('hud-state');if(label)label.textContent=m.protocol==='android'?'Android Auto':'CarPlay'}if(m.type==='video-config')receiver.configure(m);if(m.type==='video-frame')receiver.decode(m)});
 let dragging=false,last={x:.5,y:.5},wheelActive=false,wheelTimer,wheelFrame,wheelX=0,wheelY=0;
 const touch=(p,down)=>airauto.input({command:'touch',x:p.x,y:p.y,down});
 function point(e,clamp=false){return airautoGeometry.coordinates(e.clientX,e.clientY,canvas.getBoundingClientRect(),decodedWidth,decodedHeight,clamp)}

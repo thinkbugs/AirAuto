@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id);
-let config,running=false,toastTimer,artUrl='',playing={},locale='zh-CN',updateState={},displayItems=[],displayLoading=true,displayRequest=0,displaySaveRequest=0,resolutionChoice,networkRequest=0,networkReadRequest=0,networkReadBusy=false,mediaFormat,displayError='',displayDraft,lastReceiverStatus='',wizardStep=1,wizardMode='hotspot',wizardDevice='',wizardStarting=false;
+let config,running=false,toastTimer,artUrl='',playing={},locale='zh-CN',updateState={},displayItems=[],displayLoading=true,displayRequest=0,displaySaveRequest=0,resolutionChoice,networkRequest=0,networkReadRequest=0,networkReadBusy=false,mediaFormat,displayError='',displayDraft,lastReceiverStatus='',wizardStep=1,wizardMode='hotspot',wizardDevice='',wizardDeviceType='iphone',wizardStarting=false;
 const logs=[],pendingSaves=new Set(),networkEdits=new Map();
 let networkInfo=null,networkBusy=false;
 const t=source=>AirAutoI18n.translate(source,config?.language||'system',locale);
@@ -116,7 +116,9 @@ function wireWizard(){
     if(step===2)loadNetwork();
     if(step===3)renderSummary();
   }
+  function renderDeviceType(){wizardDeviceType=config?.deviceType==='android'?'android':'iphone';document.querySelectorAll('#wizard-device-type button').forEach(button=>button.classList.toggle('active',button.dataset.type===wizardDeviceType));const iphone=$n('wizard-iphone-panel'),android=$n('wizard-android-panel');if(iphone)iphone.hidden=wizardDeviceType!=='iphone';if(android)android.hidden=wizardDeviceType!=='android';const refresh=$n('wizard-refresh');if(refresh)refresh.hidden=wizardDeviceType==='android'}
   async function loadDevices(){
+    renderDeviceType();
     const box=$n('wizard-devices');if(!box)return;box.replaceChildren();
     const hint=$n('wizard-device-hint');const result=await call('bluetooth');const devices=result.ok?result.devices:[];
     wizardDevice=wizardDevice||config?.targetBluetooth||'';
@@ -134,27 +136,35 @@ function wireWizard(){
   function markMode(mode){document.querySelectorAll('.mode-card').forEach(card=>card.classList.toggle('active',card.dataset.mode===mode))}
   function loadNetwork(){
     wizardMode=config?.wirelessMode||'hotspot';markMode(wizardMode);
+    const android=config?.deviceType==='android';
+    const iphoneNetwork=$n('wizard-iphone-network'),androidNetwork=$n('wizard-android-network');
+    if(iphoneNetwork)iphoneNetwork.hidden=android;if(androidNetwork)androidNetwork.hidden=!android;
     const ssid=$n('wizard-ssid'),password=$n('wizard-password');
     if(ssid)ssid.value=config?.[fieldKey('ssid')]||'';
     if(password)password.value=config?.[fieldKey('password')]||'';
+    const host=$n('wizard-host'),port=$n('wizard-port');
+    if(host)host.value=config?.aaHost||'';if(port)port.value=String(config?.aaPort||5277);
   }
   async function ensureNetworkSaved(){
     const ssid=$n('wizard-ssid'),password=$n('wizard-password');if(!ssid||!password)return false;
     if(!ssid.value.trim()){toast('请填写Wi-Fi名称');ssid.focus();return false}
     await save(fieldKey('ssid'),ssid.value.trim());await save(fieldKey('password'),password.value);return true;
   }
+  async function ensureAndroidSaved(){const host=$n('wizard-host'),port=$n('wizard-port');const value=(host?.value||'').trim();if(!value){toast('请填写手机地址');host?.focus();return false}const portValue=Number(port?.value||5277);if(!Number.isInteger(portValue)||portValue<1||portValue>65535){toast('端口无效');return false}await save('aaHost',value);await save('aaPort',portValue);return true}
   function renderSummary(){
     const box=$n('wizard-summary');if(!box)return;box.replaceChildren();
+    const android=config?.deviceType==='android';
     const active=[...document.querySelectorAll('#wizard-devices .device-card.active')][0];
-    const deviceName=active?.querySelector('strong')?.textContent||'—';
-    const items=[['设备',deviceName],['网络',config?.wirelessMode==='lan'?'现有局域网':'本机移动热点'],['Wi-Fi',config?.[fieldKey('ssid')]||'—']];
+    const deviceName=android?'Android 手机（开发者模式）':(active?.querySelector('strong')?.textContent||'—');
+    const network=android?`${config?.aaHost||'—'}:${config?.aaPort||5277}`:(config?.wirelessMode==='lan'?'现有局域网':'本机移动热点');
+    const items=[['设备',deviceName],['网络',network],['Wi-Fi',android?'—':(config?.[fieldKey('ssid')]||'—')]];
     for(const [label,value] of items){const wrap=document.createElement('div');const small=document.createElement('small');small.textContent=label;const strong=document.createElement('strong');strong.textContent=value;wrap.append(small,strong);box.append(wrap)}
   }
   async function startFromWizard(){
     if(wizardStarting)return;wizardStarting=true;
     const next=$n('wizard-next');if(next)next.disabled=true;const status=$n('wizard-status');
     try{
-      if(!await ensureNetworkSaved())return;
+      if(config?.deviceType==='android'){if(!await ensureAndroidSaved())return}else if(!await ensureNetworkSaved())return;
       const saved=await Promise.all([...pendingSaves]);if(saved.some(value=>!value.ok&&value.code!=='display-save-superseded'))return;
       await window.airautoAudio?.prepare(config);
       if(status){text('wizard-status','正在启动接收…');status.classList.toggle('busy',true);status.classList.toggle('ok',false)}
@@ -165,9 +175,11 @@ function wireWizard(){
   }
   window.__wizardEnter=()=>go(1);
   $n('wizard-refresh').onclick=()=>loadDevices();
-  $n('wizard-next').onclick=()=>{if(wizardStep===1){if(!wizardDevice){toast('请选择一台手机');return}go(2)}else if(wizardStep===2){ensureNetworkSaved().then(ok=>{if(ok)go(3)})}else startFromWizard()};
+  $n('wizard-next').onclick=()=>{if(wizardStep===1){if(config?.deviceType==='android'){go(2);return}if(!wizardDevice){toast('请选择一台手机');return}go(2)}else if(wizardStep===2){const check=config?.deviceType==='android'?ensureAndroidSaved():ensureNetworkSaved();check.then(ok=>{if(ok)go(3)})}else startFromWizard()};
   $n('wizard-back').onclick=()=>{if(wizardStep>1)go(wizardStep-1)};
   $n('wizard-read').onclick=async()=>{const button=$n('wizard-read');if(!button)return;button.disabled=true;try{const trigger=$('read-network');if(trigger)trigger.click();for(let i=0;i<50&&networkReadBusy;i++)await new Promise(resolve=>setTimeout(resolve,200));await new Promise(resolve=>setTimeout(resolve,250));const ssid=$n('wizard-ssid'),password=$n('wizard-password');if(ssid)ssid.value=$('ssid')?.value||'';if(password)password.value=$('password')?.value||''}finally{button.disabled=false}};
+  document.querySelectorAll('#wizard-device-type button').forEach(button=>button.onclick=async()=>{const saved=await save('deviceType',button.dataset.type);if(saved.ok){wizardDeviceType=config.deviceType;renderDeviceType();if(wizardStep===2)loadNetwork();if(wizardStep===3)renderSummary()}});
+  for(const id of ['wizard-host','wizard-port'])if($n(id))$n(id).addEventListener('change',()=>{if(config?.deviceType==='android')ensureAndroidSaved()});
   document.querySelectorAll('.mode-card').forEach(card=>card.onclick=async()=>{const mode=card.dataset.mode;const saved=await save('wirelessMode',mode);if(saved.ok){wizardMode=mode;markMode(mode);loadNetwork()}});
   $n('wizard-hotspot').onclick=()=>call('settings-hotspot');
   $n('wizard-bt').onclick=()=>call('settings-bluetooth');
@@ -238,6 +250,9 @@ airauto.on(message=>{
   $('audioEnabled').checked=config.audioEnabled!==false;$('audioEnabled').onchange=()=>save('audioEnabled',$('audioEnabled').checked);$('open-auth').onclick=()=>call('open-auth');$('open-log').onclick=()=>call('open-log');
   $('autoReconnect').checked=config.autoReconnect===true;$('autoReconnect').onchange=()=>save('autoReconnect',$('autoReconnect').checked);
   if($('splitCockpit')){$('splitCockpit').checked=config.splitCockpit===true;$('splitCockpit').onchange=()=>save('splitCockpit',$('splitCockpit').checked)}
+  if($('deviceType')){$('deviceType').value=config.deviceType||'iphone';const toggleAa=()=>{if($('aa-fields'))$('aa-fields').hidden=$('deviceType').value!=='android'};toggleAa();$('deviceType').onchange=async()=>{const saved=await save('deviceType',$('deviceType').value);if(saved.ok)toggleAa()}}
+  if($('aaHost')){$('aaHost').value=config.aaHost||'';$('aaHost').onchange=()=>save('aaHost',$('aaHost').value.trim())}
+  if($('aaPort')){$('aaPort').value=String(config.aaPort||5277);$('aaPort').onchange=()=>save('aaPort',Number($('aaPort').value)||5277)}
   $('refresh-status').onclick=async()=>{const value=await call('state');if(value.ok){text('auth-status',value.auth?'文件已就绪，等待iPhone验证':'缺少文件');logs.length=0;for(const item of value.diagnostics||[])logs.push(diagnosticLine(item));renderLogs();updateState=value.updates||updateState;renderUpdates()}};
   $('hotspot-settings').onclick=()=>call(config.wirelessMode==='lan'?'settings-location':'settings-hotspot');$('bluetooth-settings').onclick=()=>call('settings-bluetooth');$('refresh-bt').onclick=bluetooth;$('refresh-network').onclick=networks;$('refresh-displays').onclick=displays;$('refresh-audio').onclick=()=>audioDevices(true);
   $('import-auth').onclick=async()=>{const value=await airauto.call('import-auth');if(value.ok){text('auth-status','认证文件已更新');result('auth-result','认证材料已用Windows DPAPI保护保存')}else result('auth-result',value.error)};
