@@ -59,6 +59,29 @@
     <article class="glass trip-card"><small data-i18n="画面尺寸">画面尺寸</small><strong id="trip-size">—</strong></article>
   </div>
 </section>
+<section id="appearance" class="page appearance-page" hidden>
+  <header class="settings-head"><p class="hero-eyebrow" data-i18n="设置">设置</p><h1 data-i18n="壁纸与主题">壁纸与主题</h1></header>
+  <h2 class="section-title" data-i18n="主题模式">主题模式</h2>
+  <div class="card"><div class="segment" id="theme-modes">
+    <button data-theme="system" data-i18n="跟随Windows">跟随Windows</button>
+    <button data-theme="light" data-i18n="浅色">浅色</button>
+    <button data-theme="dark" data-i18n="深色">深色</button>
+  </div></div>
+  <h2 class="section-title" data-i18n="强调色">强调色</h2>
+  <div class="card"><div class="swatches" id="accent-swatches">
+    <button data-accent="sky"><span class="swatch" style="--sw:#4cc2ff"></span><b data-i18n="青蓝">青蓝</b></button>
+    <button data-accent="jade"><span class="swatch" style="--sw:#35d49a"></span><b data-i18n="翡翠">翡翠</b></button>
+    <button data-accent="violet"><span class="swatch" style="--sw:#a78bfa"></span><b data-i18n="紫罗兰">紫罗兰</b></button>
+    <button data-accent="amber"><span class="swatch" style="--sw:#f0b45c"></span><b data-i18n="琥珀">琥珀</b></button>
+  </div></div>
+  <h2 class="section-title" data-i18n="壁纸">壁纸</h2>
+  <div class="wallpaper-grid" id="wallpaper-grid">
+    <button data-wallpaper="aurora"><span class="wallpaper-preview w-aurora"></span><b data-i18n="极光湖岸">极光湖岸</b></button>
+    <button data-wallpaper="dusk"><span class="wallpaper-preview w-dusk"></span><b data-i18n="暮色山岭">暮色山岭</b></button>
+    <button data-wallpaper="night"><span class="wallpaper-preview w-night"></span><b data-i18n="深海夜空">深海夜空</b></button>
+    <button data-wallpaper="plain"><span class="wallpaper-preview w-plain"></span><b data-i18n="纯净">纯净</b></button>
+  </div>
+</section>
 <section id="connect" class="page connect-page" hidden>
   <div class="wizard">
     <header class="wizard-head">
@@ -117,6 +140,7 @@
   <div class="settings-grid">
     <button class="settings-tile" data-page="connection"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4M3 8a8 8 0 0 0 0 8M21 8a8 8 0 0 1 0 8"/></svg><strong data-i18n="连接设置">连接设置</strong><span data-i18n="蓝牙、网络与接收参数">蓝牙、网络与接收参数</span></button>
     <button class="settings-tile" data-page="display"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><strong data-i18n="显示与分辨率">显示与分辨率</strong><span data-i18n="画面尺寸与显示模式">画面尺寸与显示模式</span></button>
+    <button class="settings-tile" data-page="appearance"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18"/><circle cx="9" cy="9" r="1.4"/><circle cx="15" cy="9" r="1.4"/><circle cx="9" cy="15" r="1.4"/><circle cx="15" cy="15" r="1.4"/></svg><strong data-i18n="壁纸与主题">壁纸与主题</strong><span data-i18n="背景、强调色与主题">背景、强调色与主题</span></button>
     <button class="settings-tile" data-page="audio"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9z"/><path d="M16 8a6 6 0 0 1 0 8"/></svg><strong data-i18n="音频输出">音频输出</strong><span data-i18n="设备与音量">设备与音量</span></button>
     <button class="settings-tile" data-page="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg><strong data-i18n="关于与更新">关于与更新</strong><span data-i18n="版本、更新与认证">版本、更新与认证</span></button>
     <button class="settings-tile" data-page="donation"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><strong data-i18n="捐赠支持">捐赠支持</strong><span data-i18n="支持持续开发">支持持续开发</span></button>

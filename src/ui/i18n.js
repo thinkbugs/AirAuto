@@ -222,6 +222,19 @@
     ["投屏时长","投影時長","Session time"],
     ["解码帧率","解碼影格率","Decode rate"],
     ["画面尺寸","畫面尺寸","Picture size"],
+    ["壁纸与主题","壁紙與主題","Wallpaper & themes"],
+    ["背景、强调色与主题","背景、強調色與主題","Background, accent and theme"],
+    ["主题模式","主題模式","Theme mode"],
+    ["强调色","強調色","Accent color"],
+    ["青蓝","青藍","Sky"],
+    ["翡翠","翡翠","Jade"],
+    ["紫罗兰","紫羅蘭","Violet"],
+    ["琥珀","琥珀","Amber"],
+    ["壁纸","壁紙","Wallpaper"],
+    ["极光湖岸","極光湖岸","Aurora shore"],
+    ["暮色山岭","暮色山嶺","Dusk ridge"],
+    ["深海夜空","深海夜空","Deep night"],
+    ["纯净","純淨","Clean"],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){
