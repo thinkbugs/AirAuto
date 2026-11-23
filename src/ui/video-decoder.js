@@ -11,4 +11,4 @@
  recover(reason){const now=Date.now();this.retries=this.retries.filter(t=>now-t<10000);if(this.retries.length>=3){this.ready=false;this.api.fail('视频恢复失败：'+reason);return false}this.retries.push(now);this.software=true;this.api.recover(reason);this.configure({data:this.description},true);return true}
  tick(){if(!this.ready)return;if(this.awaitKey)this.request();else if(this.lastInput>this.lastOutput&&Date.now()-this.lastOutput>2500)this.recover('视频输出停滞')}
  close(){clearInterval(this.timer);this.generation++;this.ready=false;for(const frame of [...this.pending,...this.submitted])this.ack(frame);this.pending=[];this.submitted=[];if(this.decoder&&this.decoder.state!=='closed')this.decoder.close()}
-}if(typeof module==='object')module.exports=VideoReceiver;else root.WinPlayVideoReceiver=VideoReceiver})(globalThis);
+}if(typeof module==='object')module.exports=VideoReceiver;else root.AirAutoVideoReceiver=VideoReceiver})(globalThis);

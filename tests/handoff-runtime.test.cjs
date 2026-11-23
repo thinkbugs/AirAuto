@@ -34,7 +34,7 @@ async function receiver({interruptAt,fps=60}={}){
   './nowPlaying':{NowPlaying:class{position(){return 0}close(){}}},'./relay':{setIapRelayFactory:value=>relayFactory=value},
   './media':{closeMedia:()=>{}},'./networkMode':{receiverNetwork,accessPointIdentifier:()=>mac},'./handoffRecovery':{HandoffRecovery:Recovery},'./videoFrameGate':require('../build/engine/videoFrameGate')
  };
- const processMock={connected:true,env:{WINPLAY_NATIVE:'public-native',WINPLAY_RESOURCES:'public-resources'},send:message=>messages.push(message),
+ const processMock={connected:true,env:{AIRAUTO_NATIVE:'public-native',AIRAUTO_RESOURCES:'public-resources'},send:message=>messages.push(message),
   on:(event,callback)=>{if(event==='message')receive=callback},once:()=>{},exit:()=>{}};
  const context={require:name=>{assert(name in modules,'unexpected runtime dependency '+name);return modules[name]},exports:{},Buffer,console:{},process:processMock,
   setTimeout:clock.setTimeout,clearTimeout:clock.clearTimeout,setInterval:()=>({unref(){}}),clearInterval:()=>{}};

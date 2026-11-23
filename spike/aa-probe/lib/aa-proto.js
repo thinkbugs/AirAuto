@@ -109,18 +109,18 @@ function serviceDiscoveryResponse({ width, height, fps, density } = negotiation(
   ]
   return encode('ServiceDiscoveryResponse', {
     services,
-    make: 'WinPlay',
-    model: 'WinPlay',
+    make: 'AirAuto',
+    model: 'AirAuto',
     year: '2026',
-    vehicle_id: 'WINPLAY-AA-0001',
+    vehicle_id: 'AIRAUTO-AA-0001',
     driver_position: 0,
-    head_unit_make: 'WinPlay',
-    head_unit_model: 'WinPlay AA Probe',
+    head_unit_make: 'AirAuto',
+    head_unit_model: 'AirAuto AA Probe',
     head_unit_software_build: '0.1.0',
     head_unit_software_version: '0.1.0',
     can_play_native_media_during_vr: false,
     hide_projected_clock: false,
-    display_name: 'WinPlay',
+    display_name: 'AirAuto',
   })
 }
 

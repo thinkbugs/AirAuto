@@ -1,4 +1,4 @@
-// WinPlay Windows platform bridge. Bluetooth APIs: Microsoft Winsock AF_BTH.
+// AirAuto Windows platform bridge. Bluetooth APIs: Microsoft Winsock AF_BTH.
 using System;
 using System.IO;
 using System.Text;

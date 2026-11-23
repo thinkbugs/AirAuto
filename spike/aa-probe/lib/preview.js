@@ -1,7 +1,7 @@
 'use strict'
 
 // Browser preview: serves a WebCodecs page and pushes the AA video channel to it. It only
-// exists to eyeball the probe; WinPlay's real renderer is the Electron UI.
+// exists to eyeball the probe; AirAuto's real renderer is the Electron UI.
 
 const fs = require('node:fs')
 const http = require('node:http')

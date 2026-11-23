@@ -13,5 +13,5 @@
   clear(){if(this.request)this.api.cancel(this.request);this.request=0;this.pending?.close();this.pending=undefined}
   close(){this.clear()}
  }
- if(typeof module==='object')module.exports=LatestVideoPainter;else root.WinPlayLatestVideoPainter=LatestVideoPainter;
+ if(typeof module==='object')module.exports=LatestVideoPainter;else root.AirAutoLatestVideoPainter=LatestVideoPainter;
 })(globalThis);

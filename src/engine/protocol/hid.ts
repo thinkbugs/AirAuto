@@ -102,7 +102,7 @@ export function touchHidDevice(xMax: number, yMax: number, displayUuid: string):
     hidVendorID: 2,
     hidCountryCode: 0,
     uuid: TOUCH_HID_UID.toString(16),
-    name: 'WinPlay Touchscreen',
+    name: 'AirAuto Touchscreen',
     displayUUID: displayUuid,
     hidDescriptor: multitouchDescriptor(xMax, yMax)
   }
@@ -328,15 +328,15 @@ function hidDeviceEntry(
 }
 
 export function knobHidDevice(displayUuid: string): PlistValue {
-  return hidDeviceEntry(KNOB_HID_UID, 'WinPlay Knob', knobDescriptor, displayUuid)
+  return hidDeviceEntry(KNOB_HID_UID, 'AirAuto Knob', knobDescriptor, displayUuid)
 }
 
 export function mediaHidDevice(displayUuid: string): PlistValue {
-  return hidDeviceEntry(MEDIA_HID_UID, 'WinPlay Media', mediaDescriptor, displayUuid)
+  return hidDeviceEntry(MEDIA_HID_UID, 'AirAuto Media', mediaDescriptor, displayUuid)
 }
 
 export function telephonyHidDevice(displayUuid: string): PlistValue {
-  return hidDeviceEntry(TELEPHONY_HID_UID, 'WinPlay Telephony', telephonyDescriptor, displayUuid)
+  return hidDeviceEntry(TELEPHONY_HID_UID, 'AirAuto Telephony', telephonyDescriptor, displayUuid)
 }
 
 export interface KnobState {

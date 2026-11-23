@@ -68,7 +68,7 @@ test('an earlier delayed exact-mode save cannot overwrite a later ordinary-mode 
 test('superseded save errors neither replace a newer draft nor prevent starting',async()=>{
  const r=fixture(),replies=[];r.apply([r.item()]);r.context.call=()=>new Promise(resolve=>replies.push(resolve));
  const first=r.context.saveDisplay({fullScreen:true}),last=r.context.saveDisplay({fullScreen:false,width:1920,height:1080});
- let started=0;r.context.running=false;r.context.window={winplayAudio:{prepare:async()=>{}}};r.context.showPage=()=>{};
+ let started=0;r.context.running=false;r.context.window={airautoAudio:{prepare:async()=>{}}};r.context.showPage=()=>{};
  vm.runInContext(source.match(/^  \$\('start'\)\.onclick=async\(\)=>\{[^\n]+/m)[0],r.context);
  const start=r.node('start').onclick();replies[0]({ok:false,code:'display-save-superseded'});await first;
  assert.equal(r.context.displayDraft.fullScreen,false);assert.equal(r.context.displayDraft.width,1920);assert.equal(r.context.displayError,'');
@@ -76,7 +76,7 @@ test('superseded save errors neither replace a newer draft nor prevent starting'
  assert.equal(started,1);assert.equal(r.config.fullScreen,false);assert.equal(r.config.width,1920);
 });
 test('a backend superseded response is silent',async()=>{
- let toasts=0;const context={winplay:{call:async()=>({ok:false,code:'display-save-superseded'})},toast:()=>++toasts};
+ let toasts=0;const context={airauto:{call:async()=>({ok:false,code:'display-save-superseded'})},toast:()=>++toasts};
  vm.runInNewContext(source.match(/^async function call\(op,arg\).*$/m)[0],context);
  assert.equal((await context.call('save',{})).code,'display-save-superseded');assert.equal(toasts,0);
 });

@@ -8,7 +8,7 @@ function harness(){
 }
 function detail(error){return JSON.parse(error.message.slice(error.message.indexOf('：')+1))}
 test('monitor helper failures preserve safe timeout, exit and Win32 codes without process arguments or paths',()=>{
- const {context}=harness(),secret='C:\\Users\\PrivateUser\\AppData\\WinPlay.exe';
+ const {context}=harness(),secret='C:\\Users\\PrivateUser\\AppData\\AirAuto.exe';
  const timeout=detail(context.nativeMonitorFailure({code:null,killed:true,signal:'SIGTERM',message:secret},secret,5012));
  assert.deepEqual(timeout,{stage:'monitors',reason:'process-failed',elapsedMs:5012,signal:'SIGTERM',killed:true,timedOut:true});
  const missing=detail(context.nativeMonitorFailure({code:'ENOENT',path:secret,message:secret},secret,4));

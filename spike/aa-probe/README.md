@@ -1,11 +1,11 @@
 # AA head-unit probe (M1 spike)
 
-Android Auto receiver spike, isolated from the WinPlay engine. It exists to prove the
+Android Auto receiver spike, isolated from the AirAuto engine. It exists to prove the
 protocol链路 before any UI or engine refactor: AAP framing, TLS-over-frames, version
 exchange, service discovery, channel open, media setup, codec config, a video frame and
 teardown all round-trip against a bundled mock phone.
 
-Not wired into WinPlay yet. Nothing outside `spike/` depends on it.
+Not wired into AirAuto yet. Nothing outside `spike/` depends on it.
 
 ## What works
 
@@ -95,5 +95,5 @@ TLS is pinned to 1.2 for this spike to avoid TLS 1.3 post-handshake tickets.
 The `.proto` definitions under `proto/` are adapted from
 [DiAuto](https://github.com/shihabal3amri/DiAuto) (AGPL-3.0), which preserves
 [Open Headunit](https://github.com/andreknieriem/open-headunit) and Michael Reid's original
-headunit work. Everything else in this directory is original WinPlay code under
+headunit work. Everything else in this directory is original AirAuto code under
 AGPL-3.0-or-later. See the repository `LICENSE` and `NOTICE`.

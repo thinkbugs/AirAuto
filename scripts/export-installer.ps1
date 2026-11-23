@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $packageInfo = Get-Content -LiteralPath (Join-Path $projectRoot 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-$artifactName = 'WinPlay-' + $packageInfo.version + '-Setup-x64.exe'
+$artifactName = 'AirAuto-' + $packageInfo.version + '-Setup-x64.exe'
 $artifactPath = Join-Path $projectRoot ('dist/' + $artifactName)
 if (!(Test-Path -LiteralPath $artifactPath -PathType Leaf)) { throw 'Installer was not generated; desktop export aborted' }
 $startupCheck = Join-Path $projectRoot 'scripts/check-installer-startup.cjs'

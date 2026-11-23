@@ -26,7 +26,7 @@ export interface CpIdentity {
 let cached: CpIdentity | null = null
 
 function identityFile(): string {
-  return join(app.getPath('userData'), 'cp', 'winplay-v1', 'identity.json')
+  return join(app.getPath('userData'), 'cp', 'airauto-v1', 'identity.json')
 }
 
 export function loadOrCreateIdentity(): CpIdentity {
@@ -48,7 +48,7 @@ export function loadOrCreateIdentity(): CpIdentity {
   const kp = ed25519Generate()
   const pairingId = randomUUID()
   try {
-    mkdirSync(join(app.getPath('userData'), 'cp', 'winplay-v1'), { recursive: true })
+    mkdirSync(join(app.getPath('userData'), 'cp', 'airauto-v1'), { recursive: true })
     writeFileAtomic(
       file,
       JSON.stringify({

@@ -1,6 +1,6 @@
 'use strict'
 
-// Android Auto head-unit probe. Isolated from WinPlay's engine: it only speaks the
+// Android Auto head-unit probe. Isolated from AirAuto's engine: it only speaks the
 // protocol far enough to verify framing, TLS-in-frame, service discovery and media setup
 // against a real phone (AA developer mode "head unit server") or the bundled mock phone.
 
@@ -40,7 +40,7 @@ function ensureCertificate() {
   execFileSync('openssl', [
     'req', '-x509', '-newkey', 'rsa:2048', '-nodes',
     '-keyout', KEY_FILE, '-out', CERT_FILE,
-    '-days', '3650', '-subj', '/CN=WinPlay AA Probe',
+    '-days', '3650', '-subj', '/CN=AirAuto AA Probe',
   ], { stdio: 'ignore' })
 }
 

@@ -1,10 +1,10 @@
 import { mkdirSync, readFileSync, writeFileSync, renameSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { execFileSync } from 'node:child_process'
-export const dataDir = process.env.WINPLAY_DATA || join(process.env.LOCALAPPDATA!, 'WinPlay')
+export const dataDir = process.env.AIRAUTO_DATA || join(process.env.LOCALAPPDATA!, 'AirAuto')
 export const app = { getPath: (_: string) => dataDir }
 function protect(data: Buffer, decrypt = false): Buffer {
- const helper = process.env.WINPLAY_NATIVE!
+ const helper = process.env.AIRAUTO_NATIVE!
  return execFileSync(helper, [decrypt ? 'unprotect' : 'protect'], {input:data, windowsHide:true, maxBuffer:16*1024*1024})
 }
 export function readProtected(file: string): Buffer { return protect(readFileSync(file),true) }

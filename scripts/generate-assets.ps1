@@ -33,13 +33,13 @@ foreach($size in @(16,20,24,32,40,48,64,128,256,512)){
  $drawing.FillPolygon($white,[System.Drawing.PointF[]]@([System.Drawing.PointF]::new(62,46),[System.Drawing.PointF]::new(75,56),[System.Drawing.PointF]::new(62,66)))
  $drawing.FillEllipse($dark,74.5,73.5,3,3)
  $stream=New-Object System.IO.MemoryStream;$bitmap.Save($stream,[System.Drawing.Imaging.ImageFormat]::Png);$png=$stream.ToArray()
- if($size -ge 256){[IO.File]::WriteAllBytes((Join-Path $iconRoot "winplay-$size.png"),$png)}
+ if($size -ge 256){[IO.File]::WriteAllBytes((Join-Path $iconRoot "airauto-$size.png"),$png)}
  if($size -le 256){$images+=@{size=$size;bytes=$png}}
  $stream.Dispose();$pen.Dispose();$dark.Dispose();$blue.Dispose();$screen.Dispose();$white.Dispose();$drawing.Dispose();$bitmap.Dispose()
 }
-$writer=New-Object System.IO.BinaryWriter([System.IO.File]::Create((Join-Path $iconRoot 'winplay.ico')))
+$writer=New-Object System.IO.BinaryWriter([System.IO.File]::Create((Join-Path $iconRoot 'airauto.ico')))
 $writer.Write([uint16]0);$writer.Write([uint16]1);$writer.Write([uint16]$images.Count)
 $offset=6+16*$images.Count
 foreach($entry in $images){$dimension=if($entry.size -eq 256){0}else{$entry.size};$writer.Write([byte]$dimension);$writer.Write([byte]$dimension);$writer.Write([byte]0);$writer.Write([byte]0);$writer.Write([uint16]1);$writer.Write([uint16]32);$writer.Write([uint32]$entry.bytes.Length);$writer.Write([uint32]$offset);$offset+=$entry.bytes.Length}
 foreach($entry in $images){$writer.Write([byte[]]$entry.bytes)}$writer.Close()
-Copy-Item -LiteralPath (Join-Path $iconRoot 'winplay-256.png') -Destination (Join-Path $projectRoot 'src/ui/winplay.png') -Force
+Copy-Item -LiteralPath (Join-Path $iconRoot 'airauto-256.png') -Destination (Join-Path $projectRoot 'src/ui/airauto.png') -Force

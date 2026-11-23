@@ -1,22 +1,22 @@
-# Read-only Windows Defender performance diagnosis for the desktop WinPlay installer.
-# Run only after the user authorizes administrator profiling. Does not install WinPlay,
+# Read-only Windows Defender performance diagnosis for the desktop AirAuto installer.
+# Run only after the user authorizes administrator profiling. Does not install AirAuto,
 # change antivirus settings, add exclusions, or touch user configuration.
 $ErrorActionPreference='Stop'
 $principal=[Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent())
 if(!$principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Administrator permission is required for Windows Defender performance recording.'}
 $desktopPath=[Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)
 $packageInfo=Get-Content -LiteralPath (Join-Path $PSScriptRoot '../package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-$installerPath=Join-Path $desktopPath ('WinPlay-'+$packageInfo.version+'-Setup-x64.exe')
+$installerPath=Join-Path $desktopPath ('AirAuto-'+$packageInfo.version+'-Setup-x64.exe')
 if(!(Test-Path -LiteralPath $installerPath -PathType Leaf)){throw 'Desktop installer was not found.'}
-$outputFolder=Join-Path $env:TEMP 'WinPlay-installer-diagnosis'
+$outputFolder=Join-Path $env:TEMP 'AirAuto-installer-diagnosis'
 New-Item -ItemType Directory -Path $outputFolder -Force | Out-Null
-trap { $_.Exception.Message | Set-Content -LiteralPath (Join-Path $env:TEMP 'WinPlay-installer-diagnosis/error.txt') -Encoding utf8; exit 1 }
+trap { $_.Exception.Message | Set-Content -LiteralPath (Join-Path $env:TEMP 'AirAuto-installer-diagnosis/error.txt') -Encoding utf8; exit 1 }
 $tracePath=Join-Path $outputFolder 'startup.etl'
 $reportPath=Join-Path $outputFolder 'report.txt'
 $launchJob=Start-Job -ArgumentList $installerPath,$outputFolder -ScriptBlock {
  param($installer,$outputFolder)
  Start-Sleep -Seconds 2
- $testInstaller=Join-Path $outputFolder ('WinPlay-test-'+[Guid]::NewGuid().ToString('N')+'.exe')
+ $testInstaller=Join-Path $outputFolder ('AirAuto-test-'+[Guid]::NewGuid().ToString('N')+'.exe')
  $copyTimer=[Diagnostics.Stopwatch]::StartNew()
  Copy-Item -LiteralPath $installer -Destination $testInstaller
  $copyTimer.Stop()

@@ -1,4 +1,4 @@
-(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.WinPlayAudioTimeline=factory()})(globalThis,function(){
+(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.AirAutoAudioTimeline=factory()})(globalThis,function(){
  // Preserve RTP spacing and decoded duration without accelerating late audio.
  class Timeline {
   constructor(rate,delay){this.rate=rate;this.delay=delay;this.reset()}

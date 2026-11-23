@@ -1,38 +1,40 @@
-<p align="center"><img src="resources/icons/winplay-256.png" width="104" alt="WinPlay应用图标"></p>
+<p align="center"><img src="resources/icons/airauto-256.png" width="104" alt="AirAuto应用图标"></p>
 
-<h1 align="center">WinPlay</h1>
+<h1 align="center">AirAuto</h1>
 
 <p align="center">把iPhone的CarPlay带到Windows，支持无线连接、独立画面窗口、音频播放与鼠标/触控板操作。</p>
 
+> AirAuto 原名 WinPlay，1.2.5 及之前版本以 WinPlay 名称发布。当前开发线正在重构为车机座舱界面：零层级首页、深色设计系统与独立投屏 HUD；Android Auto 支持同步开发中。
+
 <p align="center">
   <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.5-2563eb?style=flat-square" alt="源码版本1.2.5"></a>
-  <a href="https://github.com/Roylyl/WinPlay/releases/latest"><img src="https://img.shields.io/github/v/release/Roylyl/WinPlay?style=flat-square&amp;label=release&amp;color=2563eb" alt="GitHub最新正式发行版"></a>
+  <a href="https://github.com/Roylyl/AirAuto/releases/latest"><img src="https://img.shields.io/github/v/release/Roylyl/AirAuto?style=flat-square&amp;label=release&amp;color=2563eb" alt="GitHub最新正式发行版"></a>
   <a href="#使用条件"><img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-555555?style=flat-square" alt="Windows10/11x64"></a>
   <a href="#无线连接"><img src="https://img.shields.io/badge/CarPlay-wireless-2563eb?style=flat-square" alt="无线CarPlay"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--or--later-2563eb?style=flat-square" alt="AGPL-3.0-or-later许可证"></a>
-  <a href="https://github.com/Roylyl/WinPlay/releases"><img src="https://img.shields.io/badge/download-x64%20EXE-2563eb?style=flat-square" alt="Windows安装包发行页"></a>
+  <a href="https://github.com/Roylyl/AirAuto/releases"><img src="https://img.shields.io/badge/download-x64%20EXE-2563eb?style=flat-square" alt="Windows安装包发行页"></a>
 </p>
 
 <p align="center">
   <a href="#界面与语言"><img src="https://img.shields.io/badge/languages-%E7%AE%80%E4%BD%93%20%2F%20%E7%B9%81%E9%AB%94%20%2F%20English-555555?style=flat-square" alt="简体中文、繁體中文和English"></a>
   <a href="#从源码构建"><img src="https://img.shields.io/badge/core-Electron%2042-555555?style=flat-square" alt="Electron42桌面应用"></a>
-  <a href="https://github.com/Roylyl/WinPlay/releases"><img src="https://img.shields.io/github/downloads/Roylyl/WinPlay/total?style=flat-square&amp;label=downloads&amp;color=2563eb" alt="发行附件累计下载量"></a>
-  <a href="https://github.com/Roylyl/WinPlay/stargazers"><img src="https://img.shields.io/github/stars/Roylyl/WinPlay?style=flat-square&amp;label=stars&amp;color=2563eb" alt="GitHubStar数"></a>
-  <a href="https://github.com/Roylyl/WinPlay/forks"><img src="https://img.shields.io/github/forks/Roylyl/WinPlay?style=flat-square&amp;label=forks&amp;color=555555" alt="GitHubFork数"></a>
-  <a href="https://github.com/Roylyl/WinPlay/issues"><img src="https://img.shields.io/github/issues/Roylyl/WinPlay?style=flat-square&amp;label=issues&amp;color=555555" alt="开放Issue数"></a>
-  <a href="https://github.com/Roylyl/WinPlay/pulls"><img src="https://img.shields.io/github/issues-pr/Roylyl/WinPlay?style=flat-square&amp;label=pull%20requests&amp;color=555555" alt="开放PullRequest数"></a>
-  <a href="https://github.com/Roylyl/WinPlay/commits"><img src="https://img.shields.io/github/last-commit/Roylyl/WinPlay?style=flat-square&amp;label=last%20commit&amp;color=555555" alt="最近提交时间"></a>
+  <a href="https://github.com/Roylyl/AirAuto/releases"><img src="https://img.shields.io/github/downloads/Roylyl/AirAuto/total?style=flat-square&amp;label=downloads&amp;color=2563eb" alt="发行附件累计下载量"></a>
+  <a href="https://github.com/Roylyl/AirAuto/stargazers"><img src="https://img.shields.io/github/stars/Roylyl/AirAuto?style=flat-square&amp;label=stars&amp;color=2563eb" alt="GitHubStar数"></a>
+  <a href="https://github.com/Roylyl/AirAuto/forks"><img src="https://img.shields.io/github/forks/Roylyl/AirAuto?style=flat-square&amp;label=forks&amp;color=555555" alt="GitHubFork数"></a>
+  <a href="https://github.com/Roylyl/AirAuto/issues"><img src="https://img.shields.io/github/issues/Roylyl/AirAuto?style=flat-square&amp;label=issues&amp;color=555555" alt="开放Issue数"></a>
+  <a href="https://github.com/Roylyl/AirAuto/pulls"><img src="https://img.shields.io/github/issues-pr/Roylyl/AirAuto?style=flat-square&amp;label=pull%20requests&amp;color=555555" alt="开放PullRequest数"></a>
+  <a href="https://github.com/Roylyl/AirAuto/commits"><img src="https://img.shields.io/github/last-commit/Roylyl/AirAuto?style=flat-square&amp;label=last%20commit&amp;color=555555" alt="最近提交时间"></a>
 </p>
 
 <p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> · <a href="#其他平台">其他平台</a> · <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.5.md">1.2.5版本说明</a> · <a href="#捐赠">捐赠</a></p>
 
 <p align="center">其他平台：<a href="https://github.com/Roylyl/MacPlay">macOS</a> · <a href="https://github.com/Roylyl/LinuxPlay">Linux</a> · <a href="https://github.com/Roylyl/AndroidPlay">Android</a></p>
 
-<p align="center"><a href="https://github.com/Roylyl/WinPlay/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/Roylyl/WinPlay/issues">反馈问题</a></p>
+<p align="center"><a href="https://github.com/Roylyl/AirAuto/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/Roylyl/AirAuto/issues">反馈问题</a></p>
 
-WinPlay接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗口与分组设置带到Windows，并参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)的热点连接方案。适合Windows笔记本、平板与桌面电脑，使用Windows移动热点或现有局域网接收iPhone的CarPlay，在电脑上操作导航、播放音乐和使用CarPlay应用。
+AirAuto接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗口与分组设置带到Windows，并参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)的热点连接方案。适合Windows笔记本、平板与桌面电脑，使用Windows移动热点或现有局域网接收iPhone的CarPlay，在电脑上操作导航、播放音乐和使用CarPlay应用。
 
-蓝牙负责配对与连接引导，Wi-Fi传输音视频。两种无线模式分别保存配置，手机端的配件名称与车型统一为WinPlay。当前提供无线CarPlay，不支持USB直连。
+蓝牙负责配对与连接引导，Wi-Fi传输音视频。两种无线模式分别保存配置，手机端的配件名称与车型统一为AirAuto。当前提供无线CarPlay，不支持USB直连。
 
 ## 快速入门
 
@@ -47,7 +49,7 @@ WinPlay接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗�
 
 ### 安装
 
-在[GitHubReleases](https://github.com/Roylyl/WinPlay/releases)下载安装包，按向导完成安装；1.2.5对应`WinPlay-1.2.5-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
+在[GitHubReleases](https://github.com/Roylyl/AirAuto/releases)下载安装包，按向导完成安装；1.2.5对应`AirAuto-1.2.5-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
 
 首次默认1280×720、60fps、可等比例缩放的窗口、系统默认输入/输出设备、100%音量与跟随系统语言。当前安装包未做发行代码签名，Windows可能显示安全提示。
 
@@ -57,7 +59,7 @@ WinPlay接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗�
 
 ### 无线连接
 
-1. 在Windows蓝牙设置中配对iPhone，回到WinPlay点击“刷新iPhone列表”并选择目标。
+1. 在Windows蓝牙设置中配对iPhone，回到AirAuto点击“刷新iPhone列表”并选择目标。
 2. 选择本机移动热点或现有局域网，按下表准备网络。
 3. 网络接口保持“自动选择（推荐）”，点击“读取当前网络和密码”填入配置，读取失败的部分可手动填写。普通使用无需选择网卡。
 4. 点击“启动接收”，在iPhone上确认允许CarPlay。收到视频并完成首帧解码后，独立画面窗口自动显示。
@@ -68,13 +70,13 @@ WinPlay接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗�
 | 本机移动热点 | 在Windows设置中开启移动热点；读取系统设置中的热点名称和密码，信道0表示自动发现 | 识别Windows实际用于热点共享的私有接口，等待链路与地址就绪 |
 | 现有局域网 | 电脑可通过Wi-Fi或网线接入路由器，iPhone加入同一路由器的Wi-Fi | 自动选择可用的Wi-Fi或以太网接口；使用Wi-Fi时，从同一接口读取网络名称、实际信道和保存的密码 |
 
-连接页显示当前使用的Wi-Fi、网线连接或移动热点，以及下一步操作。需要指定接口时，展开“手动选择网卡（高级）”；也可点击“恢复自动选择”交给WinPlay判断。读取网络和密码不会把自动选择改成固定网卡。
+连接页显示当前使用的Wi-Fi、网线连接或移动热点，以及下一步操作。需要指定接口时，展开“手动选择网卡（高级）”；也可点击“恢复自动选择”交给AirAuto判断。读取网络和密码不会把自动选择改成固定网卡。
 
 热点模式读取Windows移动热点自身的名称与密码，不读取保存的Wi-Fi密码；局域网模式的自动选择和凭据读取使用同一接口。电脑使用以太网时，无法通过网线读取iPhone要连接的Wi-Fi密码，请手动填写该Wi-Fi名称、密码及实际信道一次，后续保留使用；启动后按提示在iPhone上加入该Wi-Fi。
 
 读取失败时显示原因并保留原输入，可手动补齐。启动热点接收前会刷新系统配置，避免使用已修改的旧名称或密码。
 
-Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的客户端隔离可能阻止连接。防火墙需允许WinPlay与iPhone互访以及Bonjour多播。停止接收不会关闭Windows移动热点。
+Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的客户端隔离可能阻止连接。防火墙需允许AirAuto与iPhone互访以及Bonjour多播。停止接收不会关闭Windows移动热点。
 
 ## 主要功能
 
@@ -98,7 +100,7 @@ Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的
 
 连接、显示、音频页保留固定底部接收栏。接收未启动时显示“启动接收”；运行期间提供“停止接收”“显示画面”和“应用并重新连接”。关于页集中展示版本、更新、日志与认证，最近日志和认证区默认折叠。
 
-“连接→应用”提供语言、关闭行为与外观设置。支持浅色、深色及跟随Windows；外观只影响WinPlay自身界面，CarPlay语言和画面外观由iPhone决定。切换设置页或应用语言不会断开会话。
+“连接→应用”提供语言、关闭行为与外观设置。支持浅色、深色及跟随Windows；外观只影响AirAuto自身界面，CarPlay语言和画面外观由iPhone决定。切换设置页或应用语言不会断开会话。
 
 ## 显示与窗口
 
@@ -124,7 +126,7 @@ Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的
 
 首次关闭主窗口时可选择退出或最小化到托盘，并勾选“不再提示”；之后可在“连接→应用”修改。托盘菜单可显示主窗口、显示CarPlay、启动/停止接收或退出应用。
 
-关闭CarPlay窗口会先询问“您确定要断开与iPhone的连接吗？”取消保持连接，确认后停止接收。主动停止或完整会话断开后，画面窗口自动关闭，保留当前页面与配置；未开启自动重连时，主界面恢复“启动接收”。CarPlay内部的WinPlay入口用于打开设置主窗口。
+关闭CarPlay窗口会先询问“您确定要断开与iPhone的连接吗？”取消保持连接，确认后停止接收。主动停止或完整会话断开后，画面窗口自动关闭，保留当前页面与配置；未开启自动重连时，主界面恢复“启动接收”。CarPlay内部的AirAuto入口用于打开设置主窗口。
 
 ### 无线自动重连
 
@@ -144,11 +146,11 @@ Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的
 
 ### 系统媒体控件
 
-WinPlay向Windows系统媒体控件同步iPhone上报的播放状态、标题、歌手、专辑、封面、时长与进度。系统按钮可播放/暂停、上一首与下一首；播放器上报有效时长并允许跳转时，可拖动系统进度条。未上报的信息可能为空。
+AirAuto向Windows系统媒体控件同步iPhone上报的播放状态、标题、歌手、专辑、封面、时长与进度。系统按钮可播放/暂停、上一首与下一首；播放器上报有效时长并允许跳转时，可拖动系统进度条。未上报的信息可能为空。
 
 ### 歌词与封面
 
-部分音乐App通过歌名字段显示歌词，有时专辑文字也会频繁变化。WinPlay照常同步这些文字，不把标题或专辑文字变化当作切歌，封面独立按需处理：
+部分音乐App通过歌名字段显示歌词，有时专辑文字也会频繁变化。AirAuto照常同步这些文字，不把标题或专辑文字变化当作切歌，封面独立按需处理：
 
 - 确认切歌后清除旧封面，新曲目的首张封面立即显示。
 - 相同图片不重复同步，歌词更新不重复携带已有封面。
@@ -160,7 +162,7 @@ WinPlay向Windows系统媒体控件同步iPhone上报的播放状态、标题、
 
 “关于→软件更新”提供自动检查、手动检查、发行说明与下载入口。自动检查默认开启，每次启动软件后检查一次，运行期间每隔两小时在后台检查，包括最小化到任务栏或托盘时。后台定时检查不弹出对话框，结果显示在软件更新页面；手动检查可随时执行。关闭自动检查后，启动和定时检查均停止。
 
-更新只读取[Roylyl/WinPlay正式发行版](https://github.com/Roylyl/WinPlay/releases)，兼容`V1.2.1`、`v1.2.1`、`WinPlay-1.2.1`和纯数字标签。按数字版本大小判断新版，不按发布时间判断，草稿和预发行版不参与更新。
+更新只读取[Roylyl/AirAuto正式发行版](https://github.com/Roylyl/AirAuto/releases)，兼容`V1.2.1`、`v1.2.1`、`AirAuto-1.2.1`和纯数字标签。按数字版本大小判断新版，不按发布时间判断，草稿和预发行版不参与更新。
 
 发现新版后可下载、查看说明或稍后处理，同一版本不重复自动提醒。安装包按实际发行标签与对应版本的x64EXE匹配，通过系统浏览器下载后由用户安装；没有匹配附件时提供发行说明入口。
 
@@ -172,7 +174,7 @@ WinPlay向Windows系统媒体控件同步iPhone上报的播放状态、标题、
 
 认证材料与程序代码分别适用各自权利条件，公开下载不代表获得再分发授权。公开分发安装包前，应确认内置材料授权，或移除内置文件并提供用户导入方式，见[NOTICE](NOTICE)。
 
-设置、认证文件与CarPlay配对身份保存在`%APPDATA%\WinPlay\data`，敏感数据使用WindowsDPAPI保护。卸载默认保留用户数据。不要公开此目录、Wi-Fi密码或认证私钥。
+设置、认证文件与CarPlay配对身份保存在`%APPDATA%\AirAuto\data`，敏感数据使用WindowsDPAPI保护。卸载默认保留用户数据。不要公开此目录、Wi-Fi密码或认证私钥。
 
 ## 常见问题
 
@@ -193,7 +195,7 @@ WinPlay向Windows系统媒体控件同步iPhone上报的播放状态、标题、
 | 音乐起播有短暂等待 | 正在建立协商的音乐缓冲，导航和通话使用较短缓冲 |
 | 音频变速变调、断续或爆音 | 确认输出设备并应用重连；持续发生时导出日志反馈 |
 
-反馈问题可前往[GitHubIssues](https://github.com/Roylyl/WinPlay/issues)。请说明版本、无线模式、现象和出现时间；音频异常再补充输出设备及连接方式，例如DP/HDMI显示器、有线耳机或蓝牙耳机。日志包含音频缺包与时钟统计、视频数据量和队列积压，便于区分网络与播放问题。附日志前请检查内容，不要上传密码或私钥。
+反馈问题可前往[GitHubIssues](https://github.com/Roylyl/AirAuto/issues)。请说明版本、无线模式、现象和出现时间；音频异常再补充输出设备及连接方式，例如DP/HDMI显示器、有线耳机或蓝牙耳机。日志包含音频缺包与时钟统计、视频数据量和队列积压，便于区分网络与播放问题。附日志前请检查内容，不要上传密码或私钥。
 
 ## 其他平台
 
@@ -222,7 +224,7 @@ npm start
 npm run dist
 ~~~
 
-产物为`dist/WinPlay-1.2.5-Setup-x64.exe`。[导出脚本](scripts/export-installer.ps1)会将安装包复制到Windows桌面，再通过官方卸载程序卸载已有WinPlay并保留用户数据。
+产物为`dist/AirAuto-1.2.5-Setup-x64.exe`。[导出脚本](scripts/export-installer.ps1)会将安装包复制到Windows桌面，再通过官方卸载程序卸载已有AirAuto并保留用户数据。
 
 | 目录 | 内容 |
 | --- | --- |
@@ -240,11 +242,11 @@ npm run dist
 
 Android Auto支持仍处于开发阶段（`spike/aa-probe`）：目前只验证协议链路，尚未接入应用界面。
 
-WinPlay是独立衍生项目，不代表Apple或上游作者，不声称获得MFi认证。第三方组件、认证证书、私钥和商标继续适用各自权利条件。分发修改版时应保留声明，并提供适用许可要求的对应源码与构建资料。
+AirAuto是独立衍生项目，不代表Apple或上游作者，不声称获得MFi认证。第三方组件、认证证书、私钥和商标继续适用各自权利条件。分发修改版时应保留声明，并提供适用许可要求的对应源码与构建资料。
 
 ## 捐赠
 
-如果WinPlay对你有帮助，欢迎支持项目的持续维护。应用侧栏的“捐赠”页也提供以下方式，收款码可点击放大。
+如果AirAuto对你有帮助，欢迎支持项目的持续维护。应用侧栏的“捐赠”页也提供以下方式，收款码可点击放大。
 
 <table>
   <tr>

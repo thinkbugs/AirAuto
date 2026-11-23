@@ -11,8 +11,8 @@
 /native/bin/
 /native/obj/
 /README.preview.html
-/WinPlay-*-Setup-*.exe
-/WinPlay-*-更新日志.md
+/AirAuto-*-Setup-*.exe
+/AirAuto-*-更新日志.md
 *.tsbuildinfo
 *.log
 *.blockmap
@@ -77,7 +77,7 @@ CLAUDE.local.md
 /debug/
 /diagnostics/
 /logs/
-WinPlay-*-diagnostics*.json
+AirAuto-*-diagnostics*.json
 codex-clipboard-*
 屏幕截图*.png
 屏幕截图*.jpg

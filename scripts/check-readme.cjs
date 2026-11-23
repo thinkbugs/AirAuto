@@ -7,7 +7,7 @@ app.whenReady().then(async()=>{
  const {marked}=await import('marked');
  const html=marked.parse(fs.readFileSync(path.join(root,'README.md'),'utf8'),{gfm:true});
  const file=path.join(root,'README.preview.html');
- fs.writeFileSync(file,`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>WinPlay README</title><style>body{max-width:960px;margin:36px auto;padding:0 24px;font:16px/1.75 "Segoe UI",sans-serif;color:#252525}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #ddd;padding:8px;text-align:left}pre{background:#f4f4f4;padding:16px;overflow:auto}code{font-family:Consolas,monospace}a{color:#0969da}h1,h2,h3{line-height:1.4}h2{border-bottom:1px solid #ddd;padding-bottom:8px}</style>${html}`);
+ fs.writeFileSync(file,`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AirAuto README</title><style>body{max-width:960px;margin:36px auto;padding:0 24px;font:16px/1.75 "Segoe UI",sans-serif;color:#252525}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #ddd;padding:8px;text-align:left}pre{background:#f4f4f4;padding:16px;overflow:auto}code{font-family:Consolas,monospace}a{color:#0969da}h1,h2,h3{line-height:1.4}h2{border-bottom:1px solid #ddd;padding-bottom:8px}</style>${html}`);
  const win=new BrowserWindow({width:1150,height:850,show:false,webPreferences:{sandbox:true,contextIsolation:true,nodeIntegration:false}});
  await win.loadFile(file);
  win.showInactive();await new Promise(r=>setTimeout(r,250));

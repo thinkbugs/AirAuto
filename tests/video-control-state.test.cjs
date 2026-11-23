@@ -3,9 +3,9 @@ const source=fs.readFileSync(require.resolve('../src/ui/app.js'),'utf8');
 function fixture(){
  const nodes=new Map();let receive;
  const node=id=>{if(!nodes.has(id))nodes.set(id,{disabled:false,hidden:false,textContent:'',classList:{toggle(){}}});return nodes.get(id)};
- const context={$:node,running:false,config:undefined,lastReceiverStatus:'',text:(id,value)=>node(id).textContent=value,window:{},navigator:{},metadata(){},winplay:{on:handler=>receive=handler}};
+ const context={$:node,running:false,config:undefined,lastReceiverStatus:'',text:(id,value)=>node(id).textContent=value,window:{},navigator:{},metadata(){},airauto:{on:handler=>receive=handler}};
  const state=source.match(/^function state\(active\)\{[^\n]+\}/m);assert.ok(state);vm.runInNewContext(state[0],context);
- const start=source.indexOf('winplay.on(message=>{'),end=source.indexOf('\n});',start);assert.ok(start>=0&&end>start);vm.runInNewContext(source.slice(start,end+4),context);
+ const start=source.indexOf('airauto.on(message=>{'),end=source.indexOf('\n});',start);assert.ok(start>=0&&end>start);vm.runInNewContext(source.slice(start,end+4),context);
  return {node,context,receive,metrics:width=>receive({type:'metrics',requested:60,attempt:60,receivedFps:60,decodedFps:0,decodedWidth:width,decodedHeight:width?720:0})};
 }
 test('starting reception shows receiver actions but keeps show-video disabled',()=>{

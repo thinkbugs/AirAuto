@@ -2,10 +2,10 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 
 function receiverEvents(){
  const source=fs.readFileSync(require.resolve('../src/ui/app.js'),'utf8');
- const start=source.indexOf('winplay.on(message=>{'),end=source.indexOf('\n(async()=>{',start);
+ const start=source.indexOf('airauto.on(message=>{'),end=source.indexOf('\n(async()=>{',start);
  const values={},nodes={};let receive;
  const context={lastReceiverStatus:'',running:false,config:undefined,window:{},navigator:{},logs:[],
-  winplay:{on:fn=>receive=fn},$:id=>nodes[id]??={classList:{toggle:(name,enabled)=>{nodes[id][name]=enabled}}},text:(id,value)=>values[id]=value,
+  airauto:{on:fn=>receive=fn},$:id=>nodes[id]??={classList:{toggle:(name,enabled)=>{nodes[id][name]=enabled}}},text:(id,value)=>values[id]=value,
   metadata:()=>{},diagnosticLine:message=>message.status,renderLogs:()=>{}};
  vm.runInNewContext(source.match(/^function state\(active\).*$/m)[0]+'\n'+source.slice(start,end),context);
  return {receive,values,nodes};

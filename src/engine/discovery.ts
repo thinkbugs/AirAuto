@@ -54,8 +54,8 @@ export class Discovery {
   this.interfaces = deps.interfaces || os.networkInterfaces
   this.now = deps.now || Date.now
   const addresses = (this.interfaces()[iface] || []).filter(a => !a.internal)
-  const host = 'winplay-' + identity.pi.toLowerCase() + '.local', fqdn = 'WinPlay._airplay._tcp.local'
-  const txt = {deviceid:identity.deviceId, features:'0x44540380,0x61', flags:'0x4', model:'WinPlay', srcvers:'950.7.1', protovers:'1.1', pi:identity.pi, pk:identity.pk}
+  const host = 'airauto-' + identity.pi.toLowerCase() + '.local', fqdn = 'AirAuto._airplay._tcp.local'
+  const txt = {deviceid:identity.deviceId, features:'0x44540380,0x61', flags:'0x4', model:'AirAuto', srcvers:'950.7.1', protovers:'1.1', pi:identity.pi, pk:identity.pk}
   this.records = [
    {name:'_airplay._tcp.local', type:'PTR', ttl:120, data:fqdn},
    {name:fqdn, type:'SRV', ttl:120, data:{port:17000, target:host}},

@@ -1,8 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const REPOSITORY = 'https://github.com/Roylyl/WinPlay';
-const API = 'https://api.github.com/repos/Roylyl/WinPlay/releases?per_page=100';
+const REPOSITORY = 'https://github.com/Roylyl/AirAuto';
+const API = 'https://api.github.com/repos/Roylyl/AirAuto/releases?per_page=100';
 const AUTO_CHECK_INTERVAL_MS = 2 * 60 * 60 * 1000;
 const MAX_RESPONSE_BYTES = 4 * 1024 * 1024;
 const MAX_CACHE_BYTES = 16 * 1024;
@@ -30,30 +30,30 @@ function safeLink(value, expectedPath) {
 }
 function tagVersion(tag) {
   if (typeof tag !== 'string') return null;
-  const match = /^(?:[Vv]|WinPlay-)?(.+)$/.exec(tag);
+  const match = /^(?:[Vv]|AirAuto-)?(.+)$/.exec(tag);
   return match && versionParts(match[1]) ? match[1] : null;
 }
 function releasePage(tag, rawPage) {
-  const pagePath = `/Roylyl/WinPlay/releases/tag/${tag}`;
+  const pagePath = `/Roylyl/AirAuto/releases/tag/${tag}`;
   return safeLink(rawPage, pagePath) || `https://github.com${pagePath}`;
 }
 function installerLink(version, tag, assets) {
   if (!Array.isArray(assets)) return null;
-  const name = `WinPlay-${version}-Setup-x64.exe`;
+  const name = `AirAuto-${version}-Setup-x64.exe`;
   const asset = assets.find(item => item && item.name === name &&
-    safeLink(item.browser_download_url, `/Roylyl/WinPlay/releases/download/${tag}/${name}`));
-  return asset ? safeLink(asset.browser_download_url, `/Roylyl/WinPlay/releases/download/${tag}/${name}`) : null;
+    safeLink(item.browser_download_url, `/Roylyl/AirAuto/releases/download/${tag}/${name}`));
+  return asset ? safeLink(asset.browser_download_url, `/Roylyl/AirAuto/releases/download/${tag}/${name}`) : null;
 }
 function validCachedRelease(raw, current) {
   if (!raw || compareVersions(raw.version, current) !== 1) return null;
-  const tag = raw.tag === undefined ? `WinPlay-${raw.version}` : raw.tag;
+  const tag = raw.tag === undefined ? `AirAuto-${raw.version}` : raw.tag;
   if (tagVersion(tag) !== raw.version) return null;
-  const name = `WinPlay-${raw.version}-Setup-x64.exe`;
+  const name = `AirAuto-${raw.version}-Setup-x64.exe`;
   return {
     version: raw.version,
     tag,
     page: releasePage(tag, raw.page),
-    installer: safeLink(raw.installer, `/Roylyl/WinPlay/releases/download/${tag}/${name}`)
+    installer: safeLink(raw.installer, `/Roylyl/AirAuto/releases/download/${tag}/${name}`)
   };
 }
 async function readLimitedJSON(response, signal) {
@@ -81,7 +81,7 @@ async function readLimitedJSON(response, signal) {
 
 class Updates {
   constructor({version, dataDir, onChange = () => {}, fetchImpl = globalThis.fetch}) {
-    if (!versionParts(version)) throw new Error('WinPlay版本格式无效');
+    if (!versionParts(version)) throw new Error('AirAuto版本格式无效');
     if (typeof fetchImpl !== 'function') throw new Error('更新检查不可用');
     this.version = version;
     this.cachePath = path.join(dataDir, 'updates.json');
@@ -163,7 +163,7 @@ class Updates {
     try {
       const response = await this.fetchImpl(API, {
         signal: controller.signal, redirect: 'error',
-        headers: {'Accept': 'application/vnd.github+json', 'User-Agent': `WinPlay/${this.version}`, 'X-GitHub-Api-Version': '2022-11-28'}
+        headers: {'Accept': 'application/vnd.github+json', 'User-Agent': `AirAuto/${this.version}`, 'X-GitHub-Api-Version': '2022-11-28'}
       });
       if (response.status !== 200) throw new Error(`github-http-${response.status}`);
       const raw = await readLimitedJSON(response, controller.signal);

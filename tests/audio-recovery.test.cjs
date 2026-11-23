@@ -31,9 +31,9 @@ function harness({compactPTS=false,deferOutput=false}={}){
   decode(chunk){this.submitted.push(chunk);this.origin??=chunk.timestamp;if(!deferOutput)this.output(compactPTS?this.origin+Math.round(this.outputFrames/48000*1000000):chunk.timestamp);this.outputFrames+=1024}
   output(timestamp,value=.75){const data={numberOfChannels:2,numberOfFrames:1024,sampleRate:48000,timestamp,closed:false,copyTo(plane){plane.fill(value)},close(){this.closed=true}};this.callbacks.output(data);return data}
  }
- const scope={AudioContext:Context,AudioDecoder:Decoder,EncodedAudioChunk:class{constructor(v){Object.assign(this,v)}},WinPlayAudioTimeline:Timeline,performance:{now:()=>now*1000},navigator:{mediaDevices:{addEventListener(){}}},winplay:{input:m=>messages.push(m)},setInterval:(fn,ms)=>{if(ms===10)pump=fn;else if(ms===10000)diagnostics=fn},window:{}};
+ const scope={AudioContext:Context,AudioDecoder:Decoder,EncodedAudioChunk:class{constructor(v){Object.assign(this,v)}},AirAutoAudioTimeline:Timeline,performance:{now:()=>now*1000},navigator:{mediaDevices:{addEventListener(){}}},airauto:{input:m=>messages.push(m)},setInterval:(fn,ms)=>{if(ms===10)pump=fn;else if(ms===10000)diagnostics=fn},window:{}};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../src/ui/audio.js'),'utf8'),scope);
- const audio=scope.window.winplayAudio;
+ const audio=scope.window.airautoAudio;
  return {audio,sources,decoders,messages,setTime(t){now=t},pump(){pump()},stats(){diagnostics();return messages.filter(m=>m.command==='audio-diagnostic').map(m=>JSON.parse(m.reason)).filter(v=>!v.phase).at(-1)},
   sample(time){let value=0;for(const s of sources){const elapsed=time-s.when;if(elapsed<0||time>=(s.stopAt??Infinity))continue;const offset=elapsed+s.trim,index=Math.floor(offset*s.buffer.sampleRate+1e-7),plane=s.buffer.getChannelData(0);if(index>=plane.length)continue;value+=plane[index]*s.envelope.gain.at(time)}return value},
   async open(codec='pcm',realtime=false){await audio.prepare({});audio.handle({type:'audio-config',id:1,opts:{codec,clockRate:48000,channels:2,latencyMs:250,realtime}});await new Promise(r=>setImmediate(r));audio.handle({type:'audio-active',id:1,active:true})},

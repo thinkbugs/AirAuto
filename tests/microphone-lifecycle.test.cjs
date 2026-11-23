@@ -4,9 +4,9 @@ function fixture(){
  class Node{constructor(){this.port={};nodes.push(this)}connect(){return this}disconnect(){this.disconnected=true}}
  class Context{constructor(){this.state='running';this.destination={};this.audioWorklet={addModule:async()=>{}};contexts.push(this)}createMediaStreamSource(){return new Node()}createGain(){const node=new Node();node.gain={};return node}async resume(){this.resumed=true}async close(){this.state='closed'}}
  class Encoder{static async isConfigSupported(){return {supported:true}}constructor(callbacks){this.callbacks=callbacks;encoders.push(this)}configure(){this.state='configured'}close(){if(this.state==='closed')throw new Error('already closed');this.state='closed'}}
- const scope={AudioContext:Context,AudioWorkletNode:Node,AudioEncoder:Encoder,navigator:{mediaDevices:{addEventListener(){},enumerateDevices:async()=>[],getUserMedia:()=>new Promise((resolve,reject)=>requests.push({resolve,reject}))}},winplay:{input:m=>messages.push(m)},setInterval(){},window:{}};
+ const scope={AudioContext:Context,AudioWorkletNode:Node,AudioEncoder:Encoder,navigator:{mediaDevices:{addEventListener(){},enumerateDevices:async()=>[],getUserMedia:()=>new Promise((resolve,reject)=>requests.push({resolve,reject}))}},airauto:{input:m=>messages.push(m)},setInterval(){},window:{}};
  vm.runInNewContext(fs.readFileSync('src/ui/audio.js','utf8'),scope);
- return {audio:scope.window.winplayAudio,requests,contexts,nodes,messages,encoders,open(codec='pcm'){scope.window.winplayAudio.handle({type:'mic-open',id:1,opts:{codec,sampleRate:48000,channels:1,frameMs:20}})},stream(){const track={stopped:false,stop(){this.stopped=true}};return {track,getTracks:()=>[track]}}};
+ return {audio:scope.window.airautoAudio,requests,contexts,nodes,messages,encoders,open(codec='pcm'){scope.window.airautoAudio.handle({type:'mic-open',id:1,opts:{codec,sampleRate:48000,channels:1,frameMs:20}})},stream(){const track={stopped:false,stop(){this.stopped=true}};return {track,getTracks:()=>[track]}}};
 }
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 test('stopping while microphone permission is pending cancels capture after permission resolves',async()=>{

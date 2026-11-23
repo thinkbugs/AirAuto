@@ -3,20 +3,20 @@ const $=id=>document.getElementById(id);
 let config,running=false,toastTimer,artUrl='',playing={},locale='zh-CN',updateState={},displayItems=[],displayLoading=true,displayRequest=0,displaySaveRequest=0,resolutionChoice,networkRequest=0,networkReadRequest=0,networkReadBusy=false,mediaFormat,displayError='',displayDraft,lastReceiverStatus='';
 const logs=[],pendingSaves=new Set(),networkEdits=new Map();
 let networkInfo=null,networkBusy=false;
-const t=source=>WinPlayI18n.translate(source,config?.language||'system',locale);
+const t=source=>AirAutoI18n.translate(source,config?.language||'system',locale);
 function formatText(source,values={}){return t(source).replace(/\{(\w+)\}/g,(_,key)=>String(values[key]??''))}
-function resultDetail(source){return source.split('；').map(t).join(WinPlayI18n.resolveLanguage(config?.language||'system',locale)==='en'?'; ':'；')}
+function resultDetail(source){return source.split('；').map(t).join(AirAutoI18n.resolveLanguage(config?.language||'system',locale)==='en'?'; ':'；')}
 function text(id,source,values){const node=$(id);node.dataset.i18n=source;node._translationValues=values;node._resultDetail=undefined;node.textContent=formatText(source,values)}
 function literal(id,value){const node=$(id);delete node.dataset.i18n;node._translationValues=undefined;node.textContent=value}
 function applyLanguage(){
-  document.documentElement.lang=WinPlayI18n.resolveLanguage(config?.language||'system',locale);
+  document.documentElement.lang=AirAutoI18n.resolveLanguage(config?.language||'system',locale);
   document.querySelectorAll('[data-i18n]').forEach(node=>{node.textContent=formatText(node.dataset.i18n,node._translationValues)+(node._resultDetail?'\n'+resultDetail(node._resultDetail):'')});
   for(const [name,attribute] of [['title','title'],['aria','aria-label'],['placeholder','placeholder'],['alt','alt']])document.querySelectorAll('[data-i18n-'+name+']').forEach(node=>node.setAttribute(attribute,t(node.dataset['i18n'+name[0].toUpperCase()+name.slice(1)])));
   document.querySelectorAll('option[data-device-label]').forEach(option=>{option.textContent=option.dataset.deviceLabel+(option.dataset.annotation?' · '+t(option.dataset.annotation):'')});
   updateDisplaySummary();renderUpdates();renderLogs();renderMediaFormat();renderNetwork();
 }
 function toast(source){text('toast',source);$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4500)}
-async function call(op,arg){const result=await winplay.call(op,arg);if(!result.ok&&result.code!=='display-save-superseded')toast(result.error);return result}
+async function call(op,arg){const result=await airauto.call(op,arg);if(!result.ok&&result.code!=='display-save-superseded')toast(result.error);return result}
 function theme(dark){document.body.classList.toggle('dark',dark)}
 function fieldKey(key){return config.wirelessMode==='lan'?({ssid:'lanSsid',password:'lanPassword',channel:'lanChannel',networkInterface:'lanNetworkInterface'}[key]||key):key}
 function invalidateNetworkRead(key){++networkReadRequest;const field=fieldKey(key);networkEdits.set(field,(networkEdits.get(field)||0)+1);if(key==='networkInterface')++networkRequest}
@@ -35,7 +35,7 @@ function renderNetwork(){
   if(!config)return;const mode=config.wirelessMode,manual=!!config[fieldKey('networkInterface')],info=networkInfo?.mode===mode?networkInfo.selection:null;
   $('network-auto').hidden=!manual;$('refresh-network').disabled=networkBusy;
   const action=$('network-action');action.hidden=true;$('hotspot-settings').hidden=false;
-  if(networkBusy||!info){text('network-status','正在检测网络…');text('network-help','WinPlay会自动选择当前模式可用的连接，无需了解网卡名称。');return}
+  if(networkBusy||!info){text('network-status','正在检测网络…');text('network-help','AirAuto会自动选择当前模式可用的连接，无需了解网卡名称。');return}
   if(info.ok){
     const label=info.kind==='hotspot'?'移动热点已就绪':info.kind==='wifi'?'Wi-Fi已就绪':'网线连接已就绪';
     text('network-status',manual&&!info.selectionReplaced?'手动选择 · {type}':'自动选择 · {type}',{type:t(label)});
@@ -44,11 +44,11 @@ function renderNetwork(){
   }
   const code=info.code;
   text('network-status',code==='HOTSPOT_OFF'?'请先开启移动热点':code==='HOTSPOT_TRANSITION'?'移动热点正在启动':'网络尚未就绪');
-  text('network-help',code==='LAN_NOT_READY'?(manual?'所选网卡当前不可用，可点击“恢复自动选择”，或先连接Wi-Fi/插入网线再重新检测。':'请先让电脑连接Wi-Fi或插入网线，再点击“重新检测”。'):code==='HOTSPOT_OFF'?'请在Windows设置中开启移动热点，回到WinPlay后会重新检测，无需手动选择共享网卡。':info.error||'暂时无法读取网络状态，请点击“重新检测”。');
+  text('network-help',code==='LAN_NOT_READY'?(manual?'所选网卡当前不可用，可点击“恢复自动选择”，或先连接Wi-Fi/插入网线再重新检测。':'请先让电脑连接Wi-Fi或插入网线，再点击“重新检测”。'):code==='HOTSPOT_OFF'?'请在Windows设置中开启移动热点，回到AirAuto后会重新检测，无需手动选择共享网卡。':info.error||'暂时无法读取网络状态，请点击“重新检测”。');
   action.hidden=false;action.dataset.operation=mode==='hotspot'?'settings-hotspot':'settings-network';text('network-action',mode==='hotspot'?'打开移动热点':'打开网络设置');
   $('hotspot-settings').hidden=mode==='hotspot';
 }
-function state(active){running=active;$('running-actions').hidden=!active;$('show-video').disabled=true;text('start',active?'应用并重新连接':'启动接收');if(!active)$('fps-fallback').hidden=true;text('side-status',active?'接收中':'未连接');$('side-dot').classList.toggle('connected',active)}
+function state(active){running=active;$('running-actions').hidden=!active;$('show-video').disabled=true;text('start',active?'应用并重新连接':'启动接收');if(!active)$('fps-fallback').hidden=true;const label=active?'接收中':'未连接';for(const id of ['side-status','top-status','home-status'])if($(id))text(id,label);for(const id of ['side-dot','top-dot','home-dot']){const dot=$(id);if(dot)dot.classList.toggle('connected',active)}const device=$('home-device');if(device)text('home-device',active?'iPhone已连接':'尚未连接手机');const projection=$('home-projection');if(projection)text('home-projection',active?'投屏已就绪':'配置并启动')}
 function selected(select,items,value,empty){
   select.replaceChildren();if(empty){const option=document.createElement('option');option.value='';option.dataset.i18n=empty;option.textContent=t(empty);select.append(option)}
   for(const item of items){const option=document.createElement('option');option.value=String(item.value);if(item.translate){option.dataset.i18n=item.label;option.textContent=t(item.label)}else{option.dataset.deviceLabel=item.label;option.dataset.annotation=item.annotation||'';option.textContent=item.label+(item.annotation?' · '+t(item.annotation):'')}select.append(option)}
@@ -57,7 +57,7 @@ function selected(select,items,value,empty){
 async function networks(){
   const request=++networkRequest,mode=config.wirelessMode,key=fieldKey('networkInterface');networkBusy=true;renderNetwork();
   try{
-    const r=await winplay.call('networks',{mode});if(request!==networkRequest||mode!==config.wirelessMode)return;
+    const r=await airauto.call('networks',{mode});if(request!==networkRequest||mode!==config.wirelessMode)return;
     networkInfo={mode,selection:r.selection||{ok:false,code:'NETWORK_QUERY_FAILED',error:r.error}};
     // Never clear an explicit choice because a device or query is temporarily unavailable.
     selected($('networkInterface'),(r.choices||[]).map(n=>({value:n.name,label:n.name,annotation:n.kind==='hotspot'?(n.ready?'移动热点 · 已就绪':'移动热点 · 未就绪'):n.kind==='wifi'?(n.ready?'Wi-Fi · 已就绪':'Wi-Fi · 未就绪'):(n.ready?'网线连接 · 已就绪':'网线连接 · 未就绪')})),config[key],'自动选择（推荐）');
@@ -92,9 +92,9 @@ async function audioDevices(request=false){
     selected($('inputDevice'),list.filter(d=>d.kind==='audioinput'&&d.deviceId!=='default'&&d.deviceId!=='communications').map((d,i)=>({value:d.deviceId,label:d.label||'输入设备'+(i+1),translate:!d.label})),config.inputDevice,'系统默认设备');
   }catch{toast('Windows未允许麦克风访问，请检查系统隐私设置')}
 }
-async function save(key,value){const request=call('save',{[key]:value});pendingSaves.add(request);let r;try{r=await request}finally{pendingSaves.delete(request)}if(!r.ok)return r;config[key]=value;if(key==='theme')theme(value==='dark'||value==='system'&&(await winplay.call('state')).dark);if(key==='language')applyLanguage();return r}
-function showPage(page){document.querySelectorAll('.nav').forEach(button=>button.classList.toggle('active',button.dataset.page===page));document.querySelectorAll('.page').forEach(node=>node.hidden=node.id!==page);$('receiver-footer').hidden=page==='about'||page==='donation'}
-document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>showPage(button.dataset.page)));
+async function save(key,value){const request=call('save',{[key]:value});pendingSaves.add(request);let r;try{r=await request}finally{pendingSaves.delete(request)}if(!r.ok)return r;config[key]=value;if(key==='theme')theme(value==='dark'||value==='system'&&(await airauto.call('state')).dark);if(key==='language')applyLanguage();return r}
+function showPage(page){document.querySelectorAll('.nav').forEach(button=>button.classList.toggle('active',button.dataset.page===page));document.querySelectorAll('.dock-item').forEach(button=>button.classList.toggle('active',button.dataset.page===page));document.querySelectorAll('.page').forEach(node=>node.hidden=node.id!==page);$('receiver-footer').hidden=page==='about'||page==='donation'||page==='home'}
+document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>showPage(button.dataset.page)));showPage('home');
 const donationMethods={wechat:'微信支付',alipay:'支付宝',alipayhk:'AlipayHK'};
 document.querySelectorAll('.donation-code').forEach(button=>button.addEventListener('click',()=>{
   const method=button.dataset.method;if(!Object.hasOwn(donationMethods,method))return;
@@ -104,9 +104,11 @@ $('donation-close').onclick=()=>$('donation-dialog').close();
 $('donation-paypal').onclick=()=>call('open-donation-paypal');
 function format(ms){const seconds=Math.max(0,Math.floor((ms||0)/1000));return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0')}
 function metadata(s,artChanged){
-  playing=s;if(artChanged){if(artUrl)URL.revokeObjectURL(artUrl);artUrl=s.artwork?.length?URL.createObjectURL(new Blob([new Uint8Array(s.artwork)],{type:s.artwork[0]===137?'image/png':'image/jpeg'})):'';$('artwork').hidden=!artUrl;if(artUrl)$('artwork').src=artUrl;else $('artwork').removeAttribute('src')}
+  playing=s;if(artChanged){if(artUrl)URL.revokeObjectURL(artUrl);artUrl=s.artwork?.length?URL.createObjectURL(new Blob([new Uint8Array(s.artwork)],{type:s.artwork[0]===137?'image/png':'image/jpeg'})):'';$('artwork').hidden=!artUrl;if(artUrl)$('artwork').src=artUrl;else $('artwork').removeAttribute('src');
+    const homeArt=$('home-art');if(homeArt){homeArt.hidden=!artUrl;if(artUrl)homeArt.src=artUrl;else homeArt.removeAttribute('src')}}
+  if($('home-track')){if(s.title)literal('home-track',s.title);else text('home-track','暂无播放');literal('home-artist',[s.artist,s.album].filter(Boolean).join(' · '))}
   if(s.title)literal('track-title',s.title);else text('track-title','未上报歌名');literal('track-artist',[s.artist,s.album].filter(Boolean).join(' · '));$('seek').max=s.durationMs||1;$('seek').disabled=!s.canSeek||!s.durationMs;position(s.positionMs);
-  if('mediaSession' in navigator){if(!navigator.mediaSession.metadata)navigator.mediaSession.metadata=new MediaMetadata();const meta=navigator.mediaSession.metadata;meta.title=s.title;meta.artist=s.artist;meta.album=s.album;if(artChanged)meta.artwork=artUrl?[{src:artUrl,type:s.artwork?.[0]===137?'image/png':'image/jpeg'}]:[];navigator.mediaSession.playbackState=s.playing?'playing':'paused';for(const [name,index] of [['play',1],['pause',2],['previoustrack',5],['nexttrack',4]])navigator.mediaSession.setActionHandler(name,()=>winplay.input({command:'media',index}));try{navigator.mediaSession.setActionHandler('seekto',s.canSeek&&s.durationMs?event=>winplay.input({command:'seek',ms:Math.round(event.seekTime*1000)}):null)}catch{}}
+  if('mediaSession' in navigator){if(!navigator.mediaSession.metadata)navigator.mediaSession.metadata=new MediaMetadata();const meta=navigator.mediaSession.metadata;meta.title=s.title;meta.artist=s.artist;meta.album=s.album;if(artChanged)meta.artwork=artUrl?[{src:artUrl,type:s.artwork?.[0]===137?'image/png':'image/jpeg'}]:[];navigator.mediaSession.playbackState=s.playing?'playing':'paused';for(const [name,index] of [['play',1],['pause',2],['previoustrack',5],['nexttrack',4]])navigator.mediaSession.setActionHandler(name,()=>airauto.input({command:'media',index}));try{navigator.mediaSession.setActionHandler('seekto',s.canSeek&&s.durationMs?event=>airauto.input({command:'seek',ms:Math.round(event.seekTime*1000)}):null)}catch{}}
 }
 function position(ms){$('seek').value=Math.min(playing.durationMs||1,ms||0);$('progress').textContent=format(ms)+' / '+format(playing.durationMs);if(navigator.mediaSession&&playing.durationMs>0){try{navigator.mediaSession.setPositionState({duration:playing.durationMs/1000,position:Math.min(playing.durationMs/1000,Math.max(0,(ms||0)/1000)),playbackRate:1})}catch{}}}
 function renderLogs(){if(logs.length>1000)logs.splice(0,logs.length-1000);if(logs.length)literal('logs',logs.slice(-100).join('\n'));else text('logs','暂无日志');$('open-log').disabled=!logs.length}
@@ -120,7 +122,7 @@ function renderUpdates(){
 }
 function renderMediaFormat(){if(!mediaFormat)return;const o=mediaFormat;literal('actual-media-format',(o.codec==='pcm'?'PCM/16-bit':o.codec==='aac-lc'?'AAC-LC':o.codec.toUpperCase())+' · '+o.clockRate/1000+'kHz · '+formatText('{channels}声道',{channels:o.channels}))}
 function result(id,source,detail=''){text(id,source);const node=$(id);node._resultDetail=detail;if(detail)node.textContent+='\n'+resultDetail(detail);node.hidden=!source&&!detail}
-winplay.on(message=>{
+airauto.on(message=>{
   if(message.type==='display-capabilities'&&config){++displayRequest;applyDisplayCapabilities(message)}
   if(message.type==='language'){locale=message.locale||locale;if(config){config.language=message.language||'system';$('language').value=config.language;applyLanguage()}}
   if(message.type==='updates'){updateState=message.updates||{};renderUpdates()}
@@ -129,7 +131,7 @@ winplay.on(message=>{
   if(message.type==='reconnect-wait'){state(true);text('side-status','等待自动重连')}
   if(message.type==='starting')$('lan-guide').hidden=true;
   if(message.type==='lan-guide'){text('lan-guide','电脑正在使用以太网。请在iPhone上打开“设置→Wi-Fi”，手动加入“{ssid}”，输入该Wi-Fi的密码。若已连接，请保持连接并等待CarPlay画面，无需反复点击启动接收。',{ssid:message.ssid});$('lan-guide').hidden=false}
-  if(message.type==='starting'||message.type==='started'){lastReceiverStatus='';state(true);if(config)window.winplayAudio?.prepare(config).catch(()=>{})}
+  if(message.type==='starting'||message.type==='started'){lastReceiverStatus='';state(true);if(config)window.airautoAudio?.prepare(config).catch(()=>{})}
   if(message.type==='requested-fps'){$('fps-fallback').hidden=message.attempt>=message.requested;text('fps-fallback','当前已从{requested}fps回退至{attempt}fps',{requested:message.requested,attempt:message.attempt})}
   if(message.type==='status'||message.type==='diagnostic'){if(message.type==='status'){lastReceiverStatus=message.status+' '+(message.detail||'');text('status',message.status);text('status-detail',message.detail||'')}logs.push(diagnosticLine(message));renderLogs()}
   if(message.type==='connected'){$('lan-guide').hidden=true;lastReceiverStatus='正在接收CarPlay视频';text('status',lastReceiverStatus);text('status-detail','');text('side-status','已收到视频')}
@@ -141,10 +143,10 @@ winplay.on(message=>{
   }
   if(message.type==='metrics'){$('show-video').disabled=!(running&&message.decodedWidth);$('metric-request').textContent=message.requested+'fps';$('metric-attempt').textContent=running?message.attempt+'fps':'—';$('metric-received').textContent=running?message.receivedFps.toFixed(1)+'fps':'—';$('metric-decoded').textContent=running?(message.decodedFps||0).toFixed(1)+'fps':'—';if(message.decodedWidth)text('video-size','实际解码尺寸：{width}×{height}',{width:message.decodedWidth,height:message.decodedHeight})}
   if(message.type==='audio-config'&&message.opts.media){mediaFormat=message.opts;renderMediaFormat()}
-  if(message.type==='now-playing')metadata(message.state,message.artChanged);if(message.type==='position')position(message.positionMs);window.winplayAudio?.handle(message);
+  if(message.type==='now-playing')metadata(message.state,message.artChanged);if(message.type==='position')position(message.positionMs);window.airautoAudio?.handle(message);
 });
 (async()=>{
-  const r=await call('state');if(!r.ok)return;config=r.settings;config.language=config.language||'system';locale=r.locale||navigator.language;resolutionChoice=config.resolutionMode;updateState=r.updates||{};theme(r.dark);state(r.running);$('show-video').disabled=!(r.running&&r.stats?.decodedWidth);$('version').textContent=$('about-version').textContent=r.version;literal('architecture',r.architecture||'x64');
+  const r=await call('state');if(!r.ok)return;config=r.settings;config.language=config.language||'system';locale=r.locale||navigator.language;resolutionChoice=config.resolutionMode;updateState=r.updates||{};theme(r.dark);state(r.running);$('show-video').disabled=!(r.running&&r.stats?.decodedWidth);$('version').textContent=$('about-version').textContent=r.version;const topVersion=$('top-version');if(topVersion)topVersion.textContent=r.version;const homeVersion=$('home-version');if(homeVersion)homeVersion.textContent=r.version;literal('architecture',r.architecture||'x64');
   for(const item of r.diagnostics||[])logs.push(diagnosticLine(item));renderLogs();text('auth-status',r.auth?'文件已就绪，等待iPhone验证':'缺少文件');
   bindNetworkEditing();
   for(const key of ['ssid','password','channel','fps','theme','closeBehavior','language']){$(key).value=config[fieldKey(key)];$(key).addEventListener('change',()=>save(fieldKey(key),['channel','fps'].includes(key)?Number($(key).value):$(key).value))}
@@ -158,24 +160,24 @@ winplay.on(message=>{
   $('resolutionPreset').onchange=async()=>{const value=$('resolutionPreset').value;resolutionChoice=value;$('custom-size').hidden=value!=='custom';if(value==='native')await saveDisplay({fullScreen:true});else if(value==='custom')await saveDisplay({fullScreen:false,width:Number($('width').value),height:Number($('height').value)});else{const [width,height]=value.split('x').map(Number);await saveDisplay({fullScreen:false,width,height})}};
   $('width').oninput=$('height').oninput=()=>{$('request-pixels').textContent=($('width').value||'—')+'×'+($('height').value||'—')};
   $('width').onchange=$('height').onchange=()=>saveDisplay({width:Number($('width').value),height:Number($('height').value)});$('fullScreen').onchange=()=>saveDisplay({fullScreen:$('fullScreen').checked});$('displayId').onchange=()=>{const item=displayItems.find(d=>d.id===Number($('displayId').value));if(item){$('strictPixels').disabled=true;$('strictPixels').checked=false;for(const option of $('resolutionPreset').options)if(option.value==='native')option.disabled=true;saveDisplay({displayId:item.id})}};
-  $('start').onclick=async()=>{const active=running;$('start').disabled=true;try{const saved=await Promise.all([...pendingSaves]);if(displayError){showPage('display');result('display-error',displayError);return}if(saved.some(value=>!value.ok&&value.code!=='display-save-superseded'))return;await window.winplayAudio.prepare(config);await call(active?'restart':'start')}finally{$('start').disabled=false}};$('stop').onclick=()=>call('stop');$('show-video').onclick=()=>call('show-video');
+  $('start').onclick=async()=>{const active=running;$('start').disabled=true;try{const saved=await Promise.all([...pendingSaves]);if(displayError){showPage('display');result('display-error',displayError);return}if(saved.some(value=>!value.ok&&value.code!=='display-save-superseded'))return;await window.airautoAudio.prepare(config);await call(active?'restart':'start')}finally{$('start').disabled=false}};$('stop').onclick=()=>call('stop');$('show-video').onclick=()=>call('show-video');
   $('audioEnabled').checked=config.audioEnabled!==false;$('audioEnabled').onchange=()=>save('audioEnabled',$('audioEnabled').checked);$('open-auth').onclick=()=>call('open-auth');$('open-log').onclick=()=>call('open-log');
   $('autoReconnect').checked=config.autoReconnect===true;$('autoReconnect').onchange=()=>save('autoReconnect',$('autoReconnect').checked);
   $('refresh-status').onclick=async()=>{const value=await call('state');if(value.ok){text('auth-status',value.auth?'文件已就绪，等待iPhone验证':'缺少文件');logs.length=0;for(const item of value.diagnostics||[])logs.push(diagnosticLine(item));renderLogs();updateState=value.updates||updateState;renderUpdates()}};
   $('hotspot-settings').onclick=()=>call(config.wirelessMode==='lan'?'settings-location':'settings-hotspot');$('bluetooth-settings').onclick=()=>call('settings-bluetooth');$('refresh-bt').onclick=bluetooth;$('refresh-network').onclick=networks;$('refresh-displays').onclick=displays;$('refresh-audio').onclick=()=>audioDevices(true);
-  $('import-auth').onclick=async()=>{const value=await winplay.call('import-auth');if(value.ok){text('auth-status','认证文件已更新');result('auth-result','认证材料已用Windows DPAPI保护保存')}else result('auth-result',value.error)};
-  $('export-diagnostics').onclick=async()=>{const value=await winplay.call('export-diagnostics');result('log-result',value.ok?'日志已导出':value.error)};
+  $('import-auth').onclick=async()=>{const value=await airauto.call('import-auth');if(value.ok){text('auth-status','认证文件已更新');result('auth-result','认证材料已用Windows DPAPI保护保存')}else result('auth-result',value.error)};
+  $('export-diagnostics').onclick=async()=>{const value=await airauto.call('export-diagnostics');result('log-result',value.ok?'日志已导出':value.error)};
   $('project-home').onclick=()=>call('open-project');$('release-notes').onclick=()=>call('open-release');$('download-update').onclick=()=>call('download-update');
-  $('check-updates').onclick=async()=>{$('check-updates').disabled=true;text('check-updates','正在检查更新…');try{const value=await winplay.call('check-updates');if(value.updates)updateState=value.updates;else if(!value.ok)updateState={...updateState,checking:false,status:'检查更新失败',detail:value.error}}finally{renderUpdates()}};
+  $('check-updates').onclick=async()=>{$('check-updates').disabled=true;text('check-updates','正在检查更新…');try{const value=await airauto.call('check-updates');if(value.updates)updateState=value.updates;else if(!value.ok)updateState={...updateState,checking:false,status:'检查更新失败',detail:value.error}}finally{renderUpdates()}};
   $('automatic-updates').onchange=async()=>{const button=$('automatic-updates');button.disabled=true;try{const value=await call('set-automatic-updates',{enabled:button.checked});if(value.updates)updateState=value.updates;else if(value.ok)updateState.automatic=button.checked;renderUpdates()}finally{button.disabled=false}};
-  $('previous').onclick=()=>winplay.input({command:'media',index:5});$('playpause').onclick=()=>winplay.input({command:'media',index:3});$('next').onclick=()=>winplay.input({command:'media',index:4});$('seek').addEventListener('change',()=>winplay.input({command:'seek',ms:Math.round(Number($('seek').value))}));
+  $('previous').onclick=()=>airauto.input({command:'media',index:5});$('playpause').onclick=()=>airauto.input({command:'media',index:3});$('next').onclick=()=>airauto.input({command:'media',index:4});$('seek').addEventListener('change',()=>airauto.input({command:'seek',ms:Math.round(Number($('seek').value))}));
   $('read-network').onclick=async()=>{
     if(networkReadBusy)return;const button=$('read-network'),mode=$('wirelessMode').value||config.wirelessMode,request=++networkReadRequest,before=[...pendingSaves],edits=new Map(networkEdits);
     const current=()=>request===networkReadRequest&&mode===config.wirelessMode&&mode===($('wirelessMode').value||config.wirelessMode);
     networkReadBusy=true;button.disabled=true;text('read-network','正在读取网络和密码…');result('network-result','');
     const operation=(async()=>{
       const previous=await Promise.all(before);if(!current())return {ok:true,ignored:true};if(previous.some(value=>!value.ok))return {ok:false};
-      const value=await winplay.call('read-current-network',{mode});if(!current())return {ok:true,ignored:true};
+      const value=await airauto.call('read-current-network',{mode});if(!current())return {ok:true,ignored:true};
       if(!value.ok){result('network-result',value.error||'未能读取当前网络，请检查网络设置后重试。');return value}
       if(value.mode&&value.mode!==mode)return {ok:true,ignored:true};
       if(typeof value.ssid!=='string'||!value.ssid){result('network-result','未能读取当前网络，请检查网络设置后重试。');return {ok:false}}
@@ -194,4 +196,4 @@ winplay.on(message=>{
   $('collapse-sidebar').onclick=()=>document.body.classList.toggle('sidebar-collapsed');const resizer=$('sidebar-resizer');resizer.onpointerdown=e=>{resizer.setPointerCapture(e.pointerId);resizer.onpointermove=event=>{document.querySelector('aside').style.width=Math.max(150,Math.min(200,event.clientX))+'px'};resizer.onpointerup=()=>{resizer.onpointermove=null}};
   document.addEventListener('keydown',event=>{if(event.key!=='Enter'||event.defaultPrevented||event.ctrlKey||event.altKey||event.metaKey||$('receiver-footer').hidden||$('start').disabled)return;if(event.target.closest('button,select,summary')||event.target.matches('input[type=range],input[type=checkbox]'))return;event.preventDefault();event.target.blur?.();$('start').click()});
   let refreshing=false;window.addEventListener('focus',async()=>{if(refreshing)return;refreshing=true;try{await Promise.all([networks(),displays(),audioDevices(),bluetooth()])}finally{refreshing=false}});applyLanguage();await Promise.all([networks(),displays(),audioDevices(),bluetooth()]);navigator.mediaDevices.addEventListener('devicechange',()=>audioDevices());
-})().catch(()=>toast('界面初始化失败，请重新打开WinPlay'));
+})().catch(()=>toast('界面初始化失败，请重新打开AirAuto'));

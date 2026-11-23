@@ -30,7 +30,7 @@ export class LocalSigner implements MfiSigner {
  private key:Buffer;private cert:Buffer
  constructor(dir:string){const keyFile=join(dir,'identity.pk8.dpapi'),certFile=join(dir,'certificate.p7b.dpapi');let key:Buffer;
   if(existsSync(keyFile)||existsSync(certFile)){if(!existsSync(keyFile)||!existsSync(certFile))throw new Error('本机认证文件不完整，请重新导入配套文件');key=readProtected(keyFile);this.cert=readProtected(certFile)}
-  else{const bundled=join(process.env.WINPLAY_RESOURCES!,'authentication');key=readFileSync(join(bundled,'identity.pk8'));this.cert=readFileSync(join(bundled,'certificate.p7b'))}
+  else{const bundled=join(process.env.AIRAUTO_RESOURCES!,'authentication');key=readFileSync(join(bundled,'identity.pk8'));this.cert=readFileSync(join(bundled,'certificate.p7b'))}
   this.key=validateAuthentication(key,this.cert)}
  async certificate(){return this.cert}
  async protocolMajor(){return 3}

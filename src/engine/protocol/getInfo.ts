@@ -175,7 +175,7 @@ export function buildInfoPlist(cfg: CpStackConfig): PlistValue {
     sourceVersion: cfg.sourceVersion,
     features: cfg.disableAudioOutput ? CARPLAY_FEATURES_NO_AUDIO : CARPLAY_FEATURES,
     statusFlags: 4,
-    model: 'WinPlay',
+    model: 'AirAuto',
     manufacturer: 'Roylyl',
     deviceID: cfg.deviceId,
     bluetoothIDs: [cfg.btMac],

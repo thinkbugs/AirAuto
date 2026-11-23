@@ -1,4 +1,4 @@
-/** Accessory authentication interface, implemented by WinPlay LocalSigner. */
+/** Accessory authentication interface, implemented by AirAuto LocalSigner. */
 
 export interface MfiSigner {
   /** The accessory MFi certificate, loaded from the configured authentication material. */

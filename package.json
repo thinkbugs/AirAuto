@@ -1,5 +1,5 @@
 {
-  "name": "winplay",
+  "name": "airauto",
   "version": "1.2.5",
   "private": true,
   "description": "Windows CarPlay接收端",
@@ -31,8 +31,8 @@
     "plist": "3.1.0"
   },
   "build": {
-    "appId": "io.github.roylyl.winplay",
-    "productName": "WinPlay",
+    "appId": "io.github.roylyl.airauto",
+    "productName": "AirAuto",
     "electronDist": "node_modules/electron/dist",
     "compression": "maximum",
     "electronLanguages": [
@@ -96,7 +96,7 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "resources/icons/winplay.ico",
+      "icon": "resources/icons/airauto.ico",
       "signExecutable": false
     },
     "nsis": {
@@ -104,7 +104,7 @@
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "artifactName": "WinPlay-${version}-Setup-${arch}.exe",
+      "artifactName": "AirAuto-${version}-Setup-${arch}.exe",
       "include": "scripts/installer.nsh"
     }
   }

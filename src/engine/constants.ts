@@ -1,1 +1,1 @@
-export const DEBUG = process.env.WINPLAY_DEBUG === "1"
+export const DEBUG = process.env.AIRAUTO_DEBUG === "1"

@@ -82,7 +82,7 @@ function attach(socket) {
     log('send-service-discovery-request')
     conn.send(CHANNEL.CONTROL, CONTROL_MSG.SERVICE_DISCOVERY_REQUEST, proto.encode('ServiceDiscoveryRequest', {
       phone_name: 'Mock Phone',
-      phone_brand: 'WinPlay Spike',
+      phone_brand: 'AirAuto Spike',
     }))
   })
 

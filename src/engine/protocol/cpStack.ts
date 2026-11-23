@@ -1,7 +1,7 @@
 /**
  * CpStack — the CarPlay network session engine, ported from Roylyl/MacPlay.
  *
- * WinPlay binds TCP17000. Implements pairing, authentication, encrypted
+ * AirAuto binds TCP17000. Implements pairing, authentication, encrypted
  * RTSP control, network media negotiation and HID input. Platform media and
  * iAP2 transport are supplied by the Windows adapters.
  */
@@ -222,7 +222,7 @@ export class CpStack extends EventEmitter {
     this._conns.clear()
   }
 
-  /** Adopt an already-accepted control connection (WinPlay owns the TCP17000 listener). */
+  /** Adopt an already-accepted control connection (AirAuto owns the TCP17000 listener). */
   attachSocket(sock: net.Socket): void {
     // Wi-Fi loss need not send FIN/RST. TCP probes also cover quiet sessions
     // whose phone does not negotiate an application-level timing heartbeat.
@@ -606,7 +606,7 @@ export class CpStack extends EventEmitter {
     const type = String(body.type ?? '')
     if(['disableBluetooth','iAPSendMessage','modesChanged'].includes(type))this.emit('protocol-state','控制命令',type)
     // The car/home button in the CarPlay dock sends requestUI (no url), asking us
-    // to bring up WinPlay's settings window.
+    // to bring up AirAuto's settings window.
     if (type === 'requestUI') {
       console.log('[cpStack] requestUI → host UI requested')
       this.emit('host-ui-requested')
@@ -625,7 +625,7 @@ export class CpStack extends EventEmitter {
         console.log(`[cpStack] modesChanged ${j}`)
       }
     } else if (type === 'suggestUI') {
-      // The phone offers URLs the head unit may show; WinPlay shows its own UI instead.
+      // The phone offers URLs the head unit may show; AirAuto shows its own UI instead.
       const params = (body.params ?? {}) as Record<string, PlistValue>
       const urls = Array.isArray(params.urls) ? params.urls : []
       console.log(`[cpStack] suggestUI (${urls.length} urls, not shown)`)

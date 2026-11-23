@@ -1,4 +1,4 @@
-WinPlay 1.2.5 — Roylyl
+AirAuto 1.2.5 — Roylyl (formerly WinPlay)
 AGPL-3.0-or-later; see LICENSE.
 
 CarPlay control, pairing, encryption, plist and HID implementation adapted from
@@ -24,6 +24,6 @@ Electron (MIT), Chromium/FFmpeg and Node.js have their own bundled license texts
 @noble/curves (MIT), multicast-dns (MIT), plist (MIT) retain their licenses.
 Wireless reception uses Windows Bluetooth and Wi-Fi; no Apple drivers are required.
 
-The WinPlay icon is adapted from the AndroidPlay/MacPlay icon design family:
+The AirAuto icon is adapted from the AndroidPlay/MacPlay icon design family:
 dark rounded tile, light-blue screen and play mark, with original CRT-style
 monitor, pedestal, power light and four-pane window artwork. SVG source included.
