@@ -23,6 +23,9 @@ function createPreview({ port, log = () => {} }) {
   const wss = new WebSocketServer({ noServer: true })
   let lastConfig = null
   let frames = 0
+  // Frames since the last keyframe, replayed to a client that connects mid-stream so it
+  // does not stare at a black canvas until the next GOP.
+  let gop = []
 
   server.on('upgrade', (request, socket, head) => {
     if (request.url !== '/ws') {
@@ -30,8 +33,11 @@ function createPreview({ port, log = () => {} }) {
       return
     }
     wss.handleUpgrade(request, socket, head, client => {
-      log('preview-client', { total: wss.clients.size })
+      log('preview-client', { total: wss.clients.size, replay: gop.length })
       if (lastConfig) client.send(JSON.stringify(lastConfig))
+      for (const payload of gop) {
+        if (client.readyState === client.OPEN) client.send(payload, { binary: true })
+      }
     })
   })
 
@@ -43,6 +49,7 @@ function createPreview({ port, log = () => {} }) {
 
   return {
     broadcastConfig(configured) {
+      gop = []
       lastConfig = {
         type: 'config',
         codec: configured.codec,
@@ -58,6 +65,8 @@ function createPreview({ port, log = () => {} }) {
       header[0] = frame.keyframe ? 1 : 0
       header.writeBigUInt64BE(frame.timestamp ?? 0n, 1)
       const payload = Buffer.concat([header, frame.data])
+      if (frame.keyframe) gop = [payload]
+      else if (gop.length < 300) gop.push(payload)
       for (const client of wss.clients) {
         if (client.readyState === client.OPEN) client.send(payload, { binary: true })
       }

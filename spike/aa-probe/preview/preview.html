@@ -209,24 +209,16 @@ function onFrame(buffer) {
   let data = new Uint8Array(buffer, 9)
   // A decoder configured from an avcC description still needs a keyframe before deltas.
   if (needKey && !key) return
-  if (key) {
-    needKey = false
-    // Decode the first keyframe on its own before the stream starts pouring in; the
-    // software H.264 path is sensitive to a delta arriving before the IDR has completed.
-    window.__firstFrame = true
-  }
+  if (key) needKey = false
   lastKey = key
   if (key) setState('接收中（关键帧）', true)
   if (annexbMode) data = withConfigNals(avccToAnnexB(data), key)
   window.__lastChunk = { key, bytes: data.length, ts: timestamp, hex: Array.from(data.slice(0, 8), b => b.toString(16).padStart(2, '0')).join(' ') }
   try {
     decoder.decode(new EncodedVideoChunk({ type: key ? 'key' : 'delta', timestamp, data }))
-    if (window.__firstFrame) {
-      window.__firstFrame = false
-      decoder.flush().catch(error => fail('首帧', error))
-    }
   } catch (error) {
-    setState('喂帧失败', false)
+    // A burst of replayed frames can outrun the decoder; keep the last good picture.
+    window.__previewErrors.push('feed: ' + error.message)
     return
   }
   $('queue').textContent = decoder.decodeQueueSize
