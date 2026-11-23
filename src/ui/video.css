@@ -12,3 +12,5 @@ body.hud-visible #hud{opacity:1;transform:none;pointer-events:auto}
 #hud button{width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(14,20,28,.55);color:#dfe8f5;font:16px/1 "Segoe UI",sans-serif;cursor:pointer;display:grid;place-items:center;backdrop-filter:blur(8px)}
 #hud button:hover{background:rgba(30,42,58,.75)}
 #hud-close:hover{background:rgba(183,39,39,.85);border-color:rgba(255,120,120,.4)}
+
+#hud button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}

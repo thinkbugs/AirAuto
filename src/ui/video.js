@@ -27,3 +27,5 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();ai
  hud.addEventListener('pointerenter',()=>{clearTimeout(hideTimer);document.body.classList.add('hud-visible')});
  hud.addEventListener('pointerleave',show);
 })();
+
+document.getElementById('hud-voice').addEventListener('click',()=>airauto.input({command:'siri'}));

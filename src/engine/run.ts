@@ -125,6 +125,7 @@ process.on('message',async(msg:any)=>{try{
  if(msg.command==='video-recover')videoGate?.recover(msg.reason==='ipc-overflow'?'ipc-overflow':'transport-overflow')
  if(msg.command==='touch'&&active){const {x,y,down}=msg;if(Number.isFinite(x)&&Number.isFinite(y))active.sendTouches([{x:Math.min(1,Math.max(0,x)),y:Math.min(1,Math.max(0,y)),down:!!down,id:0}])}
  if(msg.command==='media'&&Number.isInteger(msg.index)&&msg.index>=1&&msg.index<=5)active?.sendMedia(msg.index)
+ if(msg.command==='siri')active?.invokeSiri()
  if(msg.command==='seek'&&playing&&Number.isFinite(msg.ms)&&playing.seek(msg.ms))accessory?.seek(Math.round(playing.state.positionMs))
  if(msg.command==='audio'){settings.mediaVolume=Math.min(1,Math.max(0,Number(msg.mediaVolume)));settings.callVolume=Math.min(1,Math.max(0,Number(msg.callVolume)));for(const s of sessions){s.setStreamVolume(3,settings.mediaVolume,0);s.setStreamVolume(4,settings.mediaVolume,0);s.setStreamVolume(2,settings.callVolume,0)}}
  if(msg.command==='mic')micPacket(msg.id,Buffer.from(msg.data),msg.samples)

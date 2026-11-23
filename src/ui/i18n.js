@@ -192,6 +192,12 @@
     ["版本、更新与认证","版本、更新與驗證","Version, updates and authentication"],
     ["捐赠支持","捐贈支持","Support the project"],
     ["支持持续开发","支持持續開發","Support ongoing development"],
+    ["语音","語音","Voice"],
+    ["切换主题","切換主題","Toggle theme"],
+    ["上一首","上一首","Previous"],
+    ["下一首","下一首","Next"],
+    ["播放或暂停","播放或暫停","Play or pause"],
+    ["请先连接手机","請先連線手機","Connect a phone first"],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){
