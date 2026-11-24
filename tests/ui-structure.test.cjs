@@ -50,7 +50,7 @@ test('every settings page stays inside the scroll container', () => {
     assert.equal(child.tag, 'section', 'only page sections live under settings-content')
     assert.ok(hasClass(child, 'page'), 'child carries the page class')
   }
-  assert.deepEqual(container.children.map(node => node.attrs.id), ['home', 'trip', 'appearance', 'connect', 'settings', 'connection', 'display', 'audio', 'about'])
+  assert.deepEqual(container.children.map(node => node.attrs.id), ['home', 'trip', 'weather', 'good-life', 'appearance', 'connect', 'settings', 'connection', 'display', 'audio', 'about'])
 })
 
 test('no card or section title is orphaned outside a page', () => {
@@ -72,4 +72,17 @@ test('connection page keeps all of its sections and the CarLife fields inside a 
   let card = host.parent
   while (card && !hasClass(card, 'card')) card = card.parent
   assert.ok(card, 'CarLife address input must stay inside the device card')
+})
+
+test('dock keeps weather after music and good life after phone', () => {
+  const root = parse(html)
+  const dock = [...walk(root)].find(node => node.attrs.id === 'app-dock')
+  assert.ok(dock, 'dock exists')
+  const items = [...walk(dock)]
+    .filter(node => hasClass(node, 'dock-item'))
+    .map(node => node.attrs['data-page'] ? `page:${node.attrs['data-page']}` : `action:${node.attrs['data-action']}`)
+  assert.deepEqual(items, [
+    'page:home', 'action:project', 'page:audio', 'page:weather',
+    'page:trip', 'action:project', 'page:good-life', 'page:settings',
+  ])
 })

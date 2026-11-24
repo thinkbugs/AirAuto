@@ -7,7 +7,7 @@
 > AirAuto 当前开发线正在重构为车机座舱界面：零层级首页、深色设计系统与独立投屏 HUD；Android Auto 与 CarLife+ 支持同步开发中。
 
 <p align="center">
-  <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.6-2563eb?style=flat-square" alt="源码版本1.2.6"></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.7-2563eb?style=flat-square" alt="源码版本1.2.7"></a>
   <a href="https://github.com/thinkbugs/AirAuto/releases/latest"><img src="https://img.shields.io/github/v/release/thinkbugs/AirAuto?style=flat-square&amp;label=release&amp;color=2563eb" alt="GitHub最新正式发行版"></a>
   <a href="#使用条件"><img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-555555?style=flat-square" alt="Windows10/11x64"></a>
   <a href="#无线连接"><img src="https://img.shields.io/badge/CarPlay-wireless-2563eb?style=flat-square" alt="无线CarPlay"></a>
@@ -26,7 +26,7 @@
   <a href="https://github.com/thinkbugs/AirAuto/commits"><img src="https://img.shields.io/github/last-commit/thinkbugs/AirAuto?style=flat-square&amp;label=last%20commit&amp;color=555555" alt="最近提交时间"></a>
 </p>
 
-<p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> ·  <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.6.md">1.2.6版本说明</a></p>
+<p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> ·  <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.7.md">1.2.7版本说明</a></p>
 
 <p align="center"><a href="https://github.com/thinkbugs/AirAuto/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/thinkbugs/AirAuto/issues">反馈问题</a></p>
 
@@ -47,7 +47,7 @@ AirAuto 把独立CarPlay窗口与分组设置带到Windows、后续增加Android
 
 ### 安装
 
-在[GitHubReleases](https://github.com/thinkbugs/AirAuto/releases)下载安装包，按向导完成安装；1.2.6对应`AirAuto-1.2.6-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
+在[GitHubReleases](https://github.com/thinkbugs/AirAuto/releases)下载安装包，按向导完成安装；1.2.7对应`AirAuto-1.2.7-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
 
 首次默认1280×720、60fps、可等比例缩放的窗口、系统默认输入/输出设备、100%音量与跟随系统语言。当前安装包未做发行代码签名，Windows可能显示安全提示。
 
@@ -90,7 +90,8 @@ Wi-Fi共享密码需为8—63位，企业802.1X、网页登录与访客网络的
 | 歌词与封面 | 标题字段中的歌词照常同步，封面独立去重并按需更新 |
 | 窗口与托盘 | 正常最小化到任务栏，可选择关闭主窗口后留在托盘继续接收 |
 | 多语言 | 跟随系统、简体中文、繁體中文、English，切换立即生效 |
-| 座舱界面 | 极光玻璃仪表盘首页、悬浮 Dock（主页/导航/音乐 · AI · 行程/电话/更多）、三步连接向导、投屏极简 HUD、深/浅色一键切换、壁纸与主题中心（内置四套，可导入本地图片） |
+| 座舱界面 | 极光玻璃仪表盘首页、悬浮 Dock（主页/导航/音乐/天气 · AI · 行程/电话/美好生活/更多）、三步连接向导、投屏极简 HUD、深/浅色一键切换、壁纸与主题中心（内置四套，可导入本地图片） |
+| 天气与美好生活 | Dock 新增“天气”“美好生活”入口页；服务尚未接入，页面会明确提示，数据与生活服务后续接入 |
 | 分屏座舱 | 宽屏时可让投屏靠左，右侧显示时钟、媒体与帧率（显示设置中开启） |
 | Android Auto | 开发者模式连接（局域网或 adb forward），视频/触摸/音频复用现有管线 |
 | CarLife+ | 荣耀/百度 CarLife+ 接收端（测试中）：UDP 7999 自动发现或直连手机 IP，7 通道握手，H.264 视频与触摸复用现有管线 |
@@ -217,7 +218,7 @@ npm start
 npm run dist
 ~~~
 
-产物为`dist/AirAuto-1.2.6-Setup-x64.exe`。[导出脚本](scripts/export-installer.ps1)会将安装包复制到Windows桌面，再通过官方卸载程序卸载已有AirAuto并保留用户数据。
+产物为`dist/AirAuto-1.2.7-Setup-x64.exe`。[导出脚本](scripts/export-installer.ps1)会将安装包复制到Windows桌面，再通过官方卸载程序卸载已有AirAuto并保留用户数据。
 
 | 目录 | 内容 |
 | --- | --- |

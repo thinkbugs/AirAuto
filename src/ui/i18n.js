@@ -267,6 +267,15 @@
     ["支持 iPhone CarPlay · CarLife+（测试中）","支援 iPhone CarPlay · CarLife+（測試中）","iPhone CarPlay · CarLife+ (testing)"],
     ["测试中：无线 CarLife+ 需要手机先与“车机”完成系统蓝牙配对；未配对时引擎只输出欢迎页并会在数秒后结束，电脑接入蓝牙适配器后即可完整使用。","測試中：無線 CarLife+ 需要手機先與「車機」完成系統藍牙配對；未配對時引擎只輸出歡迎頁並會在數秒後結束，電腦接入藍牙適配器後即可完整使用。","Testing: wireless CarLife+ needs the phone to finish a system Bluetooth pairing with the head unit. Without it the engine only streams its welcome page and exits after a few seconds; a Bluetooth adapter on the PC completes the setup."],
     ["手机地址无效","手機位址無效","Invalid phone address"],
+    ["天气","天氣","Weather"],
+    ["天气服务尚未接入","天氣服務尚未接入","Weather service not connected"],
+    ["接入天气数据源或从手机同步后，这里会显示当前天气、温度与未来预报。","接入天氣資料來源或從手機同步後，這裡會顯示目前天氣、溫度與未來預報。","Connect a weather source or sync from the phone to show current conditions, temperature and the forecast."],
+    ["美好生活","美好生活","Good Life"],
+    ["服务正在筹备","服務正在籌備","Service in preparation"],
+    ["这里将聚合出行、餐饮、停车与车主服务；目前尚未接入。","這裡將整合出行、餐飲、停車與車主服務；目前尚未接入。","Travel, dining, parking and owner services will live here; not connected yet."],
+    ["返回首页","返回首頁","Back to home"],
+    ["环境","環境","Environment"],
+    ["服务","服務","Services"],
 ];
   const dictionary=new Map(entries.map(row=>[row[0],row]));
   function resolveLanguage(selection,systemLocale){
