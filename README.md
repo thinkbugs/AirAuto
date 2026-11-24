@@ -26,9 +26,7 @@
   <a href="https://github.com/thinkbugs/AirAuto/commits"><img src="https://img.shields.io/github/last-commit/thinkbugs/AirAuto?style=flat-square&amp;label=last%20commit&amp;color=555555" alt="最近提交时间"></a>
 </p>
 
-<p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> · <a href="#其他平台">其他平台</a> · <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.5.md">1.2.5版本说明</a></p>
-
-<p align="center">其他平台：<a href="https://github.com/Roylyl/MacPlay">macOS</a> · <a href="https://github.com/Roylyl/LinuxPlay">Linux</a> · <a href="https://github.com/Roylyl/AndroidPlay">Android</a></p>
+<p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> ·  <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.5.md">1.2.5版本说明</a></p>
 
 <p align="center"><a href="https://github.com/thinkbugs/AirAuto/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/thinkbugs/AirAuto/issues">反馈问题</a></p>
 
