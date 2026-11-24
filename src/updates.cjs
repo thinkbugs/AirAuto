@@ -1,8 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const REPOSITORY = 'https://github.com/Roylyl/AirAuto';
-const API = 'https://api.github.com/repos/Roylyl/AirAuto/releases?per_page=100';
+const REPOSITORY = 'https://github.com/thinkbugs/AirAuto';
+const API = 'https://api.github.com/repos/thinkbugs/AirAuto/releases?per_page=100';
 const AUTO_CHECK_INTERVAL_MS = 2 * 60 * 60 * 1000;
 const MAX_RESPONSE_BYTES = 4 * 1024 * 1024;
 const MAX_CACHE_BYTES = 16 * 1024;
@@ -34,15 +34,15 @@ function tagVersion(tag) {
   return match && versionParts(match[1]) ? match[1] : null;
 }
 function releasePage(tag, rawPage) {
-  const pagePath = `/Roylyl/AirAuto/releases/tag/${tag}`;
+  const pagePath = `/thinkbugs/AirAuto/releases/tag/${tag}`;
   return safeLink(rawPage, pagePath) || `https://github.com${pagePath}`;
 }
 function installerLink(version, tag, assets) {
   if (!Array.isArray(assets)) return null;
   const name = `AirAuto-${version}-Setup-x64.exe`;
   const asset = assets.find(item => item && item.name === name &&
-    safeLink(item.browser_download_url, `/Roylyl/AirAuto/releases/download/${tag}/${name}`));
-  return asset ? safeLink(asset.browser_download_url, `/Roylyl/AirAuto/releases/download/${tag}/${name}`) : null;
+    safeLink(item.browser_download_url, `/thinkbugs/AirAuto/releases/download/${tag}/${name}`));
+  return asset ? safeLink(asset.browser_download_url, `/thinkbugs/AirAuto/releases/download/${tag}/${name}`) : null;
 }
 function validCachedRelease(raw, current) {
   if (!raw || compareVersions(raw.version, current) !== 1) return null;
@@ -53,7 +53,7 @@ function validCachedRelease(raw, current) {
     version: raw.version,
     tag,
     page: releasePage(tag, raw.page),
-    installer: safeLink(raw.installer, `/Roylyl/AirAuto/releases/download/${tag}/${name}`)
+    installer: safeLink(raw.installer, `/thinkbugs/AirAuto/releases/download/${tag}/${name}`)
   };
 }
 async function readLimitedJSON(response, signal) {

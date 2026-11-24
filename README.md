@@ -8,29 +8,29 @@
 
 <p align="center">
   <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.5-2563eb?style=flat-square" alt="源码版本1.2.5"></a>
-  <a href="https://github.com/Roylyl/AirAuto/releases/latest"><img src="https://img.shields.io/github/v/release/Roylyl/AirAuto?style=flat-square&amp;label=release&amp;color=2563eb" alt="GitHub最新正式发行版"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/releases/latest"><img src="https://img.shields.io/github/v/release/thinkbugs/AirAuto?style=flat-square&amp;label=release&amp;color=2563eb" alt="GitHub最新正式发行版"></a>
   <a href="#使用条件"><img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-555555?style=flat-square" alt="Windows10/11x64"></a>
   <a href="#无线连接"><img src="https://img.shields.io/badge/CarPlay-wireless-2563eb?style=flat-square" alt="无线CarPlay"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--or--later-2563eb?style=flat-square" alt="AGPL-3.0-or-later许可证"></a>
-  <a href="https://github.com/Roylyl/AirAuto/releases"><img src="https://img.shields.io/badge/download-x64%20EXE-2563eb?style=flat-square" alt="Windows安装包发行页"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/releases"><img src="https://img.shields.io/badge/download-x64%20EXE-2563eb?style=flat-square" alt="Windows安装包发行页"></a>
 </p>
 
 <p align="center">
   <a href="#界面与语言"><img src="https://img.shields.io/badge/languages-%E7%AE%80%E4%BD%93%20%2F%20%E7%B9%81%E9%AB%94%20%2F%20English-555555?style=flat-square" alt="简体中文、繁體中文和English"></a>
   <a href="#从源码构建"><img src="https://img.shields.io/badge/core-Electron%2042-555555?style=flat-square" alt="Electron42桌面应用"></a>
-  <a href="https://github.com/Roylyl/AirAuto/releases"><img src="https://img.shields.io/github/downloads/Roylyl/AirAuto/total?style=flat-square&amp;label=downloads&amp;color=2563eb" alt="发行附件累计下载量"></a>
-  <a href="https://github.com/Roylyl/AirAuto/stargazers"><img src="https://img.shields.io/github/stars/Roylyl/AirAuto?style=flat-square&amp;label=stars&amp;color=2563eb" alt="GitHubStar数"></a>
-  <a href="https://github.com/Roylyl/AirAuto/forks"><img src="https://img.shields.io/github/forks/Roylyl/AirAuto?style=flat-square&amp;label=forks&amp;color=555555" alt="GitHubFork数"></a>
-  <a href="https://github.com/Roylyl/AirAuto/issues"><img src="https://img.shields.io/github/issues/Roylyl/AirAuto?style=flat-square&amp;label=issues&amp;color=555555" alt="开放Issue数"></a>
-  <a href="https://github.com/Roylyl/AirAuto/pulls"><img src="https://img.shields.io/github/issues-pr/Roylyl/AirAuto?style=flat-square&amp;label=pull%20requests&amp;color=555555" alt="开放PullRequest数"></a>
-  <a href="https://github.com/Roylyl/AirAuto/commits"><img src="https://img.shields.io/github/last-commit/Roylyl/AirAuto?style=flat-square&amp;label=last%20commit&amp;color=555555" alt="最近提交时间"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/releases"><img src="https://img.shields.io/github/downloads/thinkbugs/AirAuto/total?style=flat-square&amp;label=downloads&amp;color=2563eb" alt="发行附件累计下载量"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/stargazers"><img src="https://img.shields.io/github/stars/thinkbugs/AirAuto?style=flat-square&amp;label=stars&amp;color=2563eb" alt="GitHubStar数"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/forks"><img src="https://img.shields.io/github/forks/thinkbugs/AirAuto?style=flat-square&amp;label=forks&amp;color=555555" alt="GitHubFork数"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/issues"><img src="https://img.shields.io/github/issues/thinkbugs/AirAuto?style=flat-square&amp;label=issues&amp;color=555555" alt="开放Issue数"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/pulls"><img src="https://img.shields.io/github/issues-pr/thinkbugs/AirAuto?style=flat-square&amp;label=pull%20requests&amp;color=555555" alt="开放PullRequest数"></a>
+  <a href="https://github.com/thinkbugs/AirAuto/commits"><img src="https://img.shields.io/github/last-commit/thinkbugs/AirAuto?style=flat-square&amp;label=last%20commit&amp;color=555555" alt="最近提交时间"></a>
 </p>
 
 <p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> · <a href="#其他平台">其他平台</a> · <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.5.md">1.2.5版本说明</a></p>
 
 <p align="center">其他平台：<a href="https://github.com/Roylyl/MacPlay">macOS</a> · <a href="https://github.com/Roylyl/LinuxPlay">Linux</a> · <a href="https://github.com/Roylyl/AndroidPlay">Android</a></p>
 
-<p align="center"><a href="https://github.com/Roylyl/AirAuto/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/Roylyl/AirAuto/issues">反馈问题</a></p>
+<p align="center"><a href="https://github.com/thinkbugs/AirAuto/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/thinkbugs/AirAuto/issues">反馈问题</a></p>
 
 AirAuto接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗口与分组设置带到Windows，并参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)的热点连接方案。适合Windows笔记本、平板与桌面电脑，使用Windows移动热点或现有局域网接收iPhone的CarPlay，在电脑上操作导航、播放音乐和使用CarPlay应用。
 
@@ -49,7 +49,7 @@ AirAuto接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗�
 
 ### 安装
 
-在[GitHubReleases](https://github.com/Roylyl/AirAuto/releases)下载安装包，按向导完成安装；1.2.5对应`AirAuto-1.2.5-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
+在[GitHubReleases](https://github.com/thinkbugs/AirAuto/releases)下载安装包，按向导完成安装；1.2.5对应`AirAuto-1.2.5-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
 
 首次默认1280×720、60fps、可等比例缩放的窗口、系统默认输入/输出设备、100%音量与跟随系统语言。当前安装包未做发行代码签名，Windows可能显示安全提示。
 
@@ -167,7 +167,7 @@ AirAuto向Windows系统媒体控件同步iPhone上报的播放状态、标题、
 
 “关于→软件更新”提供自动检查、手动检查、发行说明与下载入口。自动检查默认开启，每次启动软件后检查一次，运行期间每隔两小时在后台检查，包括最小化到任务栏或托盘时。后台定时检查不弹出对话框，结果显示在软件更新页面；手动检查可随时执行。关闭自动检查后，启动和定时检查均停止。
 
-更新只读取[Roylyl/AirAuto正式发行版](https://github.com/Roylyl/AirAuto/releases)，兼容`V1.2.1`、`v1.2.1`、`AirAuto-1.2.1`和纯数字标签。按数字版本大小判断新版，不按发布时间判断，草稿和预发行版不参与更新。
+更新只读取[thinkbugs/AirAuto正式发行版](https://github.com/thinkbugs/AirAuto/releases)，兼容`V1.2.1`、`v1.2.1`、`AirAuto-1.2.1`和纯数字标签。按数字版本大小判断新版，不按发布时间判断，草稿和预发行版不参与更新。
 
 发现新版后可下载、查看说明或稍后处理，同一版本不重复自动提醒。安装包按实际发行标签与对应版本的x64EXE匹配，通过系统浏览器下载后由用户安装；没有匹配附件时提供发行说明入口。
 
@@ -200,7 +200,7 @@ AirAuto向Windows系统媒体控件同步iPhone上报的播放状态、标题、
 | 音乐起播有短暂等待 | 正在建立协商的音乐缓冲，导航和通话使用较短缓冲 |
 | 音频变速变调、断续或爆音 | 确认输出设备并应用重连；持续发生时导出日志反馈 |
 
-反馈问题可前往[GitHubIssues](https://github.com/Roylyl/AirAuto/issues)。请说明版本、无线模式、现象和出现时间；音频异常再补充输出设备及连接方式，例如DP/HDMI显示器、有线耳机或蓝牙耳机。日志包含音频缺包与时钟统计、视频数据量和队列积压，便于区分网络与播放问题。附日志前请检查内容，不要上传密码或私钥。
+反馈问题可前往[GitHubIssues](https://github.com/thinkbugs/AirAuto/issues)。请说明版本、无线模式、现象和出现时间；音频异常再补充输出设备及连接方式，例如DP/HDMI显示器、有线耳机或蓝牙耳机。日志包含音频缺包与时钟统计、视频数据量和队列积压，便于区分网络与播放问题。附日志前请检查内容，不要上传密码或私钥。
 
 ## 其他平台
 

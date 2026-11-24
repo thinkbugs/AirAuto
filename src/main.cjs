@@ -334,7 +334,7 @@ ipcMain.handle('call',async(event,op,arg)=>{checkSender(event);try{switch(op){
  case 'set-automatic-updates':if(typeof arg?.enabled!=='boolean')throw Error('更新选项无效');updates.setAutomatic(arg.enabled).then(value=>{if(arg.enabled&&value.automatic&&value.status==='发现新版本')promptUpdate().catch(()=>{})}).catch(()=>{});return {ok:true,updates:updates.state()};
  case 'open-release':await shell.openExternal(updates.releaseUrl());return {ok:true};
  case 'download-update':{const url=updates.state().release?.installer;if(!url)throw Error('暂无适合当前架构的安装包，请查看发行说明');await shell.openExternal(url);return {ok:true};}
- case 'open-project':await shell.openExternal('https://github.com/Roylyl/AirAuto');return {ok:true};
+ case 'open-project':await shell.openExternal('https://github.com/thinkbugs/AirAuto');return {ok:true};
  case 'stop':stop();log('接收已停止');return {ok:true};
  case 'displays':return await refreshDisplayCapabilities();
  case 'networks':{const mode=arg?.mode==='lan'?'lan':'hotspot',name=mode==='lan'?settings.lanNetworkInterface:settings.networkInterface,{listNetworks,networkGuidance}=require('./network-selection.cjs'),snapshot=await listNetworks({mode});return {...snapshot,mode,...networkGuidance(mode,name,snapshot)};}

@@ -13,9 +13,9 @@ function directory(t) {
 function release(version, extra = {}) {
   const name = `AirAuto-${version}-Setup-x64.exe`;
   return {
-    tag_name: `AirAuto-${version}`, html_url: `https://github.com/Roylyl/AirAuto/releases/tag/AirAuto-${version}`,
+    tag_name: `AirAuto-${version}`, html_url: `https://github.com/thinkbugs/AirAuto/releases/tag/AirAuto-${version}`,
     draft: false, prerelease: false,
-    assets: [{name, browser_download_url: `https://github.com/Roylyl/AirAuto/releases/download/AirAuto-${version}/${name}`}],
+    assets: [{name, browser_download_url: `https://github.com/thinkbugs/AirAuto/releases/download/AirAuto-${version}/${name}`}],
     ...extra
   };
 }
@@ -24,8 +24,8 @@ function response(items) { return new Response(JSON.stringify(items), {status: 2
 test('unified V/v tags retain their actual download paths and survive cached restart', async t => {
   for (const tag of ['V1.2.0','v1.2.0','AirAuto-1.2.0','1.2.0']) {
     const dir=directory(t), name='AirAuto-1.2.0-Setup-x64.exe';
-    const page=`https://github.com/Roylyl/AirAuto/releases/tag/${tag}`;
-    const installer=`https://github.com/Roylyl/AirAuto/releases/download/${tag}/${name}`;
+    const page=`https://github.com/thinkbugs/AirAuto/releases/tag/${tag}`;
+    const installer=`https://github.com/thinkbugs/AirAuto/releases/download/${tag}/${name}`;
     const updates=new Updates({version:'1.1.0',dataDir:dir,fetchImpl:async()=>response([release('1.2.0',{tag_name:tag,html_url:page,assets:[{name,browser_download_url:installer}]})])});
     const state=await updates.check();assert.equal(state.status,'发现新版本');assert.equal(state.release.version,'1.2.0');assert.equal(updates.releaseUrl(),page);assert.equal(updates.downloadUrl(),installer);
     const restored=new Updates({version:'1.1.0',dataDir:dir});assert.equal(restored.downloadUrl(),installer);assert.equal(restored.releaseUrl(),page);
@@ -37,7 +37,7 @@ test('V tags reject mismatched asset tags, prereleases and malformed numeric ver
     release('9.0.0',{tag_name:'V9.0.0',prerelease:true}),release('8.0.0',{tag_name:'V8.0.0-beta'}),release('7.0.0',{tag_name:'V07.0.0'}),
     release('1.2.0',{tag_name:'V1.2.0',html_url:'https://evil.example/'})
   ])});
-  await updates.check();assert.equal(updates.state().release.version,'1.2.0');assert.equal(updates.state().release.installer,null);assert.equal(updates.releaseUrl(),'https://github.com/Roylyl/AirAuto/releases/tag/V1.2.0');
+  await updates.check();assert.equal(updates.state().release.version,'1.2.0');assert.equal(updates.state().release.installer,null);assert.equal(updates.releaseUrl(),'https://github.com/thinkbugs/AirAuto/releases/tag/V1.2.0');
 });
 
 test('uses only AirAuto releases, compares numeric versions and excludes nonstable tags', async t => {
@@ -52,7 +52,7 @@ test('uses only AirAuto releases, compares numeric versions and excludes nonstab
   assert.equal(state.release.version, '1.10.0');
   assert.equal(state.status, '发现新版本');
   assert.equal(state.checking, false);
-  assert.equal(calls[0].url, 'https://api.github.com/repos/Roylyl/AirAuto/releases?per_page=100');
+  assert.equal(calls[0].url, 'https://api.github.com/repos/thinkbugs/AirAuto/releases?per_page=100');
   assert.equal(calls[0].options.headers['User-Agent'], 'AirAuto/1.1.0');
   assert.equal(calls[0].options.redirect, 'error');
   assert.equal(changes[0].checking, true);
@@ -116,7 +116,7 @@ test('notifies once per version and retains safe links after failed requests', a
   assert.equal(updates.shouldNotify(), false);
   const restored = new Updates({version: '1.1.0', dataDir: dir});
   assert.equal(restored.shouldNotify(), false);
-  assert.equal(restored.downloadUrl(), 'https://github.com/Roylyl/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe');
+  assert.equal(restored.downloadUrl(), 'https://github.com/thinkbugs/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe');
   fail = true;
   await updates.check();
   assert.equal(updates.state().status, '检查更新失败');
@@ -131,19 +131,19 @@ test('requires exact x64 EXE from this repository and falls back to the release 
   const malicious = [
     'https://evil.example/AirAuto-1.2.0-Setup-x64.exe',
     'https://github.com/Roylyl/MacPlay/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe',
-    'https://github.com.evil.example/Roylyl/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe',
-    'http://github.com/Roylyl/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe',
-    'https://user:password@github.com/Roylyl/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe',
-    'https://github.com/Roylyl/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe?redirect=evil'
+    'https://github.com.evil.example/thinkbugs/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe',
+    'http://github.com/thinkbugs/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe',
+    'https://user:password@github.com/thinkbugs/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe',
+    'https://github.com/thinkbugs/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-x64.exe?redirect=evil'
   ];
   for (const browser_download_url of malicious) {
     const updates = new Updates({version: '1.1.0', dataDir: directory(t), fetchImpl: async () => response([release('1.2.0', {html_url: 'https://evil.example/', assets: [{name: 'AirAuto-1.2.0-Setup-x64.exe', browser_download_url}]})])});
     await updates.check();
     assert.equal(updates.state().release.installer, null);
-    assert.equal(updates.releaseUrl(), 'https://github.com/Roylyl/AirAuto/releases/tag/AirAuto-1.2.0');
+    assert.equal(updates.releaseUrl(), 'https://github.com/thinkbugs/AirAuto/releases/tag/AirAuto-1.2.0');
     assert.equal(updates.downloadUrl(), updates.releaseUrl());
   }
-  const updates = new Updates({version: '1.1.0', dataDir: directory(t), fetchImpl: async () => response([release('1.2.0', {assets: [{name: 'AirAuto-1.2.0-Setup-arm64.exe', browser_download_url: 'https://github.com/Roylyl/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-arm64.exe'}]})])});
+  const updates = new Updates({version: '1.1.0', dataDir: directory(t), fetchImpl: async () => response([release('1.2.0', {assets: [{name: 'AirAuto-1.2.0-Setup-arm64.exe', browser_download_url: 'https://github.com/thinkbugs/AirAuto/releases/download/AirAuto-1.2.0/AirAuto-1.2.0-Setup-arm64.exe'}]})])});
   await updates.check();
   assert.equal(updates.state().release.installer, null);
 });
@@ -173,12 +173,12 @@ test('same version is current, missing stable releases are explicit and invalid 
   const updates = new Updates({version: '1.1.0', dataDir: dir, fetchImpl: async () => response([release('1.1.0')])});
   assert.equal(updates.state().automatic, true);
   assert.equal(updates.state().release.installer, null);
-  assert.equal(updates.releaseUrl(), 'https://github.com/Roylyl/AirAuto/releases/tag/AirAuto-1.2.0');
+  assert.equal(updates.releaseUrl(), 'https://github.com/thinkbugs/AirAuto/releases/tag/AirAuto-1.2.0');
   await updates.check({automatic: true});
   assert.equal(updates.state().status, '当前已是最新版本');
   assert.equal(updates.state().release, null);
   assert.equal(updates.shouldNotify(), false);
-  assert.equal(updates.downloadUrl(), 'https://github.com/Roylyl/AirAuto/releases');
+  assert.equal(updates.downloadUrl(), 'https://github.com/thinkbugs/AirAuto/releases');
   const empty = new Updates({version: '1.1.0', dataDir: directory(t), fetchImpl: async () => response([release('1.2.0', {prerelease: true})])});
   await empty.check();
   assert.equal(empty.state().status, '未找到正式发行版');

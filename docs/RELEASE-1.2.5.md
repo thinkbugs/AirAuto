@@ -21,7 +21,7 @@ AirAuto是Windows无线CarPlay接收端，支持本机移动热点与现有局�
 
 局域网模式填写iPhone所连接Wi-Fi的SSID、密码与实际信道。电脑仅使用以太网时，需要手动填写这些参数；启动接收后按页面提示让iPhone加入指定Wi-Fi，再等待CarPlay画面。
 
-遇到问题可在“关于”页导出诊断JSON。完整使用方法见[README](../README.md)，版本发布与更新内容见[GitHubReleases](https://github.com/Roylyl/AirAuto/releases)。
+遇到问题可在“关于”页导出诊断JSON。完整使用方法见[README](../README.md)，版本发布与更新内容见[GitHubReleases](https://github.com/thinkbugs/AirAuto/releases)。
 
 “无线连接被动断开时自动重连”默认关闭，可在连接页开启。已建立的连接被动断开后，按5、10、20、30、60秒的等待间隔回连，之后保持60秒间隔；每次只执行一个连接尝试。主动停止接收、确认断开或退出程序会取消回连。重新收到视频后恢复正常状态，后续被动断开重新从5秒开始。
 
