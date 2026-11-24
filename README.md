@@ -7,7 +7,7 @@
 > AirAuto 当前开发线正在重构为车机座舱界面：零层级首页、深色设计系统与独立投屏 HUD；Android Auto 与 CarLife+ 支持同步开发中。
 
 <p align="center">
-  <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.5-2563eb?style=flat-square" alt="源码版本1.2.5"></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.6-2563eb?style=flat-square" alt="源码版本1.2.6"></a>
   <a href="https://github.com/thinkbugs/AirAuto/releases/latest"><img src="https://img.shields.io/github/v/release/thinkbugs/AirAuto?style=flat-square&amp;label=release&amp;color=2563eb" alt="GitHub最新正式发行版"></a>
   <a href="#使用条件"><img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-555555?style=flat-square" alt="Windows10/11x64"></a>
   <a href="#无线连接"><img src="https://img.shields.io/badge/CarPlay-wireless-2563eb?style=flat-square" alt="无线CarPlay"></a>
@@ -26,7 +26,7 @@
   <a href="https://github.com/thinkbugs/AirAuto/commits"><img src="https://img.shields.io/github/last-commit/thinkbugs/AirAuto?style=flat-square&amp;label=last%20commit&amp;color=555555" alt="最近提交时间"></a>
 </p>
 
-<p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> ·  <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.5.md">1.2.5版本说明</a></p>
+<p align="center"><a href="#快速入门">快速入门</a> · <a href="#主要功能">主要功能</a> · <a href="#显示与窗口">显示与窗口</a> · <a href="#音频与媒体控件">音频与媒体</a> ·  <a href="#从源码构建">源码构建</a> · <a href="docs/RELEASE-1.2.6.md">1.2.6版本说明</a></p>
 
 <p align="center"><a href="https://github.com/thinkbugs/AirAuto/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/thinkbugs/AirAuto/issues">反馈问题</a></p>
 
@@ -47,7 +47,7 @@ AirAuto 把独立CarPlay窗口与分组设置带到Windows、后续增加Android
 
 ### 安装
 
-在[GitHubReleases](https://github.com/thinkbugs/AirAuto/releases)下载安装包，按向导完成安装；1.2.5对应`AirAuto-1.2.5-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
+在[GitHubReleases](https://github.com/thinkbugs/AirAuto/releases)下载安装包，按向导完成安装；1.2.6对应`AirAuto-1.2.6-Setup-x64.exe`。单个EXE内置运行组件，可离线安装；开发者也可[从源码构建](#从源码构建)。
 
 首次默认1280×720、60fps、可等比例缩放的窗口、系统默认输入/输出设备、100%音量与跟随系统语言。当前安装包未做发行代码签名，Windows可能显示安全提示。
 
@@ -217,7 +217,7 @@ npm start
 npm run dist
 ~~~
 
-产物为`dist/AirAuto-1.2.5-Setup-x64.exe`。[导出脚本](scripts/export-installer.ps1)会将安装包复制到Windows桌面，再通过官方卸载程序卸载已有AirAuto并保留用户数据。
+产物为`dist/AirAuto-1.2.6-Setup-x64.exe`。[导出脚本](scripts/export-installer.ps1)会将安装包复制到Windows桌面，再通过官方卸载程序卸载已有AirAuto并保留用户数据。
 
 | 目录 | 内容 |
 | --- | --- |
