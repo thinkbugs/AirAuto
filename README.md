@@ -4,7 +4,7 @@
 
 <p align="center">把iPhone的CarPlay带到Windows，支持无线连接、独立画面窗口、音频播放与鼠标/触控板操作。</p>
 
-> AirAuto 原名 WinPlay，1.2.5 及之前版本以 WinPlay 名称发布。当前开发线正在重构为车机座舱界面：零层级首页、深色设计系统与独立投屏 HUD；Android Auto 与 CarLife+ 支持同步开发中。
+> AirAuto 当前开发线正在重构为车机座舱界面：零层级首页、深色设计系统与独立投屏 HUD；Android Auto 与 CarLife+ 支持同步开发中。
 
 <p align="center">
   <a href="package.json"><img src="https://img.shields.io/badge/source-1.2.5-2563eb?style=flat-square" alt="源码版本1.2.5"></a>
@@ -32,7 +32,7 @@
 
 <p align="center"><a href="https://github.com/thinkbugs/AirAuto/releases/latest">下载安装包</a> · <a href="#快速入门">使用方法</a> · <a href="https://github.com/thinkbugs/AirAuto/issues">反馈问题</a></p>
 
-AirAuto接续[MacPlay](https://github.com/Roylyl/MacPlay)，把独立CarPlay窗口与分组设置带到Windows，并参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)的热点连接方案。适合Windows笔记本、平板与桌面电脑，使用Windows移动热点或现有局域网接收iPhone的CarPlay，在电脑上操作导航、播放音乐和使用CarPlay应用。
+AirAuto 把独立CarPlay窗口与分组设置带到Windows、后续增加Android版，并参考[AndroidPlay](https://github.com/Roylyl/AndroidPlay)的热点连接方案。适合Windows笔记本、平板与桌面电脑，使用Windows移动热点或现有局域网接收iPhone的CarPlay，在电脑上操作导航、播放音乐和使用CarPlay应用。
 
 蓝牙负责配对与连接引导，Wi-Fi传输音视频。两种无线模式分别保存配置，手机端的配件名称与车型统一为AirAuto。当前提供无线CarPlay，不支持USB直连。
 
@@ -201,16 +201,6 @@ AirAuto向Windows系统媒体控件同步iPhone上报的播放状态、标题、
 | 音频变速变调、断续或爆音 | 确认输出设备并应用重连；持续发生时导出日志反馈 |
 
 反馈问题可前往[GitHubIssues](https://github.com/thinkbugs/AirAuto/issues)。请说明版本、无线模式、现象和出现时间；音频异常再补充输出设备及连接方式，例如DP/HDMI显示器、有线耳机或蓝牙耳机。日志包含音频缺包与时钟统计、视频数据量和队列积压，便于区分网络与播放问题。附日志前请检查内容，不要上传密码或私钥。
-
-## 其他平台
-
-如果需要在其他设备上使用CarPlay，可以选择对应平台的项目。
-
-| 项目 | 适用平台 | 连接方式 |
-| --- | --- | --- |
-| [MacPlay](https://github.com/Roylyl/MacPlay) | macOS14及以上 | USB直连或共用局域网无线连接 |
-| [LinuxPlay](https://github.com/Roylyl/LinuxPlay) | Linux桌面（X11/XWayland） | 本机热点或现有局域网无线连接 |
-| [AndroidPlay](https://github.com/Roylyl/AndroidPlay) | Android9及以上 | 系统热点与蓝牙无线连接 |
 
 ## 从源码构建
 
